@@ -15,7 +15,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.PatternMatchUtils;
 
 
@@ -23,12 +25,16 @@ public class JwtAuthorizationFilter implements Filter {
 
     private static final Logger log = LoggerFactory.getLogger(JwtAuthorizationFilter.class);
 
-    private final String[] whiteListUris = new String[]{"/login"}; //URLs do not need authorized
+    private final String[] whiteListUris = new String[]{"/login",
+        "/api-docs/**", "/swagger-ui/**"}; //URLs do not need authorized
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final RedisTemplate<String, String> redisTemplate;
 
-    public JwtAuthorizationFilter(JwtTokenProvider jwtTokenProvider) {
+    public JwtAuthorizationFilter(JwtTokenProvider jwtTokenProvider,
+        RedisTemplate<String, String> redisTemplate) {
         this.jwtTokenProvider = jwtTokenProvider;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
@@ -49,9 +55,18 @@ public class JwtAuthorizationFilter implements Filter {
 
         try {
             String token = getToken(httpServletRequest);
-            AuthenticateUser authenticateUser = getAuthenticateUser(token);
-            httpServletRequest.setAttribute("authenticatedUser", authenticateUser);
-            chain.doFilter(request, response);
+
+            String isLogout = (String) redisTemplate.opsForValue().get("Bearer " + token);
+
+            // 로그아웃이 없는(되어 있지 않은) 경우 해당 토큰은 정상적으로 작동하기
+            if (ObjectUtils.isEmpty(isLogout)) {
+                AuthenticateUser authenticateUser = getAuthenticateUser(token);
+                httpServletRequest.setAttribute("authenticatedUser", authenticateUser);
+                chain.doFilter(request, response);
+            } else {
+                httpServletResponse.sendError(HttpStatus.UNAUTHORIZED.value(),
+                    "인증 오류: Token has been logged out.");
+            }
         } catch (JsonParseException e) {
             log.error("JsonParseException" + e.getMessage());
             httpServletResponse.sendError(HttpStatus.BAD_REQUEST.value());

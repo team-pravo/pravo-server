@@ -4,23 +4,33 @@ import com.pravo.pravo.domain.member.dto.LoginDTO;
 import com.pravo.pravo.domain.member.dto.LoginResponseDTO;
 import com.pravo.pravo.domain.member.model.Member;
 import com.pravo.pravo.domain.member.repository.MemberRepository;
+import com.pravo.pravo.global.jwt.JwtTokenProvider;
+import com.pravo.pravo.global.jwt.JwtTokens;
 import com.pravo.pravo.global.jwt.JwtTokensGenerator;
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.concurrent.TimeUnit;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class MemberService {
+
     private final MemberRepository memberRepository;
     private final JwtTokensGenerator jwtTokensGenerator;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public MemberService(MemberRepository memberRepository, JwtTokensGenerator jwtTokensGenerator) {
+    private final RedisTemplate<String, String> redisTemplate;
+
+    public MemberService(MemberRepository memberRepository, JwtTokensGenerator jwtTokensGenerator,
+        RedisTemplate<String, String> redisTemplate, JwtTokenProvider jwtTokenProvider) {
         this.memberRepository = memberRepository;
         this.jwtTokensGenerator = jwtTokensGenerator;
+        this.redisTemplate = redisTemplate;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     public LoginResponseDTO login(LoginDTO loginDTO) {
-        RandomNameGenerator nameGenerator = new RandomNameGenerator();
+        RandomNameGenerator nameGenerator = new RandomNameGenerator(memberRepository);
         String uniqueRandomName = nameGenerator.generateUniqueRandomName();
 
         Member socialLoginMember = new Member();
@@ -30,10 +40,25 @@ public class MemberService {
             .orElseGet(() -> memberRepository.save(socialLoginMember));
 
         LoginResponseDTO loginResponseDTO = new LoginResponseDTO();
-        loginResponseDTO.setJwtTokens(jwtTokensGenerator.generate(loginMember.getId()));
+        JwtTokens accessToken = jwtTokensGenerator.generate(loginMember.getId());
+        loginResponseDTO.setJwtTokens(accessToken);
         loginResponseDTO.setMemberId(loginMember.getId());
         loginResponseDTO.setName(loginMember.getName());
         loginResponseDTO.setProfileImage(loginMember.getProfileImage());
+
         return loginResponseDTO;
+    }
+
+    public String logout(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        token = token.substring(7);
+        Long expiration = jwtTokenProvider.getExpiration(token);
+
+        //**로그아웃 구분하기 위해 redis에 저장**
+        redisTemplate.opsForValue()
+            .set(request.getHeader("Authorization"),
+                "logout token", expiration, TimeUnit.MILLISECONDS);
+
+        return "Successfully logged out";
     }
 }

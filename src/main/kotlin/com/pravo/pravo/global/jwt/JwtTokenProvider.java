@@ -34,6 +34,12 @@ public class JwtTokenProvider {
         return claims.getSubject();
     }
 
+    public Long getExpiration(String accessToken) {
+        Claims claims = parseClaims(accessToken);
+        Date expirationDate = claims.getExpiration();
+        return expirationDate.getTime();
+    }
+
     private Claims parseClaims(String accessToken) {
         try {
             return Jwts.parserBuilder()
