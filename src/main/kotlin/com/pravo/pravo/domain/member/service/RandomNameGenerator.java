@@ -16,7 +16,7 @@ public class RandomNameGenerator {
 
     //    private final MemberRepository memberRepository;
 //    private final Random random;
-    private static final String ADJECTIVE_FILE = "src/main/kotlin/com/pravo/pravo/domain/member/service/adjective.txt";
+    private static final String ADJECTIVE_FILE = "src/main/kotlin/com/pravo/pravo/domain/member/resources/adjective.txt";
     private static final String NOUN_FILE = "src/main/kotlin/com/pravo/pravo/domain/member/resources/noun.txt";
 
     public String generateUniqueRandomName() {
