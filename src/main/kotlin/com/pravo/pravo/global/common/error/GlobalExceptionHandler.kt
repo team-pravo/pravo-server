@@ -1,5 +1,6 @@
 package com.pravo.pravo.global.common.error
 
+import com.pravo.pravo.global.common.error.exception.NotFoundException
 import com.pravo.pravo.global.common.error.exception.UnauthorizedException
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.http.ResponseEntity
@@ -15,10 +16,11 @@ class GlobalExceptionHandler {
         return ResponseEntity.ok(response)
     }
 
-    @ExceptionHandler(EntityNotFoundException::class)
-    fun handleEntityNotFoundException(e: EntityNotFoundException): ResponseEntity<ErrorResponse> {
+    @ExceptionHandler(NotFoundException::class)
+    fun handleEntityNotFoundException(e: NotFoundException): ResponseEntity<ErrorResponse> {
         val errorCode = ErrorCode.NOT_FOUND
-        val response = ErrorResponse(errorCode)
+        val message = e.message ?: "Entity not found"
+        val response = ErrorResponse(errorCode, message)
         return ResponseEntity.ok(response)
     }
 

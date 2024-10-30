@@ -12,8 +12,9 @@ data class ErrorResponse(
 ) {
     constructor(
         errorCode: ErrorCode,
+        message: String? = null,
     ) : this(
-        message = errorCode.message,
+        message = message ?: errorCode.message,
         status = errorCode.status,
         code = errorCode.code,
     )
