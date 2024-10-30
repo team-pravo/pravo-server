@@ -20,7 +20,7 @@ public class MemberService {
     }
 
     public LoginResponseDTO login(LoginDTO loginDTO) {
-        RandomNameGenerator nameGenerator = new RandomNameGenerator(memberRepository);
+        RandomNameGenerator nameGenerator = new RandomNameGenerator();
         String uniqueRandomName = nameGenerator.generateUniqueRandomName();
 
         Member socialLoginMember = new Member();
