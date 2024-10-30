@@ -38,8 +38,8 @@ class PromiseService(
                 ?: throw NotFoundException(ErrorCode.NOT_FOUND, "약속을 찾을 수 없습니다")
 
         promise.promiseRoles
-                .find { it.member.id == memberId }
-                ?: throw UnauthorizedException(ErrorCode.UNAUTHORIZED, "약속 참가자가 아닙니다")
+            .find { it.member.id == memberId }
+            ?: throw UnauthorizedException(ErrorCode.UNAUTHORIZED, "약속 참가자가 아닙니다")
 
         val participants =
             promise.promiseRoles.map {

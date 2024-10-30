@@ -21,12 +21,14 @@ public class PromiseRepositoryImpl implements PromiseRepositoryCustom {
     public List<Promise> getPromisesByMemberIdAndStartedAtAndEndedAt(Long memberId, LocalDate startedAt, LocalDate endedAt) {
         return queryFactory
             .selectFrom(promise)
-            .join(promise.promiseRoles, promiseRole)
+            .join(promise.promiseRoles, promiseRole).fetchJoin()
+            .leftJoin(promiseRole.member).fetchJoin()
             .where(
                 memberIdEquals(memberId),
                 promiseDateAfter(startedAt),
                 promiseDateBefore(endedAt)
             )
+            .orderBy(promise.promiseDate.asc())
             .fetch();
     }
 

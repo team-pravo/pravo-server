@@ -16,6 +16,10 @@ data class PromiseResponseDto(
     val location: String?,
     @Schema(description = "약속 상태", example = "READY")
     val status: PromiseStatus,
+    @Schema(description = "모임장 이름", example = "모임장 이름")
+    val organizerName: String,
+    @Schema(description = "모임장 프로필 이미지", example = "모임장 프로필 이미지")
+    val organizerProfileImageUrl: String?,
 ) {
     companion object {
         fun of(promise: Promise): PromiseResponseDto {
@@ -25,6 +29,8 @@ data class PromiseResponseDto(
                 promiseDate = promise.promiseDate,
                 location = promise.location,
                 status = promise.status,
+                organizerName = promise.organizer.name,
+                organizerProfileImageUrl = promise.organizer.profileImage,
             )
         }
     }

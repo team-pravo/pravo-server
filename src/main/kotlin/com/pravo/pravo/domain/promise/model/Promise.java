@@ -1,6 +1,10 @@
 package com.pravo.pravo.domain.promise.model;
 
+import com.pravo.pravo.domain.member.model.Member;
 import com.pravo.pravo.domain.promise.model.enums.PromiseStatus;
+import com.pravo.pravo.domain.promise.model.enums.RoleStatus;
+import com.pravo.pravo.global.common.error.ErrorCode;
+import com.pravo.pravo.global.common.error.exception.NotFoundException;
 import com.pravo.pravo.global.common.model.BaseTimeEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -68,4 +72,12 @@ public class Promise extends BaseTimeEntity {
     }
 
     public Integer getDeposit() { return this.deposit; }
+
+    public Member getOrganizer() {
+        return promiseRoles.stream()
+            .filter(role -> role.getRole() == RoleStatus.ORGANIZER)
+            .findFirst()
+            .map(PromiseRole::getMember)
+            .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND));
+    }
 }
