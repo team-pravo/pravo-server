@@ -1,6 +1,7 @@
 package com.pravo.pravo.domain.promise.controller
 
 import com.pravo.pravo.domain.promise.dto.request.PromiseSearchDto
+import com.pravo.pravo.domain.promise.dto.response.PromiseDetailResponseDto
 import com.pravo.pravo.domain.promise.dto.response.PromiseResponseDto
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -24,4 +25,19 @@ interface PromiseApi {
         memberId: Long,
         request: PromiseSearchDto?,
     ): List<PromiseResponseDto>
+
+    @Operation(summary = "약속 상세 조회", description = "약속 상세를 조회합니다.")
+    @ApiResponse(
+        responseCode = "200",
+        description = "약속 상세 조회 성공",
+        content = [
+            Content(
+                schema = Schema(implementation = PromiseResponseDto::class),
+            ),
+        ],
+    )
+    fun getPromiseDetailByMember(
+        memberId: Long,
+        promiseId: Long,
+    ): PromiseDetailResponseDto
 }

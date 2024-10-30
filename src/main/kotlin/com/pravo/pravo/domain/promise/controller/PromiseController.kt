@@ -1,10 +1,12 @@
 package com.pravo.pravo.domain.promise.controller
 
 import com.pravo.pravo.domain.promise.dto.request.PromiseSearchDto
+import com.pravo.pravo.domain.promise.dto.response.PromiseDetailResponseDto
 import com.pravo.pravo.domain.promise.dto.response.PromiseResponseDto
 import com.pravo.pravo.domain.promise.service.PromiseService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -21,5 +23,14 @@ class PromiseController(
     ): List<PromiseResponseDto> {
         // TODO: 토큰 기반 유저 인증 추가
         return promiseService.getPromisesByMember(memberId, request?.startedAt, request?.endedAt)
+    }
+
+    @GetMapping("/{promiseId}")
+    override fun getPromiseDetailByMember(
+        @RequestParam memberId: Long,
+        @PathVariable promiseId: Long,
+    ): PromiseDetailResponseDto {
+        // TODO: 토큰 기반 유저 인증 추가
+        return promiseService.getPromiseDetailByMember(memberId, promiseId)
     }
 }
