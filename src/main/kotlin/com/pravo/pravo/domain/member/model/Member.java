@@ -19,15 +19,9 @@ public class Member extends BaseTimeEntity {
     private Long id;
 
     private String name;
-    private String email;
-    private String password;
     private String profileImage;
 
     //    private String refreshToken;
-
-    public String getPassword() {
-        return password;
-    }
 
     public long getId() {
         return this.id;
@@ -37,7 +31,7 @@ public class Member extends BaseTimeEntity {
         return this.name;
     }
 
-    public String getEmail() {
-        return this.email;
+    public String getProfileImage() {
+        return this.profileImage;
     }
 }
