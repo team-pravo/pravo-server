@@ -66,6 +66,9 @@ dependencies {
     // Redis
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
+    // Webflux
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
+
     // Test & Validation
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
