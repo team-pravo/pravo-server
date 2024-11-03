@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.concurrent.TimeUnit;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import com.pravo.pravo.global.common.error.exception.UnauthorizedException;
+import com.pravo.pravo.global.common.error.ErrorCode;
 
 @Service
 public class MemberService {
@@ -60,5 +62,11 @@ public class MemberService {
                 "logout token", expiration, TimeUnit.MILLISECONDS);
 
         return "Successfully logged out";
+    }
+
+    public void validateMemberById(Long memberId) {
+        if (!memberRepository.existsById(memberId)) {
+            throw new UnauthorizedException(ErrorCode.UNAUTHORIZED);
+        }
     }
 }
