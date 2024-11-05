@@ -13,7 +13,7 @@ class PaymentController(
 
     override fun requestOrder(
         @RequestParam memberId: Long
-    ): Long {
+    ): String {
         return paymentService.requestOrder(memberId)
     }
 }

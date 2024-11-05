@@ -13,9 +13,7 @@ import java.time.LocalDateTime;
 public class PaymentLog extends BaseTimeEntity {
 
     @Id
-    @Column(name = "payment_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String paymentId;
 
     private String mId;
     private String lastTransactionKey;
