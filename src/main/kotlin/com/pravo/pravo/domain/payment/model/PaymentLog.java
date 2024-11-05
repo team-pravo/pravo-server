@@ -45,4 +45,12 @@ public class PaymentLog extends BaseTimeEntity {
     private Long easyPayId;     // EasyPay 객체의 ID
 
     private PaymentStatus paymentStatus;
+
+    public static PaymentLog getPendingPaymentLog() {
+        return new PaymentLog();
+    }
+
+    public Long getId() {
+        return this.id;
+    }
 }
