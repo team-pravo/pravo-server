@@ -5,10 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import java.time.Instant;
 
 @Entity
 @Table(name = "member")
@@ -20,6 +17,8 @@ public class Member extends BaseTimeEntity {
 
     private String name;
     private String profileImage;
+    private String socialId;
+
 
     //    private String refreshToken;
 
@@ -31,7 +30,19 @@ public class Member extends BaseTimeEntity {
         return this.name;
     }
 
+    protected Member() {}
+
+     public Member(String name, String socialId) {
+         this.name = name;
+         this.socialId = socialId;
+     }
+
+    public String getSocialId() {
+        return this.socialId;
+    }
+
     public String getProfileImage() {
         return this.profileImage;
     }
+
 }

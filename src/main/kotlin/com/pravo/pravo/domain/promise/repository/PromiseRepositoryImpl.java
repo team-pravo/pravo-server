@@ -33,8 +33,8 @@ public class PromiseRepositoryImpl implements PromiseRepositoryCustom {
                 promiseRole.member.profileImage
             ))
             .from(promise)
-            .join(promise.promiseRoles, promiseRole).on(promiseRole.role.eq(RoleStatus.ORGANIZER)).fetchJoin()
-            .leftJoin(promiseRole.member).fetchJoin()
+            .join(promise.promiseRoles, promiseRole).on(promiseRole.role.eq(RoleStatus.ORGANIZER))
+            .leftJoin(promiseRole.member)
             .where(
                 memberIdEquals(memberId),
                 promiseDateAfter(startedAt),

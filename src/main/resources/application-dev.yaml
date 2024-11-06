@@ -20,3 +20,11 @@ spring:
         show_sql: true
         default_batch_fetch_size: 500
     open-in-view: false
+
+  jwt:
+    secret-key: ${JWT_SECRET_KEY}
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
