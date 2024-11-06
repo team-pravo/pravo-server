@@ -25,7 +25,7 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> loginPage(@RequestBody LoginDTO loginDTO) {
         return ResponseEntity.ok().body(memberService.login(loginDTO));
-        //TODO: ResponseEntity 변경
+        //TODO: 삭제 필요, 테스트용 임시 로그인 API
     }
 
     @PostMapping("/login/kakao")
