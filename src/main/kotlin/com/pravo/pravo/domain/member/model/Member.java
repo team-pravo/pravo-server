@@ -1,42 +1,48 @@
 package com.pravo.pravo.domain.member.model;
 
+import com.pravo.pravo.global.common.model.BaseTimeEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import java.time.Instant;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Table(name = "member")
-@Getter
-@Setter
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private String name;
-    private String email;
-    private String password;
     private String profileImage;
+    private String socialId;
+
 
     //    private String refreshToken;
-    private Instant createdAt;
-    private Instant updatedAt;
 
-    @PrePersist
-    public void handleBeforeCreate() {
-        this.createdAt = Instant.now();
+    public long getId() {
+        return this.id;
     }
 
-    @PreUpdate
-    public void handleBeforeUpdate() {
-        this.updatedAt = Instant.now();
+    public String getName() {
+        return this.name;
     }
+
+    protected Member() {}
+
+     public Member(String name, String socialId) {
+         this.name = name;
+         this.socialId = socialId;
+     }
+
+    public String getSocialId() {
+        return this.socialId;
+    }
+
+    public String getProfileImage() {
+        return this.profileImage;
+    }
+
 }
