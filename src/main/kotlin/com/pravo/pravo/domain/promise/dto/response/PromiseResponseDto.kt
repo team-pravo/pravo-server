@@ -1,6 +1,5 @@
 package com.pravo.pravo.domain.promise.dto.response
 
-import com.pravo.pravo.domain.promise.model.Promise
 import com.pravo.pravo.domain.promise.model.enums.PromiseStatus
 import com.querydsl.core.annotations.QueryProjection
 import io.swagger.v3.oas.annotations.media.Schema

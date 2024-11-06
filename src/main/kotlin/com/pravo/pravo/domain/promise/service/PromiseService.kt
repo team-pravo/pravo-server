@@ -9,7 +9,6 @@ import com.pravo.pravo.global.common.error.exception.NotFoundException
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
-
 @Service
 class PromiseService(
     private val promiseRepository: PromiseRepository,
@@ -26,8 +25,9 @@ class PromiseService(
         memberId: Long,
         promiseId: Long,
     ): PromiseDetailResponseDto {
-        val promise = promiseRepository.getPromiseById(promiseId)
-            ?: throw NotFoundException(ErrorCode.NOT_FOUND, "약속을 찾을 수 없습니다")
+        val promise =
+            promiseRepository.getPromiseById(promiseId)
+                ?: throw NotFoundException(ErrorCode.NOT_FOUND, "약속을 찾을 수 없습니다")
 
         val participants =
             promise.promiseRoles.map {
