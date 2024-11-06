@@ -66,6 +66,10 @@ dependencies {
 
     // Swagger
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
+
+    // Lombok
+    compileOnly("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
 }
 
 kotlin {
