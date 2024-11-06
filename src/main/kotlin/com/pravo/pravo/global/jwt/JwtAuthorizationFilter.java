@@ -29,7 +29,7 @@ public class JwtAuthorizationFilter implements Filter {
     private static final Logger log = LoggerFactory.getLogger(JwtAuthorizationFilter.class);
 
     private final String[] whiteListUris = new String[]{"/login", "/login/kakao",
-        "/api-docs/**", "/swagger-ui/**"}; //URLs do not need authorized
+        "/api-docs/**", "/swagger-ui/**", "/actuator/**"}; //URLs do not need authorized
 
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTemplate<String, String> redisTemplate;
