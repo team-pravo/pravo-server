@@ -32,10 +32,10 @@ public class MemberController {
     }
 
     @PostMapping("/login/kakao")
-    public ResponseEntity<LoginResponseDTO> loginKakao(
+    public ApiResponseDto<LoginResponseDTO> loginKakao(
         @RequestBody KakaoLoginRequestDTO kakaoLoginRequestDTO) {
         LoginRequestDTO loginRequestDto = kakaoService.fetchKakaoMemberId(kakaoLoginRequestDTO.getKakaoToken());
-        return ResponseEntity.ok().body(memberService.login(loginRequestDto));
+        return ApiResponseDto.success(memberService.login(loginRequestDto));
     }
 
     @PostMapping("/logout")
