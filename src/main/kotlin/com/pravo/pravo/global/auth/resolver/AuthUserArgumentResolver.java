@@ -31,7 +31,6 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
 
         AuthenticateUser authenticatedUser = (AuthenticateUser) request.getAttribute("authenticatedUser");
-        System.out.println("AuthUserArgumentResolver - authenticatedUser: " + authenticatedUser);  // 디버깅용 로그
 
         if (authenticatedUser == null) {
             throw new UnauthorizedException(ErrorCode.UNAUTHORIZED);
