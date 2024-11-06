@@ -1,5 +1,6 @@
 package com.pravo.pravo.global.common
 
+import com.pravo.pravo.global.common.error.ErrorCode
 import io.swagger.v3.oas.annotations.media.Schema
 
 class ApiResponseDto<T>(
@@ -39,11 +40,20 @@ class ApiResponseDto<T>(
             )
         }
 
+        @JvmStatic
         fun error(message: String, status: Int = 400, code: String = "E01"): ApiResponseDto<Nothing> {
             return ApiResponseDto(
                 message = message,
                 status = status,
                 code = code
+            )
+        }
+
+        fun error(errorCode: ErrorCode): ApiResponseDto<Nothing> {
+            return ApiResponseDto(
+                message = errorCode.message,
+                status = errorCode.status,
+                code = errorCode.code
             )
         }
     }

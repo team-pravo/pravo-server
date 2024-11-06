@@ -2,6 +2,8 @@ package com.pravo.pravo.global.jwt;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pravo.pravo.global.common.ApiResponseDto;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -17,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.PatternMatchUtils;
 
@@ -30,11 +33,15 @@ public class JwtAuthorizationFilter implements Filter {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTemplate<String, String> redisTemplate;
+    private final ObjectMapper objectMapper;
+
+
 
     public JwtAuthorizationFilter(JwtTokenProvider jwtTokenProvider,
-        RedisTemplate<String, String> redisTemplate) {
+        RedisTemplate<String, String> redisTemplate, ObjectMapper objectMapper) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.redisTemplate = redisTemplate;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -49,7 +56,8 @@ public class JwtAuthorizationFilter implements Filter {
         }
 
         if (!isContainToken(httpServletRequest)) {
-            httpServletResponse.sendError(HttpStatus.UNAUTHORIZED.value(), "인증 오류");
+            sendErrorResponse(httpServletResponse,
+                ApiResponseDto.error("인증되지 않은 사용자입니다", HttpStatus.UNAUTHORIZED.value(), "E01"));
             return;
         }
 
@@ -64,18 +72,21 @@ public class JwtAuthorizationFilter implements Filter {
                 httpServletRequest.setAttribute("authenticatedUser", authenticateUser);
                 chain.doFilter(request, response);
             } else {
-                httpServletResponse.sendError(HttpStatus.UNAUTHORIZED.value(),
-                    "인증 오류: Token has been logged out.");
+                sendErrorResponse(httpServletResponse,
+                    ApiResponseDto.error("로그아웃된 토큰입니다", HttpStatus.UNAUTHORIZED.value(), "E01"));
             }
         } catch (JsonParseException e) {
             log.error("JsonParseException" + e.getMessage());
-            httpServletResponse.sendError(HttpStatus.BAD_REQUEST.value());
+            sendErrorResponse(httpServletResponse,
+                ApiResponseDto.error("잘못된 요청입니다", HttpStatus.BAD_REQUEST.value(), "E01"));
         } catch (MalformedJwtException | UnsupportedJwtException e) {
             log.error("JwtException" + e.getMessage());
-            httpServletResponse.sendError(HttpStatus.UNAUTHORIZED.value(), "인증 오류");
+            sendErrorResponse(httpServletResponse,
+                ApiResponseDto.error("유효하지 않은 토큰입니다", HttpStatus.UNAUTHORIZED.value(), "E01"));
         } catch (ExpiredJwtException e) {
             log.error("JwtTokenExpired" + e.getMessage());
-            httpServletResponse.sendError(HttpStatus.FORBIDDEN.value(), "토큰이 만료 되었습니다");
+            sendErrorResponse(httpServletResponse,
+                ApiResponseDto.error("유효하지 않은 토큰입니다", HttpStatus.UNAUTHORIZED.value(), "E01"));
         }
     }
 
@@ -96,5 +107,15 @@ public class JwtAuthorizationFilter implements Filter {
     private AuthenticateUser getAuthenticateUser(String token) throws JsonProcessingException {
         String claimsSubject = jwtTokenProvider.extractSubject(token);
         return new AuthenticateUser(claimsSubject);
+    }
+
+    private void sendErrorResponse(HttpServletResponse response, ApiResponseDto<?> errorResponse)
+        throws IOException {
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding("UTF-8");
+        response.setStatus(errorResponse.getStatus());
+
+        String jsonResponse = objectMapper.writeValueAsString(errorResponse);
+        response.getWriter().write(jsonResponse);
     }
 }
