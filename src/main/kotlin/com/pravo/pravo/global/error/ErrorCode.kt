@@ -1,4 +1,4 @@
-package com.pravo.pravo.global.common.error
+package com.pravo.pravo.global.error
 
 enum class ErrorCode(
     val message: String,

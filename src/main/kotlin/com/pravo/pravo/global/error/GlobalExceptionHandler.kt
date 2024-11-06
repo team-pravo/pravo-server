@@ -1,6 +1,6 @@
-package com.pravo.pravo.global.common.error
+package com.pravo.pravo.global.error
 
-import com.pravo.pravo.global.common.error.exception.UnauthorizedException
+import com.pravo.pravo.global.error.exception.UnauthorizedException
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
