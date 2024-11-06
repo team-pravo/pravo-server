@@ -1,6 +1,8 @@
 package com.pravo.pravo.domain.member.service;
 
 import com.pravo.pravo.domain.member.repository.MemberRepository;
+import com.pravo.pravo.global.common.ApiResponseDto;
+import com.pravo.pravo.global.common.error.ErrorCode;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,6 +16,7 @@ public class RandomNameGenerator {
 
     private static final String ADJECTIVE_FILE = "src/main/kotlin/com/pravo/pravo/domain/member/resources/adjective.txt";
     private static final String NOUN_FILE = "src/main/kotlin/com/pravo/pravo/domain/member/resources/noun.txt";
+    // TODO: 상대경로로 바꾸기
     private final MemberRepository memberRepository;
     //    private final Random random;
 
@@ -40,10 +43,8 @@ public class RandomNameGenerator {
                 nickname =
                     index.get(ran) + " " + index2.get(ran2) + " " + (100 + random.nextInt(900));
             } catch (IOException e) {
-                System.out.println("파일을 읽는 중 오류가 발생했습니다: " + e.getMessage());
-                e.printStackTrace();
+                throw new RuntimeException("파일을 읽어오는데 실패했습니다.");
             }
-            System.out.println("nickname: " + nickname);
         } while (memberRepository.existsByName(nickname));
         return nickname;
     }

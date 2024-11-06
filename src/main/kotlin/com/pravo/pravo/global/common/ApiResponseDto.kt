@@ -14,6 +14,7 @@ class ApiResponseDto<T>(
     val data: T? = null,
 ) {
     companion object {
+        @JvmStatic
         fun success(): ApiResponseDto<Unit> {
             return ApiResponseDto(
                 message = "Success",
@@ -22,6 +23,7 @@ class ApiResponseDto<T>(
             )
         }
 
+        @JvmStatic
         fun <T> success(data: T): ApiResponseDto<T> {
             return ApiResponseDto(
                 message = "Success",
@@ -31,6 +33,7 @@ class ApiResponseDto<T>(
             )
         }
 
+        @JvmStatic
         fun <T> success(
             message: String,
             data: T,
@@ -56,6 +59,7 @@ class ApiResponseDto<T>(
             )
         }
 
+        @JvmStatic
         fun error(errorCode: ErrorCode): ApiResponseDto<Nothing> {
             return ApiResponseDto(
                 message = errorCode.message,

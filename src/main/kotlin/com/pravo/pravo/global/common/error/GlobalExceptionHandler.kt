@@ -16,6 +16,13 @@ class GlobalExceptionHandler {
         return ResponseEntity.ok(response)
     }
 
+    @ExceptionHandler(RuntimeException::class)
+    fun handleRuntimeException(e: RuntimeException): ResponseEntity<ApiResponseDto<Nothing>> {
+        val errorCode = ErrorCode.INTERNAL_SERVER_ERROR
+        val response = ApiResponseDto.error(errorCode.message, errorCode.status, errorCode.code)
+        return ResponseEntity.ok(response)
+    }
+
     @ExceptionHandler(EntityNotFoundException::class)
     fun handleEntityNotFoundException(e: EntityNotFoundException): ResponseEntity<ApiResponseDto<Nothing>> {
         val errorCode = ErrorCode.NOT_FOUND

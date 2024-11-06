@@ -1,13 +1,12 @@
 package com.pravo.pravo.domain.member.service;
 
-import com.pravo.pravo.domain.member.dto.LoginDTO;
+import com.pravo.pravo.domain.member.dto.LoginRequestDTO;
 import com.pravo.pravo.domain.member.dto.LoginResponseDTO;
 import com.pravo.pravo.domain.member.model.Member;
 import com.pravo.pravo.domain.member.repository.MemberRepository;
 import com.pravo.pravo.global.jwt.JwtTokenProvider;
 import com.pravo.pravo.global.jwt.JwtTokens;
 import com.pravo.pravo.global.jwt.JwtTokensGenerator;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.concurrent.TimeUnit;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -31,14 +30,12 @@ public class MemberService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public LoginResponseDTO login(LoginDTO loginDTO) {
+    public LoginResponseDTO login(LoginRequestDTO loginRequestDto) {
         // TODO: 이미 가입한 회원인지 확인 필요
         RandomNameGenerator nameGenerator = new RandomNameGenerator(memberRepository);
         String uniqueRandomName = nameGenerator.generateUniqueRandomName();
 
-        Member socialLoginMember = new Member();
-        socialLoginMember.setName(uniqueRandomName);
-        socialLoginMember.setSocialId(loginDTO.getSocialId());
+        Member socialLoginMember = new Member(uniqueRandomName, loginRequestDto.getSocialId());
         Member loginMember = memberRepository.findBySocialId(socialLoginMember.getSocialId())
             .orElseGet(() -> memberRepository.save(socialLoginMember));
 
@@ -52,15 +49,14 @@ public class MemberService {
         return loginResponseDTO;
     }
 
-    public String logout(HttpServletRequest request) {
-        String token = request.getHeader("Authorization");
+    public String logout(String token) {
+        // remove Bearer
         token = token.substring(7);
         Long expiration = jwtTokenProvider.getExpiration(token);
 
         //**로그아웃 구분하기 위해 redis에 저장**
         redisTemplate.opsForValue()
-            .set(request.getHeader("Authorization"),
-                "logout token", expiration, TimeUnit.MILLISECONDS);
+            .set(token, "logout token", expiration, TimeUnit.MILLISECONDS);
 
         return "Successfully logged out";
     }

@@ -19,6 +19,7 @@ public class Member extends BaseTimeEntity {
     private String profileImage;
     private String socialId;
 
+
     //    private String refreshToken;
 
     public long getId() {
@@ -29,13 +30,12 @@ public class Member extends BaseTimeEntity {
         return this.name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    protected Member() {}
 
-    public void setSocialId(String socialId) {
-        this.socialId = socialId;
-    }
+     public Member(String name, String socialId) {
+         this.name = name;
+         this.socialId = socialId;
+     }
 
     public String getSocialId() {
         return this.socialId;

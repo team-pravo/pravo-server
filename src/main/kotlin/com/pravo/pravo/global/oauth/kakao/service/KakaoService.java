@@ -2,7 +2,7 @@ package com.pravo.pravo.global.oauth.kakao.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pravo.pravo.domain.member.dto.LoginDTO;
+import com.pravo.pravo.domain.member.dto.LoginRequestDTO;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -12,10 +12,11 @@ public class KakaoService {
 
     private final String UserInfoUri = "https://kapi.kakao.com/v2/user/me";
 
-    public LoginDTO fetchKakaoMemberId(String kakaoToken) {
+    public LoginRequestDTO fetchKakaoMemberId(String kakaoToken) {
 
         //Http 요청
         WebClient wc = WebClient.create(UserInfoUri);
+        //TODO: WebClient vs OpenFeign
         String response = wc.post()
             .uri(UserInfoUri)
             .header("Authorization", "Bearer " + kakaoToken)
@@ -25,16 +26,14 @@ public class KakaoService {
             .block();
 
         ObjectMapper objectMapper = new ObjectMapper();
-        LoginDTO loginDTO = new LoginDTO();
-
         try {
             Map<String, Object> responseMap = objectMapper.readValue(response, Map.class);
             String socialId = String.valueOf(responseMap.get("id"));
-            loginDTO.setSocialId(socialId);
+            return new LoginRequestDTO(socialId);
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();
+            return null;
         }
-        return loginDTO;
     }
 }

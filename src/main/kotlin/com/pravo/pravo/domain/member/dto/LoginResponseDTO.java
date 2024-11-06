@@ -5,14 +5,14 @@ import com.pravo.pravo.global.jwt.JwtTokens;
 
 public class LoginResponseDTO {
 
-    @JsonProperty("jwt_tokens")
+    @JsonProperty("jwtTokens")
     private JwtTokens jwtTokens;
 
-    @JsonProperty("member_id")
+    @JsonProperty("memberId")
     private Long memberId;
     @JsonProperty("name")
     private String name;
-    @JsonProperty("profile_image")
+    @JsonProperty("profileImage")
     private String profileImage;
 
     public JwtTokens getJwtTokens() {
