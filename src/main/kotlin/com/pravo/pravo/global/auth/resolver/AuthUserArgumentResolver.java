@@ -1,8 +1,8 @@
 package com.pravo.pravo.global.auth.resolver;
 
 import com.pravo.pravo.global.auth.annotation.AuthUser;
-import com.pravo.pravo.global.common.error.ErrorCode;
-import com.pravo.pravo.global.common.error.exception.UnauthorizedException;
+import com.pravo.pravo.global.error.ErrorCode;
+import com.pravo.pravo.global.error.exception.UnauthorizedException;
 import com.pravo.pravo.global.jwt.AuthenticateUser;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
