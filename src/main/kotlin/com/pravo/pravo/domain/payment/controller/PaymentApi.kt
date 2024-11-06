@@ -1,5 +1,6 @@
 package com.pravo.pravo.domain.payment.controller
 
+import com.pravo.pravo.global.external.toss.dto.request.ConfirmRequestDto
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 
@@ -13,6 +14,6 @@ interface PaymentApi {
 
     @Operation(summary = "결제 승인", description = "paymentKey에 해당하는 결제를 검증하고 승인합니다.")
     fun confirmOrder(
-        confirmRequestDto: confirmRequestDto
+        confirmRequestDto: ConfirmRequestDto
     )
 }

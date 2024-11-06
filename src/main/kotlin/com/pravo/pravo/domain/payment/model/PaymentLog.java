@@ -2,10 +2,7 @@ package com.pravo.pravo.domain.payment.model;
 
 import com.pravo.pravo.domain.payment.enums.PaymentStatus;
 import com.pravo.pravo.global.common.model.BaseTimeEntity;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
@@ -44,11 +41,17 @@ public class PaymentLog extends BaseTimeEntity {
 
     private PaymentStatus paymentStatus;
 
-    public static PaymentLog getPendingPaymentLog() {
-        return new PaymentLog();
+    private PaymentLog setPaymentId(String id) {
+        this.paymentId = id;
+        return this;
     }
 
-    public Long getId() {
-        return this.id;
+    public static PaymentLog getPendingPaymentLog(String id) {
+        PaymentLog paymentLog = new PaymentLog();
+        return paymentLog.setPaymentId(id);
+    }
+
+    public String getPaymentId() {
+        return this.paymentId;
     }
 }
