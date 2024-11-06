@@ -23,9 +23,3 @@ spring:
 
   jwt:
     secret-key: ${JWT_SECRET_KEY}
-
-  data:
-    redis:
-      host: ${REDIS_HOST_LOCAL}
-      port: ${REDIS_PORT_LOCAL}
-      password: ${REDIS_PW_LOCAL}
