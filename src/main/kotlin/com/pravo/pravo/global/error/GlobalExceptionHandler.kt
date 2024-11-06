@@ -15,7 +15,7 @@ class GlobalExceptionHandler {
     protected fun handleException(exception: Exception): ResponseEntity<ApiResponseDto<Nothing>> {
         val errorCode = ErrorCode.INTERNAL_SERVER_ERROR
         val response = ApiResponseDto.error(errorCode.message, errorCode.status, errorCode.code)
-        return ResponseEntity.ok(response)
+        return ResponseEntity.status(errorCode.status).body(response)
     }
 
 //    @ExceptionHandler(FeignException::class)
@@ -27,27 +27,27 @@ class GlobalExceptionHandler {
     fun handleRuntimeException(e: RuntimeException): ResponseEntity<ApiResponseDto<Nothing>> {
         val errorCode = ErrorCode.INTERNAL_SERVER_ERROR
         val response = ApiResponseDto.error(errorCode.message, errorCode.status, errorCode.code)
-        return ResponseEntity.ok(response)
+        return ResponseEntity.status(errorCode.status).body(response)
     }
 
     @ExceptionHandler(EntityNotFoundException::class)
     fun handleEntityNotFoundException(e: EntityNotFoundException): ResponseEntity<ApiResponseDto<Nothing>> {
         val errorCode = ErrorCode.NOT_FOUND
         val response = ApiResponseDto.error(errorCode.message, errorCode.status, errorCode.code)
-        return ResponseEntity.ok(response)
+        return ResponseEntity.status(errorCode.status).body(response)
     }
 
     @ExceptionHandler(AccessDeniedException::class)
     fun handleAuthenticationException(exception: AccessDeniedException): ResponseEntity<ApiResponseDto<Nothing>> {
         val errorCode = ErrorCode.UNAUTHORIZED
         val response = ApiResponseDto.error(errorCode.message, errorCode.status, errorCode.code)
-        return ResponseEntity.ok(response)
+        return ResponseEntity.status(errorCode.status).body(response)
     }
 
     @ExceptionHandler(UnauthorizedException::class)
     fun handleUnauthorizedException(e: UnauthorizedException): ResponseEntity<ApiResponseDto<Nothing>> {
         val errorCode = ErrorCode.UNAUTHORIZED
         val response = ApiResponseDto.error(errorCode.message, errorCode.status, errorCode.code)
-        return ResponseEntity.ok(response)
+        return ResponseEntity.status(errorCode.status).body(response)
     }
 }
