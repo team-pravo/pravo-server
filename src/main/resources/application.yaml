@@ -8,6 +8,11 @@ spring:
       max-file-size: 3MB
       max-request-size: 5MB
 
+  data:
+    redis:
+      host: redis
+      port: 6379
+
 springdoc:
   packages-to-scan: com.pravo.pravo
   default-consumes-media-type: application/json;charset=UTF-8
@@ -22,3 +27,4 @@ springdoc:
     path: /api-docs/json
     enabled: true
   show-login-endpoint: true
+
