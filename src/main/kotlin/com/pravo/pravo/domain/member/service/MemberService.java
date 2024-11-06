@@ -32,6 +32,7 @@ public class MemberService {
     }
 
     public LoginResponseDTO login(LoginDTO loginDTO) {
+        // TODO: 이미 가입한 회원인지 확인 필요
         RandomNameGenerator nameGenerator = new RandomNameGenerator(memberRepository);
         String uniqueRandomName = nameGenerator.generateUniqueRandomName();
 

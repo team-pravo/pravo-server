@@ -2,6 +2,7 @@ package com.pravo.pravo.domain.promise.controller
 
 import com.pravo.pravo.domain.promise.dto.request.PromiseSearchDto
 import com.pravo.pravo.domain.promise.dto.response.PromiseResponseDto
+import com.pravo.pravo.global.common.ApiResponseDto
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
@@ -23,5 +24,5 @@ interface PromiseApi {
     fun getPromisesByMember(
         memberId: Long,
         request: PromiseSearchDto?,
-    ): List<PromiseResponseDto>
+    ): ApiResponseDto<List<PromiseResponseDto>>
 }

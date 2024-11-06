@@ -25,6 +25,7 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> loginPage(@RequestBody LoginDTO loginDTO) {
         return ResponseEntity.ok().body(memberService.login(loginDTO));
+        //TODO: ResponseEntity 변경
     }
 
     @PostMapping("/login/kakao")
