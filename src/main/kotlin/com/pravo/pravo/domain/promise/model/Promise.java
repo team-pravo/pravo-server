@@ -11,10 +11,10 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -44,7 +44,8 @@ public class Promise extends BaseTimeEntity {
     @Column
     private Integer deposit;
 
-    @OneToMany(mappedBy = "promise", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "promise_id")
     private List<PromiseRole> promiseRoles = new ArrayList<>();
 
     public Long getId() {
@@ -72,12 +73,4 @@ public class Promise extends BaseTimeEntity {
     }
 
     public Integer getDeposit() { return this.deposit; }
-
-    public Member getOrganizer() {
-        return promiseRoles.stream()
-            .filter(role -> role.getRole() == RoleStatus.ORGANIZER)
-            .findFirst()
-            .map(PromiseRole::getMember)
-            .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND));
-    }
 }

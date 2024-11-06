@@ -1,8 +1,11 @@
 package com.pravo.pravo.domain.promise.repository;
 
-import com.pravo.pravo.domain.promise.model.Promise;
+import com.pravo.pravo.domain.promise.dto.response.PromiseResponseDto;
+import com.pravo.pravo.domain.promise.dto.response.QPromiseResponseDto;
 import static com.pravo.pravo.domain.promise.model.QPromise.promise;
 import static com.pravo.pravo.domain.promise.model.QPromiseRole.promiseRole;
+
+import com.pravo.pravo.domain.promise.model.enums.RoleStatus;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
@@ -18,10 +21,19 @@ public class PromiseRepositoryImpl implements PromiseRepositoryCustom {
     }
 
     @Override
-    public List<Promise> getPromisesByMemberIdAndStartedAtAndEndedAt(Long memberId, LocalDate startedAt, LocalDate endedAt) {
+    public List<PromiseResponseDto> getPromisesByMemberIdAndStartedAtAndEndedAt(Long memberId, LocalDate startedAt, LocalDate endedAt) {
         return queryFactory
-            .selectFrom(promise)
-            .join(promise.promiseRoles, promiseRole).fetchJoin()
+            .select(new QPromiseResponseDto(
+                promise.id,
+                promise.name,
+                promise.promiseDate,
+                promise.location,
+                promise.status,
+                promiseRole.member.name,
+                promiseRole.member.profileImage
+            ))
+            .from(promise)
+            .join(promise.promiseRoles, promiseRole).on(promiseRole.role.eq(RoleStatus.ORGANIZER)).fetchJoin()
             .leftJoin(promiseRole.member).fetchJoin()
             .where(
                 memberIdEquals(memberId),
