@@ -2,7 +2,7 @@ package com.pravo.pravo.domain.member.service;
 
 import com.pravo.pravo.domain.member.repository.MemberRepository;
 import com.pravo.pravo.global.common.ApiResponseDto;
-import com.pravo.pravo.global.common.error.ErrorCode;
+import com.pravo.pravo.global.error.ErrorCode;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

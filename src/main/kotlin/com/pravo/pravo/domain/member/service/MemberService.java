@@ -10,8 +10,8 @@ import com.pravo.pravo.global.jwt.JwtTokensGenerator;
 import java.util.concurrent.TimeUnit;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import com.pravo.pravo.global.common.error.exception.UnauthorizedException;
-import com.pravo.pravo.global.common.error.ErrorCode;
+import com.pravo.pravo.global.error.exception.UnauthorizedException;
+import com.pravo.pravo.global.error.ErrorCode;
 
 @Service
 public class MemberService {
