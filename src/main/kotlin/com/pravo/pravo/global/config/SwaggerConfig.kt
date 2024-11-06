@@ -12,12 +12,13 @@ import org.springframework.context.annotation.Configuration
 class SwaggerConfig {
     @Bean
     fun openAPI(): OpenAPI {
-        val securityScheme: SecurityScheme = SecurityScheme()
-            .type(SecurityScheme.Type.HTTP)
-            .scheme("bearer")
-            .bearerFormat("JWT")
-            .`in`(SecurityScheme.In.HEADER)
-            .name("Authorization")
+        val securityScheme: SecurityScheme =
+            SecurityScheme()
+                .type(SecurityScheme.Type.HTTP)
+                .scheme("bearer")
+                .bearerFormat("JWT")
+                .`in`(SecurityScheme.In.HEADER)
+                .name("Authorization")
         return OpenAPI()
             .servers(listOf(Server().url("/")))
             .components(Components().addSecuritySchemes("jwt", securityScheme))

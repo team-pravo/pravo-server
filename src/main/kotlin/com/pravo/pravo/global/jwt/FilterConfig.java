@@ -11,7 +11,7 @@ public class FilterConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTemplate<String, String> redisTemplate;
-    ObjectMapper objectMapper;
+    ObjectMapper objectMapper = new ObjectMapper();
 
     public FilterConfig(JwtTokenProvider jwtTokenProvider,
         RedisTemplate<String, String> redisTemplate) {

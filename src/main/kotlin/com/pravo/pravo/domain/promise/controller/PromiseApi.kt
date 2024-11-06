@@ -2,12 +2,16 @@ package com.pravo.pravo.domain.promise.controller
 
 import com.pravo.pravo.domain.promise.dto.request.PromiseSearchDto
 import com.pravo.pravo.domain.promise.dto.response.PromiseResponseDto
+import com.pravo.pravo.global.auth.annotation.AuthUser
 import com.pravo.pravo.global.common.ApiResponseDto
+import com.pravo.pravo.global.jwt.AuthenticateUser
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.web.bind.annotation.ModelAttribute
 
 @Tag(name = "Promise", description = "약속 API")
 interface PromiseApi {
@@ -22,7 +26,7 @@ interface PromiseApi {
         ],
     )
     fun getPromisesByMember(
-        memberId: Long,
-        request: PromiseSearchDto?,
+        @ModelAttribute request: PromiseSearchDto?,
+        @Parameter(hidden = true) @AuthUser authenticatedUser: AuthenticateUser,
     ): ApiResponseDto<List<PromiseResponseDto>>
 }

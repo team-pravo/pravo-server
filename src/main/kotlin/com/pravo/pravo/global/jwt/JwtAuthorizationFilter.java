@@ -106,7 +106,9 @@ public class JwtAuthorizationFilter implements Filter {
 
     private AuthenticateUser getAuthenticateUser(String token) throws JsonProcessingException {
         String claimsSubject = jwtTokenProvider.extractSubject(token);
-        return new AuthenticateUser(claimsSubject);
+        long memberId = Long.parseLong(claimsSubject);
+        log.info("Parsed memberId: {}", memberId);
+        return new AuthenticateUser(memberId);
     }
 
     private void sendErrorResponse(HttpServletResponse response, ApiResponseDto<?> errorResponse)

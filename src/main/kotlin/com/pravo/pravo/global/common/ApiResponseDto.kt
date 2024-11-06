@@ -11,14 +11,14 @@ class ApiResponseDto<T>(
     @Schema(description = "응답 코드")
     val code: String,
     @Schema(description = "응답 데이터")
-    val data: T? = null
-    ) {
+    val data: T? = null,
+) {
     companion object {
         fun success(): ApiResponseDto<Unit> {
             return ApiResponseDto(
                 message = "Success",
                 status = 200,
-                code = "S01"
+                code = "S01",
             )
         }
 
@@ -27,25 +27,32 @@ class ApiResponseDto<T>(
                 message = "Success",
                 status = 200,
                 code = "S01",
-                data = data
+                data = data,
             )
         }
 
-        fun <T> success(message: String, data: T): ApiResponseDto<T> {
+        fun <T> success(
+            message: String,
+            data: T,
+        ): ApiResponseDto<T> {
             return ApiResponseDto(
                 message = message,
                 status = 200,
                 code = "S01",
-                data = data
+                data = data,
             )
         }
 
         @JvmStatic
-        fun error(message: String, status: Int = 400, code: String = "E01"): ApiResponseDto<Nothing> {
+        fun error(
+            message: String,
+            status: Int = 400,
+            code: String = "E01",
+        ): ApiResponseDto<Nothing> {
             return ApiResponseDto(
                 message = message,
                 status = status,
-                code = code
+                code = code,
             )
         }
 
@@ -53,7 +60,7 @@ class ApiResponseDto<T>(
             return ApiResponseDto(
                 message = errorCode.message,
                 status = errorCode.status,
-                code = errorCode.code
+                code = errorCode.code,
             )
         }
     }
