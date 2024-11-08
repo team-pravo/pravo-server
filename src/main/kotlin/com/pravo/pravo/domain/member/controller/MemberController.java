@@ -12,9 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api")
 public class MemberController {
 
     private final MemberService memberService;
@@ -26,7 +28,8 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> loginPage(@RequestBody LoginRequestDTO loginRequestDto) {
+    public ResponseEntity<LoginResponseDTO> loginPage(
+        @RequestBody LoginRequestDTO loginRequestDto) {
         return ResponseEntity.ok().body(memberService.login(loginRequestDto));
         //TODO: 삭제 필요, 테스트용 임시 로그인 API
     }
@@ -34,7 +37,8 @@ public class MemberController {
     @PostMapping("/login/kakao")
     public ApiResponseDto<LoginResponseDTO> loginKakao(
         @RequestBody KakaoLoginRequestDTO kakaoLoginRequestDTO) {
-        LoginRequestDTO loginRequestDto = kakaoService.fetchKakaoMemberId(kakaoLoginRequestDTO.getKakaoToken());
+        LoginRequestDTO loginRequestDto = kakaoService.fetchKakaoMemberId(
+            kakaoLoginRequestDTO.getKakaoToken());
         return ApiResponseDto.success(memberService.login(loginRequestDto));
     }
 
