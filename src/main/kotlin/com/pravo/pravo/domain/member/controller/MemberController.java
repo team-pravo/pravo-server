@@ -28,7 +28,8 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> loginPage(@RequestBody LoginRequestDTO loginRequestDto) {
+    public ResponseEntity<LoginResponseDTO> loginPage(
+        @RequestBody LoginRequestDTO loginRequestDto) {
         return ResponseEntity.ok().body(memberService.login(loginRequestDto));
         //TODO: 삭제 필요, 테스트용 임시 로그인 API
     }
@@ -36,7 +37,8 @@ public class MemberController {
     @PostMapping("/login/kakao")
     public ApiResponseDto<LoginResponseDTO> loginKakao(
         @RequestBody KakaoLoginRequestDTO kakaoLoginRequestDTO) {
-        LoginRequestDTO loginRequestDto = kakaoService.fetchKakaoMemberId(kakaoLoginRequestDTO.getKakaoToken());
+        LoginRequestDTO loginRequestDto = kakaoService.fetchKakaoMemberId(
+            kakaoLoginRequestDTO.getKakaoToken());
         return ApiResponseDto.success(memberService.login(loginRequestDto));
     }
 
