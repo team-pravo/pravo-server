@@ -28,7 +28,7 @@ public class JwtAuthorizationFilter implements Filter {
 
     private static final Logger log = LoggerFactory.getLogger(JwtAuthorizationFilter.class);
 
-    private final String[] whiteListUris = new String[]{"/api/login", "/api/login/**",
+    private final String[] whiteListUris = new String[]{"/api/login/**",
         "/api-docs/**", "/swagger-ui/**", "/actuator/**"}; //URLs do not need authorized
 
     private final JwtTokenProvider jwtTokenProvider;
