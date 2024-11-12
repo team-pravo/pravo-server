@@ -53,8 +53,8 @@ jobs:
       - name: Docker image 빌드 및 푸시
         run: |
           docker build --platform linux/amd64 \
-            -t pravo0904/pravo-server:latest . 
-          docker push pravo0904/pravo-server:latest
+            -t pravo0904/pravo-server . 
+          docker push pravo0904/pravo-server
 
   deploy-cd:
     needs: deploy-ci
