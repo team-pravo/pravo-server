@@ -2,6 +2,7 @@ package com.pravo.pravo.domain.payment.controller
 
 import com.pravo.pravo.global.external.toss.dto.request.ConfirmRequestDto
 import com.pravo.pravo.domain.payment.service.PaymentService
+import com.pravo.pravo.global.jwt.AuthenticateUser
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -17,9 +18,9 @@ class PaymentController(
 
     @GetMapping
     override fun requestOrder(
-        @RequestParam memberId: Long
+        authenticatedUser: AuthenticateUser
     ): String {
-        return paymentService.requestOrder(memberId)
+        return paymentService.requestOrder(authenticatedUser.memberId)
     }
 
     @PostMapping
