@@ -3,7 +3,6 @@ package com.pravo.pravo.global.common.error
 import com.pravo.pravo.global.common.ApiResponseDto
 import com.pravo.pravo.global.error.ErrorCode
 import com.pravo.pravo.global.error.exception.UnauthorizedException
-import feign.FeignException
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler

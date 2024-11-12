@@ -14,5 +14,5 @@ data class CashReceiptHistoryDto(
     val issueStatus: String,
     val failure: FailureDto,
     val customerIdentityNumber: String,
-    val requestedAt: String
+    val requestedAt: String,
 )

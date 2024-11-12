@@ -12,5 +12,5 @@ data class CardDto(
     val cardType: String,
     val ownerType: String,
     val acquireStatus: String,
-    val amount: Int
+    val amount: Int,
 )

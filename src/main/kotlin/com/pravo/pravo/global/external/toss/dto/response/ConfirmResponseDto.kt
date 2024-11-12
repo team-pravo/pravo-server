@@ -1,6 +1,6 @@
 package com.pravo.pravo.global.external.toss.dto.response
 
-data class ConfirmResponseDto (
+data class ConfirmResponseDto(
     val mId: String,
     val lastTransactionKey: String?,
     val paymentKey: String,
@@ -8,12 +8,12 @@ data class ConfirmResponseDto (
     val orderName: String,
     val taxExemptionAmount: Int?,
     val status: String,
-    val requestedAt: String, // ISO 형식의 String 또는 DateTimeFormatter로 변환 가능
+    val requestedAt: String,
     val approvedAt: String?,
     val useEscrow: Boolean,
     val cultureExpense: Boolean,
     val card: CardDto?,
-    val virtualAccount: VirtualAccountDto?, // 타입을 알 수 없을 때는 Any로 정의
+    val virtualAccount: VirtualAccountDto?,
     val transfer: Any?,
     val mobilePhone: Any?,
     val giftCertificate: Any?,
@@ -37,13 +37,13 @@ data class ConfirmResponseDto (
     val taxFreeAmount: Int,
     val method: String?,
     val version: String,
-    val metadata: Any
+    val metadata: Any,
 )
 
 data class ReceiptDto(
-    val url: String
+    val url: String,
 )
 
 data class CheckOutDto(
-    val url: String
+    val url: String,
 )
