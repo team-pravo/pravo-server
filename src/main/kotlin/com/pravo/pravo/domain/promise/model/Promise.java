@@ -3,8 +3,6 @@ package com.pravo.pravo.domain.promise.model;
 import com.pravo.pravo.domain.member.model.Member;
 import com.pravo.pravo.domain.promise.model.enums.PromiseStatus;
 import com.pravo.pravo.domain.promise.model.enums.RoleStatus;
-import com.pravo.pravo.global.common.error.ErrorCode;
-import com.pravo.pravo.global.common.error.exception.NotFoundException;
 import com.pravo.pravo.global.common.model.BaseTimeEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

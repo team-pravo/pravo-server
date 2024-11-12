@@ -5,8 +5,8 @@ import com.pravo.pravo.domain.promise.dto.response.PromiseDetailResponseDto
 import com.pravo.pravo.domain.promise.dto.response.PromiseResponseDto
 import com.pravo.pravo.domain.promise.repository.PromiseRepository
 import com.pravo.pravo.domain.promise.repository.PromiseRepositoryImpl
-import com.pravo.pravo.global.common.error.ErrorCode
-import com.pravo.pravo.global.common.error.exception.NotFoundException
+import com.pravo.pravo.global.error.ErrorCode
+import com.pravo.pravo.global.error.exception.NotFoundException
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
