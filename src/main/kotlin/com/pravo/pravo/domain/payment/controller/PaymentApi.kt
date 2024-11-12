@@ -1,5 +1,6 @@
 package com.pravo.pravo.domain.payment.controller
 
+import com.pravo.pravo.global.common.ApiResponseDto
 import com.pravo.pravo.global.external.toss.dto.request.ConfirmRequestDto
 import com.pravo.pravo.global.jwt.AuthenticateUser
 import io.swagger.v3.oas.annotations.Operation
@@ -13,7 +14,7 @@ interface PaymentApi {
     @SecurityRequirement(name = "jwt")
     fun requestOrder(
         authenticatedUser: AuthenticateUser
-    ): String
+    ): ApiResponseDto<String>
 
     @Operation(summary = "결제 승인", description = "paymentKey에 해당하는 결제를 검증하고 승인합니다.")
     @SecurityRequirement(name = "jwt")
