@@ -1,6 +1,5 @@
 package com.pravo.pravo.domain.promise.model;
 
-import com.pravo.pravo.domain.member.model.Member;
 import com.pravo.pravo.domain.promise.model.enums.PromiseStatus;
 import com.pravo.pravo.domain.promise.model.enums.RoleStatus;
 import com.pravo.pravo.global.common.error.ErrorCode;
@@ -19,8 +18,13 @@ import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.Where;
 
 @Entity
+@SQLRestriction("deleted = false")
+@SQLDelete(sql = "UPDATE promise SET deleted = true WHERE promise_id = ?")
 public class Promise extends BaseTimeEntity {
 
     @Id
@@ -44,9 +48,19 @@ public class Promise extends BaseTimeEntity {
     @Column
     private Integer deposit;
 
+    @Column(nullable = false)
+    private boolean deleted = false;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "promise_id")
     private List<PromiseRole> promiseRoles = new ArrayList<>();
+
+    public PromiseRole getOrganizer() {
+        return this.promiseRoles.stream()
+            .filter(role -> role.getRole().equals(RoleStatus.ORGANIZER))
+            .findFirst()
+            .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND));
+    }
 
     public Long getId() {
         return this.id;

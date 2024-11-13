@@ -9,4 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 public interface PromiseRepository extends JpaRepository<Promise, Long>, PromiseRepositoryCustom{
     @Query("SELECT DISTINCT p FROM Promise p LEFT JOIN FETCH p.promiseRoles pr LEFT JOIN FETCH pr.member WHERE p.id = :promiseId")
     public Promise getPromiseById(Long promiseId);
+
+    public void deletePromiseById(Long promiseId);
 }

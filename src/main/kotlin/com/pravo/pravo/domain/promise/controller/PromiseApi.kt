@@ -46,4 +46,19 @@ interface PromiseApi {
         @PathVariable promiseId: Long,
         @Parameter(hidden = true) @AuthUser authenticatedUser: AuthenticateUser,
     ): PromiseDetailResponseDto
+
+    @Operation(summary = "약속 삭제", description = "모임장이 약속을 삭제합니다.")
+    @ApiResponse(
+        responseCode = "200",
+        description = "약속 삭제 성공",
+        content = [
+            Content(
+                schema = Schema(implementation = ApiResponseDto::class),
+            ),
+        ],
+    )
+    fun deletePromise(
+        @PathVariable promiseId: Long,
+        @Parameter(hidden = true) @AuthUser authenticatedUser: AuthenticateUser,
+    ): ApiResponseDto<Unit>
 }
