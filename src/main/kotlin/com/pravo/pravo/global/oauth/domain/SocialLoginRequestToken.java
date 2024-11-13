@@ -7,8 +7,4 @@ public class SocialLoginRequestToken {
     public String getSocialToken() {
         return socialToken;
     }
-
-    public void setSocialToken(String socialToken) {
-        this.socialToken = socialToken;
-    }
 }

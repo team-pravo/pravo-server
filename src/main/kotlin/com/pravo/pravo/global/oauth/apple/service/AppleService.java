@@ -18,7 +18,7 @@ public class AppleService {
         Claims claims = appleIdentityTokenVerifier.verifyIdentityToken(identityToken);
         String socialId = claims.getSubject(); // get userId from token
         if (socialId == null) {
-            return null;
+            throw new IllegalArgumentException("Social ID is null. Invalid identity token.");
         }
         return new LoginRequestDTO(socialId);
     }
