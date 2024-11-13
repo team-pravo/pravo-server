@@ -1,22 +1,20 @@
 package com.pravo.pravo.domain.member.service;
 
 import com.pravo.pravo.domain.member.repository.MemberRepository;
-import com.pravo.pravo.global.common.ApiResponseDto;
-import com.pravo.pravo.global.common.error.ErrorCode;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Random;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 public class RandomNameGenerator {
 
-    private static final String ADJECTIVE_FILE = "src/main/kotlin/com/pravo/pravo/domain/member/resources/adjective.txt";
-    private static final String NOUN_FILE = "src/main/kotlin/com/pravo/pravo/domain/member/resources/noun.txt";
-    // TODO: 상대경로로 바꾸기
+    private static final String ADJECTIVE_FILE = "adjective.txt";
+    private static final String NOUN_FILE = "noun.txt";
+
     private final MemberRepository memberRepository;
     //    private final Random random;
 
@@ -28,8 +26,8 @@ public class RandomNameGenerator {
         String nickname = "";
         do {
             try {
-                Resource adjectiveResource = new FileSystemResource(ADJECTIVE_FILE);
-                Resource nounResource = new FileSystemResource(NOUN_FILE);
+                Resource adjectiveResource = new ClassPathResource(ADJECTIVE_FILE);
+                Resource nounResource = new ClassPathResource(NOUN_FILE);
 
                 ArrayList<String> index = readFile(adjectiveResource);
                 ArrayList<String> index2 = readFile(nounResource);
