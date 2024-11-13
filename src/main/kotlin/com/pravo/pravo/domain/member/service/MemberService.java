@@ -44,7 +44,7 @@ public class MemberService {
         loginResponseDTO.setJwtTokens(accessToken);
         loginResponseDTO.setMemberId(loginMember.getId());
         loginResponseDTO.setName(loginMember.getName());
-        loginResponseDTO.setProfileImage(loginMember.getProfileImage());
+        loginResponseDTO.setProfileImageUrl(loginMember.getProfileImageUrl());
 
         return loginResponseDTO;
     }

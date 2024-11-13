@@ -26,7 +26,7 @@ data class ParticipantResponseDto(
             return ParticipantResponseDto(
                 id = participant.id,
                 name = participant.name,
-                profileImageUrl = participant.profileImage,
+                profileImageUrl = participant.profileImageUrl,
                 status = promiseRole.status,
                 role = promiseRole.role,
             )

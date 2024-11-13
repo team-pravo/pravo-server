@@ -12,8 +12,8 @@ public class LoginResponseDTO {
     private Long memberId;
     @JsonProperty("name")
     private String name;
-    @JsonProperty("profileImage")
-    private String profileImage;
+    @JsonProperty("profileImageUrl")
+    private String profileImageUrl;
 
     public JwtTokens getJwtTokens() {
         return jwtTokens;
@@ -39,11 +39,11 @@ public class LoginResponseDTO {
         this.name = name;
     }
 
-    public String getProfileImage() {
-        return profileImage;
+    public String getProfileImageUrl() {
+        return profileImageUrl;
     }
 
-    public void setProfileImage(String profileImage) {
-        this.profileImage = profileImage;
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 }

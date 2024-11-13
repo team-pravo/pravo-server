@@ -28,3 +28,7 @@ spring:
     redis:
       host: localhost
       port: 6379
+
+  apple:
+    aud: ${APPLE_CLIENT_ID}
+
