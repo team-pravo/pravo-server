@@ -1,5 +1,6 @@
 package com.pravo.pravo.domain.payment.service
 
+import com.pravo.pravo.domain.payment.dto.response.RequestOrderResponseDto
 import com.pravo.pravo.domain.payment.enums.PaymentStatus
 import com.pravo.pravo.domain.payment.model.Card
 import com.pravo.pravo.domain.payment.model.EasyPay
@@ -20,16 +21,16 @@ class PaymentFacade(
     val logger = logger()
 
     @Transactional
-    fun requestOrder(memberId: Long): String {
+    fun requestOrder(memberId: Long): RequestOrderResponseDto {
         var id = UUID.randomUUID().toString()
         while (paymentService.existOrderId(id)) {
             id = UUID.randomUUID().toString()
         }
 
         val pendingPaymentLog = PaymentLog.getPendingPaymentLog(id)
-        // Pending Promise 생성
+        // TODO Pending Promise 생성
 
-        return paymentService.savePaymentLog(pendingPaymentLog).orderId
+        return RequestOrderResponseDto.of(paymentService.savePaymentLog(pendingPaymentLog).orderId)
     }
 
     @Transactional
