@@ -9,12 +9,11 @@ import java.time.LocalDateTime;
 @Entity
 public class PaymentLog extends BaseTimeEntity {
 
-    @Id
     private String paymentId;
-
     private String mId;
     private String lastTransactionKey;
     private String paymentKey;
+    @Id
     private String orderId;
     private String orderName;
     private int taxExemptionAmount;
@@ -41,17 +40,17 @@ public class PaymentLog extends BaseTimeEntity {
 
     private PaymentStatus paymentStatus;
 
-    private PaymentLog setPaymentId(String id) {
-        this.paymentId = id;
+    private PaymentLog setOrderId(String id) {
+        this.orderId = id;
         return this;
     }
 
     public static PaymentLog getPendingPaymentLog(String id) {
         PaymentLog paymentLog = new PaymentLog();
-        return paymentLog.setPaymentId(id);
+        return paymentLog.setOrderId(id);
     }
 
-    public String getPaymentId() {
-        return this.paymentId;
+    public String getOrderId() {
+        return this.orderId;
     }
 }

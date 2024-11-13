@@ -1,6 +1,7 @@
 package com.pravo.pravo.global.external.toss
 
 import com.pravo.pravo.global.external.toss.dto.request.ConfirmRequestDto
+import com.pravo.pravo.global.external.toss.dto.response.ConfirmResponseDto
 import feign.Headers
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.PostMapping
@@ -14,5 +15,5 @@ interface PaymentClient {
     fun confirm(
         @RequestHeader("Authorization") token: String,
         @RequestBody confirmRequestDto: ConfirmRequestDto,
-    ): Any
+    ): ConfirmResponseDto
 }

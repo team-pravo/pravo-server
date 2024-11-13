@@ -14,14 +14,14 @@ data class ConfirmResponseDto(
     val cultureExpense: Boolean,
     val card: CardDto?,
     val virtualAccount: VirtualAccountDto?,
-    val transfer: Any?,
-    val mobilePhone: Any?,
-    val giftCertificate: Any?,
+    val transfer: TransferDto?,
+    val mobilePhone: MobilePhoneDto?,
+    val giftCertificate: GiftCertificate?,
     val cashReceipt: CashReceiptDto?,
     val cashReceipts: List<CashReceiptHistoryDto>?,
-    val discount: Any?,
-    val cancels: Any?,
-    val secret: Any?,
+    val discount: DiscountDto?,
+    val cancels: List<CancelDto>?,
+    val secret: String?,
     val type: String,
     val easyPay: EasyPayDto?,
     val country: String,
@@ -37,7 +37,27 @@ data class ConfirmResponseDto(
     val taxFreeAmount: Int,
     val method: String?,
     val version: String,
-    val metadata: Any,
+    val metadata: Any?,
+)
+
+data class DiscountDto(
+    val amount: Int,
+)
+
+data class GiftCertificate(
+    val approveNo: String,
+    val settlementStatus: String,
+)
+
+data class MobilePhoneDto(
+    val customerMobilePhone: String,
+    val settlementStatus: String,
+    val receiptUrl: String,
+)
+
+data class TransferDto(
+    val bankCode: String,
+    val settlementStatus: String,
 )
 
 data class ReceiptDto(
