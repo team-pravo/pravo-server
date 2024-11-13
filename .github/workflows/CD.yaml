@@ -71,4 +71,4 @@ jobs:
             cd ~
             ./deploy.sh
             docker image prune -f
-          fail-on-error: true
+          script_stop: true
