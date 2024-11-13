@@ -1,6 +1,7 @@
 package com.pravo.pravo.global.common.error
 
 import com.pravo.pravo.global.common.ApiResponseDto
+import com.pravo.pravo.global.common.error.exception.BaseException
 import com.pravo.pravo.global.common.error.exception.UnauthorizedException
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.http.ResponseEntity
@@ -9,10 +10,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
-    @ExceptionHandler(Exception::class)
-    protected fun handleException(exception: Exception): ResponseEntity<ApiResponseDto<Nothing>> {
-        val errorCode = ErrorCode.INTERNAL_SERVER_ERROR
-        val response = ApiResponseDto.error(errorCode.message, errorCode.status, errorCode.code)
+    @ExceptionHandler(BaseException::class)
+    protected fun handleException(e: BaseException): ResponseEntity<ApiResponseDto<Nothing>> {
+        val errorCode = e.errorCode
+        val response =
+            ApiResponseDto.error(
+                e.message ?: errorCode.message,
+                errorCode.status,
+                errorCode.code,
+            )
         return ResponseEntity.status(errorCode.status).body(response)
     }
 
@@ -31,7 +37,7 @@ class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AccessDeniedException::class)
-    fun handleAuthenticationException(exception: AccessDeniedException): ResponseEntity<ApiResponseDto<Nothing>> {
+    fun handleAuthenticationException(e: AccessDeniedException): ResponseEntity<ApiResponseDto<Nothing>> {
         val errorCode = ErrorCode.UNAUTHORIZED
         val response = ApiResponseDto.error(errorCode.message, errorCode.status, errorCode.code)
         return ResponseEntity.status(errorCode.status).body(response)
@@ -39,8 +45,13 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(UnauthorizedException::class)
     fun handleUnauthorizedException(e: UnauthorizedException): ResponseEntity<ApiResponseDto<Nothing>> {
-        val errorCode = ErrorCode.UNAUTHORIZED
-        val response = ApiResponseDto.error(errorCode.message, errorCode.status, errorCode.code)
+        val errorCode = e.errorCode
+        val response =
+            ApiResponseDto.error(
+                e.message ?: errorCode.message,
+                errorCode.status,
+                errorCode.code,
+            )
         return ResponseEntity.status(errorCode.status).body(response)
     }
 }
