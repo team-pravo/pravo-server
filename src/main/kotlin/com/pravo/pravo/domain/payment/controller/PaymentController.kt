@@ -1,6 +1,6 @@
 package com.pravo.pravo.domain.payment.controller
 
-import com.pravo.pravo.domain.payment.service.PaymentService
+import com.pravo.pravo.domain.payment.service.PaymentFacade
 import com.pravo.pravo.global.common.ApiResponseDto
 import com.pravo.pravo.global.external.toss.dto.request.ConfirmRequestDto
 import com.pravo.pravo.global.jwt.AuthenticateUser
@@ -13,17 +13,14 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/payment")
 class PaymentController(
-    private val paymentService: PaymentService,
+    private val paymentFacade: PaymentFacade,
 ) : PaymentApi {
     @GetMapping
-    override fun requestOrder(authenticatedUser: AuthenticateUser): ApiResponseDto<String> {
-        return ApiResponseDto.success(paymentService.requestOrder(authenticatedUser.memberId))
-    }
+    override fun requestOrder(authenticatedUser: AuthenticateUser): ApiResponseDto<String> =
+        ApiResponseDto.success(paymentFacade.requestOrder(authenticatedUser.memberId))
 
     @PostMapping
     override fun confirmOrder(
         @RequestBody confirmRequestDto: ConfirmRequestDto,
-    ) {
-        return paymentService.confirmOrder(confirmRequestDto)
-    }
+    ) = paymentFacade.confirmOrder(confirmRequestDto)
 }
