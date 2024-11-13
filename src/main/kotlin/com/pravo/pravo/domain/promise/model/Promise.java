@@ -13,14 +13,12 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
-import org.hibernate.annotations.Where;
 
 @Entity
 @SQLRestriction("deleted = false")
@@ -51,8 +49,7 @@ public class Promise extends BaseTimeEntity {
     @Column(nullable = false)
     private boolean deleted = false;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "promise_id")
+    @OneToMany(mappedBy = "promise", cascade = CascadeType.ALL)
     private List<PromiseRole> promiseRoles = new ArrayList<>();
 
     public PromiseRole getOrganizer() {
