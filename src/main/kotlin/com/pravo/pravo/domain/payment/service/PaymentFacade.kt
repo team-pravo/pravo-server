@@ -1,9 +1,13 @@
 package com.pravo.pravo.domain.payment.service
 
+import com.pravo.pravo.domain.payment.enums.PaymentStatus
+import com.pravo.pravo.domain.payment.model.Card
+import com.pravo.pravo.domain.payment.model.EasyPay
 import com.pravo.pravo.domain.payment.model.PaymentLog
 import com.pravo.pravo.global.external.toss.PaymentClient
 import com.pravo.pravo.global.external.toss.dto.request.ConfirmRequestDto
 import com.pravo.pravo.global.util.logger
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.util.Base64
 import java.util.UUID
@@ -15,6 +19,7 @@ class PaymentFacade(
 ) {
     val logger = logger()
 
+    @Transactional
     fun requestOrder(memberId: Long): String {
         var id = UUID.randomUUID().toString()
         while (paymentService.existOrderId(id)) {
@@ -24,9 +29,10 @@ class PaymentFacade(
         val pendingPaymentLog = PaymentLog.getPendingPaymentLog(id)
         // Pending Promise 생성
 
-        return pendingPaymentLog.orderId
+        return paymentService.savePaymentLog(pendingPaymentLog).orderId
     }
 
+    @Transactional
     fun confirmOrder(confirmRequestDto: ConfirmRequestDto) {
         val confirm =
             paymentClient.confirm(
@@ -37,7 +43,16 @@ class PaymentFacade(
                 confirmRequestDto,
             )
         logger.info(confirm.toString())
-        // TODO Response로 PaymentLog Update
-        // TODO Front로 Reponse
+
+        val paymentLog =
+            paymentService.findPaymentLogByOrderId(confirmRequestDto.orderId)
+
+        val card = confirm.card?.let { Card(it) }
+        val easyPay = confirm.easyPay?.let { EasyPay(it) }
+
+        paymentLog.updateFromConfirmResponse(confirm, card?.id, easyPay?.id, PaymentStatus.COMPLETED)
+        paymentService.saveCardAndEasyPay(card, easyPay)
+
+        // TODO Front로 Reponse Success 및 Error 확인
     }
 }

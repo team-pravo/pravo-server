@@ -23,4 +23,8 @@ public class EasyPay {
     }
 
     public EasyPay() {}
+
+    public Long getId() {
+        return this.id;
+    }
 }

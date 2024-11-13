@@ -22,5 +22,8 @@ class PaymentController(
     @PostMapping
     override fun confirmOrder(
         @RequestBody confirmRequestDto: ConfirmRequestDto,
-    ) = paymentFacade.confirmOrder(confirmRequestDto)
+    ): ApiResponseDto<Unit> {
+        paymentFacade.confirmOrder(confirmRequestDto)
+        return ApiResponseDto.success()
+    }
 }

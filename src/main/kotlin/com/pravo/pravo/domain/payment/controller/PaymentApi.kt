@@ -15,5 +15,5 @@ interface PaymentApi {
 
     @Operation(summary = "결제 승인", description = "paymentKey에 해당하는 결제를 검증하고 승인합니다.")
     @SecurityRequirement(name = "jwt")
-    fun confirmOrder(confirmRequestDto: ConfirmRequestDto)
+    fun confirmOrder(confirmRequestDto: ConfirmRequestDto): ApiResponseDto<Unit>
 }

@@ -45,4 +45,8 @@ public class Card {
     }
 
     public Card() {}
+
+    public Long getId() {
+        return this.id;
+    }
 }
