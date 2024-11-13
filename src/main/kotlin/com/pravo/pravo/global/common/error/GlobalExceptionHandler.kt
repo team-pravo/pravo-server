@@ -2,8 +2,8 @@ package com.pravo.pravo.global.common.error
 
 import com.pravo.pravo.global.common.ApiResponseDto
 import com.pravo.pravo.global.common.error.exception.BaseException
+import com.pravo.pravo.global.common.error.exception.NotFoundException
 import com.pravo.pravo.global.common.error.exception.UnauthorizedException
-import jakarta.persistence.EntityNotFoundException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -29,10 +29,15 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(errorCode.status).body(response)
     }
 
-    @ExceptionHandler(EntityNotFoundException::class)
-    fun handleEntityNotFoundException(e: EntityNotFoundException): ResponseEntity<ApiResponseDto<Nothing>> {
-        val errorCode = ErrorCode.NOT_FOUND
-        val response = ApiResponseDto.error(errorCode.message, errorCode.status, errorCode.code)
+    @ExceptionHandler(NotFoundException::class)
+    fun handleEntityNotFoundException(e: NotFoundException): ResponseEntity<ApiResponseDto<Nothing>> {
+        val errorCode = e.errorCode
+        val response =
+            ApiResponseDto.error(
+                e.message ?: errorCode.message,
+                errorCode.status,
+                errorCode.code,
+            )
         return ResponseEntity.status(errorCode.status).body(response)
     }
 
