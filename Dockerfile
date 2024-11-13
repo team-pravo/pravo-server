@@ -1,7 +1,7 @@
 FROM amd64/amazoncorretto:21-alpine AS jar
 
-# curl 설치
-RUN apt-get update && apt-get install -y curl
+# curl 설치 (Alpine Linux)
+RUN apk update && apk add --no-cache curl
 
 # 애플리케이션 JAR 파일 복사
 COPY ./build/libs/Pravo-0.0.1-SNAPSHOT.jar /app/pravo.jar
