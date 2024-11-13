@@ -41,8 +41,8 @@ public class Member extends BaseTimeEntity {
         return this.socialId;
     }
 
-    public String getProfileImage() {
-        return this.profileImage;
+    public String getProfileImageUrl() {
+        return this.profileImageUrl;
     }
 
 }
