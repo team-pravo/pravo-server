@@ -2,6 +2,7 @@ package com.pravo.pravo.domain.member.service;
 
 import com.pravo.pravo.domain.member.dto.LoginRequestDTO;
 import com.pravo.pravo.domain.member.dto.LoginResponseDTO;
+import com.pravo.pravo.domain.member.dto.MyPageResponseDTO;
 import com.pravo.pravo.domain.member.model.Member;
 import com.pravo.pravo.domain.member.repository.MemberRepository;
 import com.pravo.pravo.global.jwt.JwtTokenProvider;
@@ -66,4 +67,10 @@ public class MemberService {
             throw new UnauthorizedException(ErrorCode.UNAUTHORIZED);
         }
     }
+
+    public MyPageResponseDTO fetchMemberById(long memberId) {
+        Member member = this.memberRepository.findById(memberId);
+        return MyPageResponseDTO.of(member);
+    }
+
 }

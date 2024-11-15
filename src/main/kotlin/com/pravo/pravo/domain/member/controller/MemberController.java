@@ -2,6 +2,7 @@ package com.pravo.pravo.domain.member.controller;
 
 import com.pravo.pravo.domain.member.dto.LoginRequestDTO;
 import com.pravo.pravo.domain.member.dto.LoginResponseDTO;
+import com.pravo.pravo.domain.member.dto.MyPageResponseDTO;
 import com.pravo.pravo.domain.member.service.MemberService;
 import com.pravo.pravo.global.common.ApiResponseDto;
 import com.pravo.pravo.global.oauth.apple.service.AppleService;
@@ -11,6 +12,7 @@ import com.pravo.pravo.global.oauth.kakao.service.KakaoService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,5 +59,13 @@ public class MemberController {
         @Parameter(hidden = true) @RequestHeader("Authorization") String token
     ) {
         return ApiResponseDto.success(memberService.logout(token));
+    }
+
+    @GetMapping("/member/{memberId}")
+    @SecurityRequirement(name = "jwt")
+    public ApiResponseDto<MyPageResponseDTO> myPage(
+        @Parameter(hidden = true) @RequestHeader("Authorization") String token,
+        @PathVariable("memberId") long memberId) {
+        return ApiResponseDto.success(memberService.fetchMemberById(memberId));
     }
 }
