@@ -5,14 +5,15 @@ import com.pravo.pravo.domain.member.dto.LoginResponseDTO;
 import com.pravo.pravo.domain.member.dto.MyPageResponseDTO;
 import com.pravo.pravo.domain.member.model.Member;
 import com.pravo.pravo.domain.member.repository.MemberRepository;
+import com.pravo.pravo.global.common.error.ErrorCode;
+import com.pravo.pravo.global.common.error.exception.UnauthorizedException;
 import com.pravo.pravo.global.jwt.JwtTokenProvider;
 import com.pravo.pravo.global.jwt.JwtTokens;
 import com.pravo.pravo.global.jwt.JwtTokensGenerator;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.concurrent.TimeUnit;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import com.pravo.pravo.global.common.error.exception.UnauthorizedException;
-import com.pravo.pravo.global.common.error.ErrorCode;
 
 @Service
 public class MemberService {
@@ -69,7 +70,9 @@ public class MemberService {
     }
 
     public MyPageResponseDTO fetchMemberById(long memberId) {
-        Member member = this.memberRepository.findById(memberId);
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(
+                () -> new EntityNotFoundException("멤버를 찾을 수 없습니다"));
         return MyPageResponseDTO.of(member);
     }
 
