@@ -1,19 +1,20 @@
 package com.pravo.pravo.domain.promise.repository;
 
-import com.pravo.pravo.domain.promise.dto.response.PromiseResponseDto;
-import com.pravo.pravo.domain.promise.dto.response.QPromiseResponseDto;
 import static com.pravo.pravo.domain.promise.model.QPromise.promise;
 import static com.pravo.pravo.domain.promise.model.QPromiseRole.promiseRole;
 
+import com.pravo.pravo.domain.promise.dto.response.PromiseResponseDto;
+import com.pravo.pravo.domain.promise.dto.response.QPromiseResponseDto;
 import com.pravo.pravo.domain.promise.model.enums.RoleStatus;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalTime;
 import java.util.List;
 
 public class PromiseRepositoryImpl implements PromiseRepositoryCustom {
+
     private final JPAQueryFactory queryFactory;
 
     public PromiseRepositoryImpl(EntityManager entityManager) {
@@ -21,7 +22,8 @@ public class PromiseRepositoryImpl implements PromiseRepositoryCustom {
     }
 
     @Override
-    public List<PromiseResponseDto> getPromisesByMemberIdAndStartedAtAndEndedAt(Long memberId, LocalDate startedAt, LocalDate endedAt) {
+    public List<PromiseResponseDto> getPromisesByMemberIdAndStartedAtAndEndedAt(Long memberId,
+        LocalDate startedAt, LocalDate endedAt) {
         return queryFactory
             .select(new QPromiseResponseDto(
                 promise.id,
@@ -30,7 +32,7 @@ public class PromiseRepositoryImpl implements PromiseRepositoryCustom {
                 promise.location,
                 promise.status,
                 promiseRole.member.name,
-                promiseRole.member.profileImage
+                promiseRole.member.profileImageUrl
             ))
             .from(promise)
             .join(promise.promiseRoles, promiseRole).on(promiseRole.role.eq(RoleStatus.ORGANIZER))
