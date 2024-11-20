@@ -7,13 +7,10 @@ import com.pravo.pravo.domain.promise.service.PromiseService
 import com.pravo.pravo.global.auth.annotation.AuthUser
 import com.pravo.pravo.global.common.ApiResponseDto
 import com.pravo.pravo.global.jwt.AuthenticateUser
-import io.swagger.v3.oas.annotations.security.SecurityRequirement
-import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -22,7 +19,6 @@ class PromiseController(
     private val promiseService: PromiseService,
 ) : PromiseApi {
     @GetMapping
-    @SecurityRequirement(name = "jwt")
     override fun getPromisesByMember(
         request: PromiseSearchDto?,
         authenticatedUser: AuthenticateUser,
@@ -31,7 +27,6 @@ class PromiseController(
     }
 
     @GetMapping("/{promiseId}")
-    @SecurityRequirement(name = "jwt")
     override fun getPromiseDetailByMember(
         @PathVariable promiseId: Long,
         @AuthUser authenticatedUser: AuthenticateUser,
@@ -40,8 +35,6 @@ class PromiseController(
     }
 
     @DeleteMapping("/{promiseId}")
-    @SecurityRequirement(name = "jwt")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     override fun deletePromise(
         @PathVariable promiseId: Long,
         @AuthUser authenticatedUser: AuthenticateUser,

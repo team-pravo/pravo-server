@@ -11,9 +11,12 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.ResponseStatus
 
 @Tag(name = "Promise", description = "약속 API")
 interface PromiseApi {
@@ -27,6 +30,7 @@ interface PromiseApi {
             ),
         ],
     )
+    @SecurityRequirement(name = "jwt")
     fun getPromisesByMember(
         @ModelAttribute request: PromiseSearchDto?,
         @Parameter(hidden = true) @AuthUser authenticatedUser: AuthenticateUser,
@@ -42,6 +46,7 @@ interface PromiseApi {
             ),
         ],
     )
+    @SecurityRequirement(name = "jwt")
     fun getPromiseDetailByMember(
         @PathVariable promiseId: Long,
         @Parameter(hidden = true) @AuthUser authenticatedUser: AuthenticateUser,
@@ -57,6 +62,8 @@ interface PromiseApi {
             ),
         ],
     )
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @SecurityRequirement(name = "jwt")
     fun deletePromise(
         @PathVariable promiseId: Long,
         @Parameter(hidden = true) @AuthUser authenticatedUser: AuthenticateUser,
