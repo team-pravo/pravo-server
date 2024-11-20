@@ -59,7 +59,5 @@ class PaymentFacade(
 
         paymentLog.updateFromConfirmResponse(confirm, card?.id, easyPay?.id, PaymentStatus.COMPLETED)
         paymentService.saveCardAndEasyPay(card, easyPay)
-
-        // TODO Front로 Reponse Success 및 Error 확인
     }
 }
