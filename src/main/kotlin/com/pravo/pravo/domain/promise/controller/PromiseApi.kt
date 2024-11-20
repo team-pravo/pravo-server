@@ -86,7 +86,10 @@ interface PromiseApi {
 
     @Operation(summary = "Pending Promise Role 상태 변경", description = "약속 참가 - 결제 이후 모임원의 상태를 Ready 상태로 변경합니다.")
     @SecurityRequirement(name = "jwt")
-    fun changeParticipantPendingStatus(promiseId: Long): ApiResponseDto<Unit>
+    fun changeParticipantPendingStatus(
+        @PathVariable promiseId: Long,
+        @Parameter(hidden = true) @AuthUser authenticatedUser: AuthenticateUser,
+    ): ApiResponseDto<Unit>
 
     @Operation(summary = "약속 취소", description = "모임원이 약속을 취소합니다.")
     @ApiResponse(
