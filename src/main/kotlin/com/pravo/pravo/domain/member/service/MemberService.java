@@ -5,8 +5,6 @@ import com.pravo.pravo.domain.member.dto.LoginResponseDTO;
 import com.pravo.pravo.domain.member.dto.MyPageResponseDTO;
 import com.pravo.pravo.domain.member.model.Member;
 import com.pravo.pravo.domain.member.repository.MemberRepository;
-import com.pravo.pravo.global.common.error.ErrorCode;
-import com.pravo.pravo.global.common.error.exception.UnauthorizedException;
 import com.pravo.pravo.global.jwt.JwtTokenProvider;
 import com.pravo.pravo.global.jwt.JwtTokens;
 import com.pravo.pravo.global.jwt.JwtTokensGenerator;
@@ -14,6 +12,8 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.concurrent.TimeUnit;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import com.pravo.pravo.global.error.exception.UnauthorizedException;
+import com.pravo.pravo.global.error.ErrorCode;
 
 @Service
 public class MemberService {
