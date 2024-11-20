@@ -13,8 +13,10 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.ResponseStatus
 
 @Tag(name = "Promise", description = "약속 API")
 interface PromiseApi {
@@ -28,6 +30,7 @@ interface PromiseApi {
             ),
         ],
     )
+    @SecurityRequirement(name = "jwt")
     fun getPromisesByMember(
         @ModelAttribute request: PromiseSearchDto?,
         @Parameter(hidden = true) @AuthUser authenticatedUser: AuthenticateUser,
@@ -43,10 +46,28 @@ interface PromiseApi {
             ),
         ],
     )
+    @SecurityRequirement(name = "jwt")
     fun getPromiseDetailByMember(
         @PathVariable promiseId: Long,
         @Parameter(hidden = true) @AuthUser authenticatedUser: AuthenticateUser,
     ): PromiseDetailResponseDto
+
+    @Operation(summary = "약속 삭제", description = "모임장이 약속을 삭제합니다.")
+    @ApiResponse(
+        responseCode = "200",
+        description = "약속 삭제 성공",
+        content = [
+            Content(
+                schema = Schema(implementation = ApiResponseDto::class),
+            ),
+        ],
+    )
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @SecurityRequirement(name = "jwt")
+    fun deletePromise(
+        @PathVariable promiseId: Long,
+        @Parameter(hidden = true) @AuthUser authenticatedUser: AuthenticateUser,
+    ): ApiResponseDto<Unit>
 
     @Operation(summary = "Pending 약속 상태 변경", description = "결제 완료된 약속을 Ready 상태로 변경합니다.")
     @SecurityRequirement(name = "jwt")

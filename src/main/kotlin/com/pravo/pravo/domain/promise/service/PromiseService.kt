@@ -6,7 +6,6 @@ import com.pravo.pravo.domain.promise.dto.response.PromiseDetailResponseDto
 import com.pravo.pravo.domain.promise.dto.response.PromiseResponseDto
 import com.pravo.pravo.domain.promise.model.Promise
 import com.pravo.pravo.domain.promise.repository.PromiseRepository
-import com.pravo.pravo.domain.promise.repository.PromiseRepositoryImpl
 import com.pravo.pravo.global.error.ErrorCode
 import com.pravo.pravo.global.error.exception.NotFoundException
 import org.springframework.stereotype.Service
@@ -14,7 +13,6 @@ import java.time.LocalDate
 
 @Service
 class PromiseService(
-    private val promiseRepositoryImpl: PromiseRepositoryImpl,
     private val promiseRepository: PromiseRepository,
 ) {
     fun getPromisesByMember(
