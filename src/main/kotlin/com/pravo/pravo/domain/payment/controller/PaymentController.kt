@@ -2,6 +2,7 @@ package com.pravo.pravo.domain.payment.controller
 
 import com.pravo.pravo.domain.payment.dto.response.RequestOrderResponseDto
 import com.pravo.pravo.domain.payment.service.PaymentFacade
+import com.pravo.pravo.domain.promise.dto.request.PromiseCreateDto
 import com.pravo.pravo.global.auth.annotation.AuthUser
 import com.pravo.pravo.global.common.ApiResponseDto
 import com.pravo.pravo.global.external.toss.dto.request.ConfirmRequestDto
@@ -20,7 +21,14 @@ class PaymentController(
     @GetMapping
     override fun requestOrder(
         @AuthUser authenticatedUser: AuthenticateUser,
-    ): ApiResponseDto<RequestOrderResponseDto> = ApiResponseDto.success(paymentFacade.requestOrder(authenticatedUser.memberId))
+        @RequestBody promiseCreateDto: PromiseCreateDto,
+    ): ApiResponseDto<RequestOrderResponseDto> =
+        ApiResponseDto.success(
+            paymentFacade.requestOrder(
+                authenticatedUser.memberId,
+                promiseCreateDto,
+            ),
+        )
 
     @PostMapping
     override fun confirmOrder(

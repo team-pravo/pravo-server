@@ -5,6 +5,8 @@ import com.pravo.pravo.domain.payment.enums.PaymentStatus
 import com.pravo.pravo.domain.payment.model.Card
 import com.pravo.pravo.domain.payment.model.EasyPay
 import com.pravo.pravo.domain.payment.model.PaymentLog
+import com.pravo.pravo.domain.promise.dto.request.PromiseCreateDto
+import com.pravo.pravo.domain.promise.service.PromiseService
 import com.pravo.pravo.global.external.toss.PaymentClient
 import com.pravo.pravo.global.external.toss.dto.request.ConfirmRequestDto
 import com.pravo.pravo.global.util.logger
@@ -17,20 +19,24 @@ import java.util.UUID
 class PaymentFacade(
     private val paymentClient: PaymentClient,
     private val paymentService: PaymentService,
+    private val promiseService: PromiseService,
 ) {
     val logger = logger()
 
     @Transactional
-    fun requestOrder(memberId: Long): RequestOrderResponseDto {
+    fun requestOrder(
+        memberId: Long,
+        promiseCreateDto: PromiseCreateDto,
+    ): RequestOrderResponseDto {
         var id = UUID.randomUUID().toString()
         while (paymentService.existOrderId(id)) {
             id = UUID.randomUUID().toString()
         }
 
         val pendingPaymentLog = PaymentLog.getPendingPaymentLog(id)
-        // TODO Pending Promise 생성
+        val pendingPromise = promiseService.createPendingPromise(promiseCreateDto)
 
-        return RequestOrderResponseDto.of(paymentService.savePaymentLog(pendingPaymentLog).orderId)
+        return RequestOrderResponseDto.of(paymentService.savePaymentLog(pendingPaymentLog).orderId, pendingPromise.id)
     }
 
     @Transactional
