@@ -39,7 +39,7 @@ class PromiseController(
         authenticatedUser: AuthenticateUser,
     ): PromiseDetailResponseDto = promiseService.getPromiseDetailByMember(authenticatedUser.memberId, promiseId)
 
-    @PostMapping("/{promiseId}")
+    @PostMapping("/{promiseId}/change")
     override fun changePendingStatus(
         @PathVariable promiseId: Long,
     ): ApiResponseDto<Unit> =
