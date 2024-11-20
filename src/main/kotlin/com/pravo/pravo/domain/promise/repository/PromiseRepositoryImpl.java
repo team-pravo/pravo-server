@@ -30,10 +30,10 @@ public class PromiseRepositoryImpl implements PromiseRepositoryCustom {
                 promise.location,
                 promise.status,
                 promiseRole.member.name,
-                promiseRole.member.profileImage
+                promiseRole.member.profileImageUrl
             ))
-            .from(promise)
-            .join(promise.promiseRoles, promiseRole)
+            .from(promiseRole)
+            .join(promiseRole.promise, promise)
             .leftJoin(promiseRole.member)
             .where(
                 memberIdEquals(memberId),

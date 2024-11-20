@@ -3,6 +3,7 @@ package com.pravo.pravo.domain.promise.controller
 import com.pravo.pravo.domain.promise.dto.request.PromiseSearchDto
 import com.pravo.pravo.domain.promise.dto.response.PromiseDetailResponseDto
 import com.pravo.pravo.domain.promise.dto.response.PromiseResponseDto
+import com.pravo.pravo.domain.promise.service.PromiseRoleService
 import com.pravo.pravo.domain.promise.service.PromiseService
 import com.pravo.pravo.global.auth.annotation.AuthUser
 import com.pravo.pravo.global.common.ApiResponseDto
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/promise")
 class PromiseController(
     private val promiseService: PromiseService,
+    private val promiseRoleService: PromiseRoleService,
 ) : PromiseApi {
     @GetMapping
     override fun getPromisesByMember(
@@ -39,6 +41,6 @@ class PromiseController(
         @PathVariable promiseId: Long,
         @AuthUser authenticatedUser: AuthenticateUser,
     ): ApiResponseDto<Unit> {
-        return ApiResponseDto.success(promiseService.deletePromise(authenticatedUser.memberId, promiseId))
+        return ApiResponseDto.success(promiseRoleService.deletePromise(authenticatedUser.memberId, promiseId))
     }
 }

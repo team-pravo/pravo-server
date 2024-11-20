@@ -1,11 +1,7 @@
 package com.pravo.pravo.domain.promise.model;
 
 import com.pravo.pravo.domain.promise.model.enums.PromiseStatus;
-import com.pravo.pravo.domain.promise.model.enums.RoleStatus;
-import com.pravo.pravo.global.common.error.ErrorCode;
-import com.pravo.pravo.global.common.error.exception.NotFoundException;
 import com.pravo.pravo.global.common.model.BaseTimeEntity;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -49,15 +45,8 @@ public class Promise extends BaseTimeEntity {
     @Column(nullable = false)
     private boolean deleted = false;
 
-    @OneToMany(mappedBy = "promise", cascade = CascadeType.ALL)
+    @OneToMany
     private List<PromiseRole> promiseRoles = new ArrayList<>();
-
-    public PromiseRole getOrganizer() {
-        return this.promiseRoles.stream()
-            .filter(role -> role.getRole().equals(RoleStatus.ORGANIZER))
-            .findFirst()
-            .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND));
-    }
 
     public Long getId() {
         return this.id;
@@ -79,9 +68,13 @@ public class Promise extends BaseTimeEntity {
         return this.status;
     }
 
+    public Integer getDeposit() { return this.deposit; }
+
+    public void delete() {
+        this.deleted = true;
+    }
+
     public List<PromiseRole> getPromiseRoles() {
         return this.promiseRoles;
     }
-
-    public Integer getDeposit() { return this.deposit; }
 }

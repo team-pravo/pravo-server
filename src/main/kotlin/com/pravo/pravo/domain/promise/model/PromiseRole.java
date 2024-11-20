@@ -71,4 +71,12 @@ public class PromiseRole extends BaseTimeEntity {
     public void setPromise(Promise promise) {
         this.promise = promise;
     }
+
+    public boolean isOrganizer() {
+        return this.role == RoleStatus.ORGANIZER;
+    }
+
+    public void delete() {
+        this.deleted = true;
+    }
 }
