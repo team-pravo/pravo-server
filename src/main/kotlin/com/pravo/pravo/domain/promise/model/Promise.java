@@ -14,12 +14,10 @@ import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @SQLRestriction("deleted = false")
-@SQLDelete(sql = "UPDATE promise SET deleted = true WHERE promise_id = ?")
 public class Promise extends BaseTimeEntity {
 
     @Id
