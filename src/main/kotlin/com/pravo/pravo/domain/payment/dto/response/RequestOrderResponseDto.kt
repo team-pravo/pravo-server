@@ -8,6 +8,6 @@ data class RequestOrderResponseDto(
         fun of(
             orderId: String,
             promiseId: Long,
-        ): RequestOrderResponseDto = of(orderId, promiseId)
+        ): RequestOrderResponseDto = RequestOrderResponseDto(orderId, promiseId)
     }
 }

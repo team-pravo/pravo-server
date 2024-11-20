@@ -94,7 +94,7 @@ public class Promise extends BaseTimeEntity {
     public static Promise pendingOf(PromiseCreateDto promiseCreateDto) {
         return new Promise(
             promiseCreateDto.getName(),
-            promiseCreateDto.getPromiseDate(),
+            promiseCreateDto.getScheduledAt(),
             promiseCreateDto.getLocation(),
             PromiseStatus.PENDING,
             promiseCreateDto.getDeposit()
