@@ -16,7 +16,7 @@ public class Member extends BaseTimeEntity {
     private Long id;
 
     private String name;
-    private String profileImage;
+    private String profileImageUrl;
     private String socialId;
 
 
@@ -42,7 +42,7 @@ public class Member extends BaseTimeEntity {
     }
 
     public String getProfileImage() {
-        return this.profileImage;
+        return this.profileImageUrl;
     }
 
 }
