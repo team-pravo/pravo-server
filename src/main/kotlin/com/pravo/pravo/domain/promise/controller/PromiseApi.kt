@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
@@ -46,4 +47,8 @@ interface PromiseApi {
         @PathVariable promiseId: Long,
         @Parameter(hidden = true) @AuthUser authenticatedUser: AuthenticateUser,
     ): PromiseDetailResponseDto
+
+    @Operation(summary = "Pending 약속 상태 변경", description = "결제 완료된 약속을 Ready 상태로 변경합니다.")
+    @SecurityRequirement(name = "jwt")
+    fun changePendingStatus(promiseId: Long): ApiResponseDto<Unit>
 }

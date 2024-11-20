@@ -92,4 +92,8 @@ public class Promise extends BaseTimeEntity {
             promiseCreateDto.getDeposit()
         );
     }
+
+    public void changePendingStatus() {
+        this.status = PromiseStatus.READY;
+    }
 }

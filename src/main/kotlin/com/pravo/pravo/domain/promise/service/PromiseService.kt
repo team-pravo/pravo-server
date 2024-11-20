@@ -42,4 +42,12 @@ class PromiseService(
         val promise = Promise.pendingOf(promiseCreateDto)
         return promiseRepository.save(promise)
     }
+
+    fun changePendingStatus(promiseId: Long) {
+        val promise =
+            promiseRepository.findById(promiseId).orElseThrow {
+                NotFoundException(ErrorCode.NOT_FOUND)
+            }
+        promise.changePendingStatus()
+    }
 }

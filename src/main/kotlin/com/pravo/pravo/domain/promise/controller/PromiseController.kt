@@ -8,6 +8,8 @@ import com.pravo.pravo.global.common.ApiResponseDto
 import com.pravo.pravo.global.jwt.AuthenticateUser
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -21,16 +23,27 @@ class PromiseController(
     override fun getPromisesByMember(
         request: PromiseSearchDto?,
         authenticatedUser: AuthenticateUser,
-    ): ApiResponseDto<List<PromiseResponseDto>> {
-        return ApiResponseDto.success(promiseService.getPromisesByMember(authenticatedUser.memberId, request?.startedAt, request?.endedAt))
-    }
+    ): ApiResponseDto<List<PromiseResponseDto>> =
+        ApiResponseDto.success(
+            promiseService.getPromisesByMember(
+                authenticatedUser.memberId,
+                request?.startedAt,
+                request?.endedAt,
+            ),
+        )
 
     @GetMapping("/{promiseId}")
     @SecurityRequirement(name = "jwt")
     override fun getPromiseDetailByMember(
         promiseId: Long,
         authenticatedUser: AuthenticateUser,
-    ): PromiseDetailResponseDto {
-        return promiseService.getPromiseDetailByMember(authenticatedUser.memberId, promiseId)
-    }
+    ): PromiseDetailResponseDto = promiseService.getPromiseDetailByMember(authenticatedUser.memberId, promiseId)
+
+    @PostMapping("/{promiseId}")
+    override fun changePendingStatus(
+        @PathVariable promiseId: Long,
+    ): ApiResponseDto<Unit> =
+        ApiResponseDto.success(
+            promiseService.changePendingStatus(promiseId),
+        )
 }
