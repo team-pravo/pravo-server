@@ -24,4 +24,15 @@ class PromiseFacade(
         promiseRoleService.createPendingPromiseRole(member, promise, RoleStatus.PARTICIPANT)
         return PromiseResponseDto.of(promise)
     }
+
+    fun changePendingStatus(
+        memberId: Long,
+        promiseId: Long,
+    ) {
+        val promise = promiseService.getPromise(promiseId)
+        promise.changePendingStatus()
+
+        val promiseRole = promiseRoleService.getPromiseRole(memberId, promiseId)
+        promiseRole.changePendingStatus()
+    }
 }

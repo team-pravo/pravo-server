@@ -41,14 +41,6 @@ class PromiseService(
         return promiseRepository.save(promise)
     }
 
-    fun changePendingStatus(promiseId: Long) {
-        val promise =
-            promiseRepository.findById(promiseId).orElseThrow {
-                NotFoundException(ErrorCode.BAD_REQUEST)
-            }
-        promise.changePendingStatus()
-    }
-
     fun getPromise(promiseId: Long): Promise {
         return promiseRepository.findById(promiseId)
             .orElseThrow { NotFoundException(ErrorCode.BAD_REQUEST, "약속을 찾을 수 없습니다") }

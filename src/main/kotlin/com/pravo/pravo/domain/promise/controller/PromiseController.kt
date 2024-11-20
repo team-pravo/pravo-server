@@ -54,7 +54,11 @@ class PromiseController(
     @PostMapping("/{promiseId}/change")
     override fun changePendingStatus(
         @PathVariable promiseId: Long,
-    ): ApiResponseDto<Unit> = ApiResponseDto.success(promiseService.changePendingStatus(promiseId))
+        @AuthUser authenticatedUser: AuthenticateUser,
+    ): ApiResponseDto<Unit> =
+        ApiResponseDto.success(
+            promiseFacade.changePendingStatus(authenticatedUser.memberId, promiseId),
+        )
 
     @DeleteMapping("/{promiseId}/cancel")
     override fun cancelPromise(
