@@ -6,6 +6,7 @@ import com.pravo.pravo.global.common.ApiResponseDto
 import com.pravo.pravo.global.external.toss.dto.request.ConfirmRequestDto
 import com.pravo.pravo.global.jwt.AuthenticateUser
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 
@@ -14,7 +15,7 @@ interface PaymentApi {
     @Operation(summary = "결제 요청", description = "약속, 결제 정보를 생성 후 paymentId를 반환합니다.")
     @SecurityRequirement(name = "jwt")
     fun requestOrder(
-        authenticatedUser: AuthenticateUser,
+        @Parameter(hidden = true) authenticatedUser: AuthenticateUser,
         promiseCreateDto: PromiseCreateDto,
     ): ApiResponseDto<RequestOrderResponseDto>
 
