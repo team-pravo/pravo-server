@@ -49,7 +49,7 @@ class PromiseController(
     ): ApiResponseDto<Unit> {
         return ApiResponseDto.success(promiseRoleService.deletePromise(authenticatedUser.memberId, promiseId))
     }
-
+    
     @PostMapping("/{promiseId}/change")
     override fun changePendingStatus(
         @PathVariable promiseId: Long,

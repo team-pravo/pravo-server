@@ -6,7 +6,7 @@ import com.pravo.pravo.global.error.ErrorCode;
 import com.pravo.pravo.global.error.ErrorCode;
 
 public class BaseException extends RuntimeException {
-    public final ErrorCode errorCode;
+    private final ErrorCode errorCode;
 
     public BaseException(ErrorCode errorCode) {
         super(errorCode.getMessage());
