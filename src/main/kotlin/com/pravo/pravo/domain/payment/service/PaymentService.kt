@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.pravo.pravo.domain.payment.service
 
 import com.pravo.pravo.domain.payment.model.Card
