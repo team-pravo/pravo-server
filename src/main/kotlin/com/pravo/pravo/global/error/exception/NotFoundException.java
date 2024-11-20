@@ -1,6 +1,6 @@
-package com.pravo.pravo.global.common.error.exception;
+package com.pravo.pravo.global.error.exception;
 
-import com.pravo.pravo.global.common.error.ErrorCode;
+import com.pravo.pravo.global.error.ErrorCode;
 
 public class NotFoundException extends BaseException {
     public NotFoundException(ErrorCode errorCode) {

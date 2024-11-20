@@ -1,7 +1,8 @@
 package com.pravo.pravo.global.common.error
 
 import com.pravo.pravo.global.common.ApiResponseDto
-import com.pravo.pravo.global.common.error.exception.UnauthorizedException
+import com.pravo.pravo.global.error.ErrorCode
+import com.pravo.pravo.global.error.exception.UnauthorizedException
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -15,6 +16,11 @@ class GlobalExceptionHandler {
         val response = ApiResponseDto.error(errorCode.message, errorCode.status, errorCode.code)
         return ResponseEntity.status(errorCode.status).body(response)
     }
+
+//    @ExceptionHandler(FeignException::class)
+//    fun handleFeignException(e: FeignException): ResponseEntity<> {
+//        return
+//    }
 
     @ExceptionHandler(RuntimeException::class)
     fun handleRuntimeException(e: RuntimeException): ResponseEntity<ApiResponseDto<Nothing>> {
