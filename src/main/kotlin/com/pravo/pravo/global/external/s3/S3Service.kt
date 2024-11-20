@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.pravo.pravo.global.external.s3
 
 import com.amazonaws.services.s3.AmazonS3
@@ -7,6 +9,7 @@ import com.pravo.pravo.global.common.error.exception.BaseException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
+import java.util.*
 
 @Service
 class S3Service(
@@ -26,7 +29,8 @@ class S3Service(
         validateExtension(file)
         validateFileSize(file)
 
-        val fileName = file.originalFilename
+        val fileExtension = file.originalFilename?.substringAfterLast(".", "")
+        val fileName = "${UUID.randomUUID()}.$fileExtension"
 
         val objectMetadata =
             ObjectMetadata().apply {
