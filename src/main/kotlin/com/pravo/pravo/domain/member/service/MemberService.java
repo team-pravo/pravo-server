@@ -60,7 +60,7 @@ public class MemberService {
     public String logout(String token) {
         // remove Bearer
         token = token.substring(7);
-        Long expiration = jwtTokenProvider.getExpiration(token);
+        Long expiration = jwtTokenProvider.getExpiration(token) - System.currentTimeMillis();
 
         //**로그아웃 구분하기 위해 redis에 저장**
         redisTemplate.opsForValue()
