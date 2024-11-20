@@ -77,5 +77,9 @@ class PromiseController(
     @PostMapping("/{promiseId}/participant/change")
     override fun changeParticipantPendingStatus(
         @PathVariable promiseId: Long,
-    ): ApiResponseDto<Unit> = ApiResponseDto.success(promiseRoleService.changePendingStatus(promiseId))
+        @AuthUser authenticatedUser: AuthenticateUser,
+    ): ApiResponseDto<Unit> =
+        ApiResponseDto.success(
+            promiseRoleService.changePendingStatus(authenticatedUser.memberId, promiseId),
+        )
 }
