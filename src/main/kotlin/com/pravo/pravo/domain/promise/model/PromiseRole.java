@@ -89,4 +89,6 @@ public class PromiseRole extends BaseTimeEntity {
     public static PromiseRole pendingOf(Promise promise, Member member) {
         return new PromiseRole(member, promise, ParticipantStatus.PENDING, RoleStatus.PARTICIPANT);
     }
+
+    public void changePendingStatus() { this.status = ParticipantStatus.READY; }
 }

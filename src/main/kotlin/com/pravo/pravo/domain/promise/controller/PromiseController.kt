@@ -77,7 +77,5 @@ class PromiseController(
     @PostMapping("/{promiseId}/participant/change")
     override fun changeParticipantPendingStatus(
         @PathVariable promiseId: Long,
-    ): ApiResponseDto<Unit> {
-        TODO("Not yet implemented")
-    }
+    ): ApiResponseDto<Unit> = ApiResponseDto.success(promiseRoleService.changePendingStatus(promiseId))
 }
