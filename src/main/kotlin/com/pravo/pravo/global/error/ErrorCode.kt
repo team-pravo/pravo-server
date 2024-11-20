@@ -1,9 +1,9 @@
 package com.pravo.pravo.global.error
 
 enum class ErrorCode(
-        val message: String,
-        val status: Int,
-        val code: String,
+    val message: String,
+    val status: Int,
+    val code: String,
 ) {
     INTERNAL_SERVER_ERROR("Internal Server Error", 500, "E01"),
     BAD_REQUEST("Bad Request", 400, "E02"),
