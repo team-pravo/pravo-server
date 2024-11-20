@@ -58,6 +58,10 @@ dependencies {
     // Health Check
     implementation("org.springframework.boot:spring-boot-starter-actuator")
 
+    // Lombok
+    compileOnly("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
+
     // MySQL
     runtimeOnly("com.mysql:mysql-connector-j")
 
@@ -88,9 +92,8 @@ dependencies {
     // Swagger
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 
-    // Lombok
-    compileOnly("org.projectlombok:lombok")
-    annotationProcessor("org.projectlombok:lombok")
+    // S3
+    implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
 }
 
 kotlin {
