@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 
 @Entity
 public class EasyPay {
-     @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

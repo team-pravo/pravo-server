@@ -7,7 +7,6 @@ import com.pravo.pravo.global.auth.annotation.AuthUser
 import com.pravo.pravo.global.common.ApiResponseDto
 import com.pravo.pravo.global.external.toss.dto.request.ConfirmRequestDto
 import com.pravo.pravo.global.jwt.AuthenticateUser
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController
 class PaymentController(
     private val paymentFacade: PaymentFacade,
 ) : PaymentApi {
-    @GetMapping
+    @PostMapping("/request")
     override fun requestOrder(
         @AuthUser authenticatedUser: AuthenticateUser,
         @RequestBody promiseCreateDto: PromiseCreateDto,
@@ -30,7 +29,7 @@ class PaymentController(
             ),
         )
 
-    @PostMapping
+    @PostMapping("/confirm")
     override fun confirmOrder(
         @RequestBody confirmRequestDto: ConfirmRequestDto,
     ): ApiResponseDto<Unit> = ApiResponseDto.success(paymentFacade.confirmOrder(confirmRequestDto))
