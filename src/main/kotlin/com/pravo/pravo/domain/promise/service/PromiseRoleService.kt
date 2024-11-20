@@ -69,4 +69,13 @@ class PromiseRoleService(
             }
         promiseRole.changePendingStatus()
     }
+
+    fun getPromiseRole(
+        memberId: Long,
+        promiseId: Long,
+    ): PromiseRole {
+        return promiseRoleRepository.findByPromiseIdAndMemberId(promiseId, memberId).orElseThrow {
+            NotFoundException(ErrorCode.BAD_REQUEST, "약속을 찾을 수 없습니다")
+        }
+    }
 }
