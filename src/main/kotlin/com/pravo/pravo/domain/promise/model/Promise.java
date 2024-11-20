@@ -46,7 +46,7 @@ public class Promise extends BaseTimeEntity {
     @Column(nullable = false)
     private boolean deleted = false;
 
-    @OneToMany
+    @OneToMany(mappedBy = "promise")
     private List<PromiseRole> promiseRoles = new ArrayList<>();
 
     public Long getId() {
