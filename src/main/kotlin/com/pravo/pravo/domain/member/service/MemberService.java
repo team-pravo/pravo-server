@@ -63,17 +63,16 @@ public class MemberService {
         return "Successfully logged out";
     }
 
-    public void validateMemberById(Long memberId) {
-        if (!memberRepository.existsById(memberId)) {
-            throw new UnauthorizedException(ErrorCode.UNAUTHORIZED);
-        }
-    }
-
     public MyPageResponseDTO fetchMemberById(long memberId) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(
                 () -> new EntityNotFoundException("멤버를 찾을 수 없습니다"));
         return MyPageResponseDTO.of(member);
+    }
+
+    public Member getMemberById(Long memberId) {
+        return memberRepository.findById(memberId)
+            .orElseThrow(() -> new EntityNotFoundException("멤버를 찾을 수 없습니다"));
     }
 
 }
