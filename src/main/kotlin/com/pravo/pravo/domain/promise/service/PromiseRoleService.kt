@@ -3,6 +3,7 @@ package com.pravo.pravo.domain.promise.service
 import com.pravo.pravo.domain.member.model.Member
 import com.pravo.pravo.domain.promise.model.Promise
 import com.pravo.pravo.domain.promise.model.PromiseRole
+import com.pravo.pravo.domain.promise.model.enums.RoleStatus
 import com.pravo.pravo.domain.promise.repository.PromiseRoleRepository
 import com.pravo.pravo.global.error.ErrorCode
 import com.pravo.pravo.global.error.exception.NotFoundException
@@ -20,18 +21,19 @@ class PromiseRoleService(
         promiseId: Long,
     ) {
         val promiseRole =
-            promiseRoleRepository.findByPromiseIdAndMemberId(promiseId, memberId)
+            promiseRoleRepository.findDetailByPromiseIdAndMemberId(promiseId, memberId)
                 ?.takeIf { it.isOrganizer }
                 ?: throw UnauthorizedException(ErrorCode.UNAUTHORIZED, "약속을 삭제할 권한이 없습니다")
         // TODO: 환불 로직 추가
         promiseRole.promise.delete()
     }
 
-    fun createPromiseRole(
+    fun createPendingPromiseRole(
         member: Member,
         promise: Promise,
+        role: RoleStatus,
     ) {
-        val promiseRole = PromiseRole.pendingOf(promise, member)
+        val promiseRole = PromiseRole.pendingOf(promise, member, role)
         promiseRoleRepository.save(promiseRole)
     }
 
@@ -48,7 +50,7 @@ class PromiseRoleService(
         promiseId: Long,
     ) {
         val promiseRole =
-            promiseRoleRepository.findByPromiseIdAndMemberId(promiseId, memberId)
+            promiseRoleRepository.findDetailByPromiseIdAndMemberId(promiseId, memberId)
                 ?.takeIf { !it.isOrganizer }
                 ?: throw UnauthorizedException(ErrorCode.UNAUTHORIZED, "약속을 취소할 권한이 없습니다")
 
@@ -57,9 +59,12 @@ class PromiseRoleService(
     }
 
     @Transactional
-    fun changePendingStatus(promiseId: Long) {
+    fun changePendingStatus(
+        memberId: Long,
+        promiseId: Long,
+    ) {
         val promiseRole =
-            promiseRoleRepository.findById(promiseId).orElseThrow {
+            promiseRoleRepository.findByPromiseIdAndMemberId(promiseId, memberId).orElseThrow {
                 NotFoundException(ErrorCode.BAD_REQUEST, "약속을 찾을 수 없습니다")
             }
         promiseRole.changePendingStatus()
