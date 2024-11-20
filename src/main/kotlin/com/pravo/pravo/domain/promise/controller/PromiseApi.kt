@@ -54,13 +54,8 @@ interface PromiseApi {
 
     @Operation(summary = "약속 삭제", description = "모임장이 약속을 삭제합니다.")
     @ApiResponse(
-        responseCode = "200",
+        responseCode = "204",
         description = "약속 삭제 성공",
-        content = [
-            Content(
-                schema = Schema(implementation = ApiResponseDto::class),
-            ),
-        ],
     )
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @SecurityRequirement(name = "jwt")
@@ -72,4 +67,16 @@ interface PromiseApi {
     @Operation(summary = "Pending 약속 상태 변경", description = "결제 완료된 약속을 Ready 상태로 변경합니다.")
     @SecurityRequirement(name = "jwt")
     fun changePendingStatus(promiseId: Long): ApiResponseDto<Unit>
+
+    @Operation(summary = "약속 취소", description = "모임원이 약속을 취소합니다.")
+    @ApiResponse(
+        responseCode = "204",
+        description = "약속 취소 성공",
+    )
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @SecurityRequirement(name = "jwt")
+    fun cancelPromise(
+        @PathVariable promiseId: Long,
+        @Parameter(hidden = true) @AuthUser authenticatedUser: AuthenticateUser,
+    ): ApiResponseDto<Unit>
 }
