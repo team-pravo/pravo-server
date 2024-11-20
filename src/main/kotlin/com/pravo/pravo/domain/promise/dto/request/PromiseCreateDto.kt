@@ -10,4 +10,6 @@ data class PromiseCreateDto(
     val promiseDate: LocalDateTime,
     @Schema(description = "약속 장소", example = "약속 장소")
     val location: String,
+    @Schema(description = "예약금", example = "예약금")
+    val deposit: Int,
 )

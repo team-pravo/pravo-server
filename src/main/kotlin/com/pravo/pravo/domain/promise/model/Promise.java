@@ -1,5 +1,6 @@
 package com.pravo.pravo.domain.promise.model;
 
+import com.pravo.pravo.domain.promise.dto.request.PromiseCreateDto;
 import com.pravo.pravo.domain.promise.model.enums.PromiseStatus;
 import com.pravo.pravo.global.common.model.BaseTimeEntity;
 import jakarta.persistence.Column;
@@ -76,5 +77,31 @@ public class Promise extends BaseTimeEntity {
 
     public List<PromiseRole> getPromiseRoles() {
         return this.promiseRoles;
+    }
+
+    public Promise() {
+    }
+
+    public Promise(String name, LocalDateTime promiseDate, String location,
+        PromiseStatus promiseStatus, Integer deposit) {
+        this.name = name;
+        this.promiseDate = promiseDate;
+        this.location = location;
+        this.status = promiseStatus;
+        this.deposit = deposit;
+    }
+
+    public static Promise pendingOf(PromiseCreateDto promiseCreateDto) {
+        return new Promise(
+            promiseCreateDto.getName(),
+            promiseCreateDto.getPromiseDate(),
+            promiseCreateDto.getLocation(),
+            PromiseStatus.PENDING,
+            promiseCreateDto.getDeposit()
+        );
+    }
+
+    public void changePendingStatus() {
+        this.status = PromiseStatus.READY;
     }
 }

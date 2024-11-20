@@ -1,8 +1,8 @@
 package com.pravo.pravo.domain.promise.service
 
 import com.pravo.pravo.domain.promise.repository.PromiseRoleRepository
-import com.pravo.pravo.global.common.error.ErrorCode
-import com.pravo.pravo.global.common.error.exception.UnauthorizedException
+import com.pravo.pravo.global.error.ErrorCode
+import com.pravo.pravo.global.error.exception.UnauthorizedException
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 

@@ -1,9 +1,9 @@
-package com.pravo.pravo.global.common.error
+package com.pravo.pravo.global.error
 
 import com.pravo.pravo.global.common.ApiResponseDto
-import com.pravo.pravo.global.common.error.exception.BaseException
-import com.pravo.pravo.global.common.error.exception.NotFoundException
-import com.pravo.pravo.global.common.error.exception.UnauthorizedException
+import com.pravo.pravo.global.error.exception.BaseException
+import com.pravo.pravo.global.error.exception.NotFoundException
+import com.pravo.pravo.global.error.exception.UnauthorizedException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice

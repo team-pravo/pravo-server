@@ -68,4 +68,8 @@ interface PromiseApi {
         @PathVariable promiseId: Long,
         @Parameter(hidden = true) @AuthUser authenticatedUser: AuthenticateUser,
     ): ApiResponseDto<Unit>
+
+    @Operation(summary = "Pending 약속 상태 변경", description = "결제 완료된 약속을 Ready 상태로 변경합니다.")
+    @SecurityRequirement(name = "jwt")
+    fun changePendingStatus(promiseId: Long): ApiResponseDto<Unit>
 }

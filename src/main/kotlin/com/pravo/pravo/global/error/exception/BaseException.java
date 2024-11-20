@@ -1,6 +1,9 @@
-package com.pravo.pravo.global.common.error.exception;
+package com.pravo.pravo.global.error.exception;
 
-import com.pravo.pravo.global.common.error.ErrorCode;
+import com.pravo.pravo.global.error.ErrorCode;
+import com.pravo.pravo.global.error.ErrorCode;
+import com.pravo.pravo.global.error.ErrorCode;
+import com.pravo.pravo.global.error.ErrorCode;
 
 public class BaseException extends RuntimeException {
     public final ErrorCode errorCode;
