@@ -20,11 +20,23 @@ class PromiseRoleService(
                 ?.takeIf { it.isOrganizer }
                 ?: throw UnauthorizedException(ErrorCode.UNAUTHORIZED, "약속을 삭제할 권한이 없습니다")
 
-        // 모든 PromiseRole 조회 후 개별 delete
         val roles = promiseRoleRepository.findAllByPromiseId(promiseId)
         roles.forEach { it.delete() }
-
-        // Promise 삭제
+        // TODO: 환불 로직 추가
         promiseRole.promise.delete()
+    }
+
+    @Transactional
+    fun cancelPromise(
+        memberId: Long,
+        promiseId: Long,
+    ) {
+        val promiseRole =
+            promiseRoleRepository.findByPromiseIdAndMemberId(promiseId, memberId)
+                ?.takeIf { !it.isOrganizer }
+                ?: throw UnauthorizedException(ErrorCode.UNAUTHORIZED, "약속을 취소할 권한이 없습니다")
+
+        // TODO: 수수료 부과 로직 추가
+        promiseRole.delete()
     }
 }
