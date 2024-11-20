@@ -3,6 +3,7 @@ package com.pravo.pravo.domain.promise.controller
 import com.pravo.pravo.domain.promise.dto.request.PromiseSearchDto
 import com.pravo.pravo.domain.promise.dto.response.PromiseDetailResponseDto
 import com.pravo.pravo.domain.promise.dto.response.PromiseResponseDto
+import com.pravo.pravo.domain.promise.service.PromiseFacade
 import com.pravo.pravo.domain.promise.service.PromiseRoleService
 import com.pravo.pravo.domain.promise.service.PromiseService
 import com.pravo.pravo.global.auth.annotation.AuthUser
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController
 class PromiseController(
     private val promiseService: PromiseService,
     private val promiseRoleService: PromiseRoleService,
+    private val promiseFacade: PromiseFacade,
 ) : PromiseApi {
     @GetMapping
     override fun getPromisesByMember(
@@ -57,4 +59,20 @@ class PromiseController(
         ApiResponseDto.success(
             promiseService.changePendingStatus(promiseId),
         )
+
+    @PostMapping("/{promiseId}/join")
+    override fun joinPromise(
+        @PathVariable promiseId: Long,
+        @AuthUser authenticatedUser: AuthenticateUser,
+    ): ApiResponseDto<PromiseResponseDto> =
+        ApiResponseDto.success(
+            promiseFacade.joinPromise(authenticatedUser.memberId, promiseId),
+        )
+
+    @PostMapping("/{promiseId}/participant/change")
+    override fun changeParticipantPendingStatus(
+        @PathVariable promiseId: Long,
+    ): ApiResponseDto<Unit> {
+        TODO("Not yet implemented")
+    }
 }

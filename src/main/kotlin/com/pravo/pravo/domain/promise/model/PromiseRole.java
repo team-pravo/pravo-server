@@ -14,12 +14,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @SQLRestriction("deleted = false")
-@SQLDelete(sql = "UPDATE promise_role SET deleted = true WHERE promise_role_id = ?")
 public class PromiseRole extends BaseTimeEntity {
 
     @Id
@@ -46,7 +44,15 @@ public class PromiseRole extends BaseTimeEntity {
     @Column(nullable = false)
     private boolean deleted = false;
 
+    public PromiseRole(Member member, Promise promise, ParticipantStatus status, RoleStatus role) {
+        this.member = member;
+        this.promise = promise;
+        this.status = status;
+        this.role = role;
+    }
+
     public PromiseRole() {
+
     }
 
     public Long getId() {
@@ -78,5 +84,9 @@ public class PromiseRole extends BaseTimeEntity {
 
     public void delete() {
         this.deleted = true;
+    }
+
+    public static PromiseRole pendingOf(Promise promise, Member member) {
+        return new PromiseRole(member, promise, ParticipantStatus.PENDING, RoleStatus.PARTICIPANT);
     }
 }

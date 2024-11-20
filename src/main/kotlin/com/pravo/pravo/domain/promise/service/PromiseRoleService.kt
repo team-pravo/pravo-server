@@ -1,5 +1,8 @@
 package com.pravo.pravo.domain.promise.service
 
+import com.pravo.pravo.domain.member.model.Member
+import com.pravo.pravo.domain.promise.model.Promise
+import com.pravo.pravo.domain.promise.model.PromiseRole
 import com.pravo.pravo.domain.promise.repository.PromiseRoleRepository
 import com.pravo.pravo.global.error.ErrorCode
 import com.pravo.pravo.global.error.exception.UnauthorizedException
@@ -20,11 +23,21 @@ class PromiseRoleService(
                 ?.takeIf { it.isOrganizer }
                 ?: throw UnauthorizedException(ErrorCode.UNAUTHORIZED, "약속을 삭제할 권한이 없습니다")
 
-        // 모든 PromiseRole 조회 후 개별 delete
-        val roles = promiseRoleRepository.findAllByPromiseId(promiseId)
-        roles.forEach { it.delete() }
-
-        // Promise 삭제
         promiseRole.promise.delete()
+    }
+
+    fun createPromiseRole(
+        member: Member,
+        promise: Promise,
+    ) {
+        val promiseRole = PromiseRole.pendingOf(promise, member)
+        promiseRoleRepository.save(promiseRole)
+    }
+
+    fun checkPromiseRole(
+        memberId: Long,
+        promiseId: Long,
+    ): Boolean {
+        return promiseRoleRepository.findByPromiseIdAndMemberId(promiseId, memberId) != null
     }
 }
