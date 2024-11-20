@@ -5,6 +5,7 @@ import com.pravo.pravo.domain.promise.model.Promise
 import com.pravo.pravo.domain.promise.model.PromiseRole
 import com.pravo.pravo.domain.promise.repository.PromiseRoleRepository
 import com.pravo.pravo.global.error.ErrorCode
+import com.pravo.pravo.global.error.exception.NotFoundException
 import com.pravo.pravo.global.error.exception.UnauthorizedException
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
@@ -53,5 +54,14 @@ class PromiseRoleService(
 
         // TODO: 수수료 부과 로직 추가
         promiseRole.delete()
+    }
+
+    @Transactional
+    fun changePendingStatus(promiseId: Long) {
+        val promiseRole =
+            promiseRoleRepository.findById(promiseId).orElseThrow {
+                NotFoundException(ErrorCode.BAD_REQUEST, "약속을 찾을 수 없습니다")
+            }
+        promiseRole.changePendingStatus()
     }
 }
