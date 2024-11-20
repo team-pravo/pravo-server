@@ -4,8 +4,8 @@ package com.pravo.pravo.global.external.s3
 
 import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.model.ObjectMetadata
-import com.pravo.pravo.global.common.error.ErrorCode
-import com.pravo.pravo.global.common.error.exception.BaseException
+import com.pravo.pravo.global.error.ErrorCode
+import com.pravo.pravo.global.error.exception.BaseException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile

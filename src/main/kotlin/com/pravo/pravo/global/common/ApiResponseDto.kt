@@ -1,6 +1,6 @@
 package com.pravo.pravo.global.common
 
-import com.pravo.pravo.global.common.error.ErrorCode
+import com.pravo.pravo.global.error.ErrorCode
 import io.swagger.v3.oas.annotations.media.Schema
 
 class ApiResponseDto<T>(
