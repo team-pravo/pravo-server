@@ -1,11 +1,14 @@
 package com.pravo.pravo.domain.payment.service
 
+import com.pravo.pravo.domain.member.service.MemberService
 import com.pravo.pravo.domain.payment.dto.response.RequestOrderResponseDto
 import com.pravo.pravo.domain.payment.enums.PaymentStatus
 import com.pravo.pravo.domain.payment.model.Card
 import com.pravo.pravo.domain.payment.model.EasyPay
 import com.pravo.pravo.domain.payment.model.PaymentLog
 import com.pravo.pravo.domain.promise.dto.request.PromiseCreateDto
+import com.pravo.pravo.domain.promise.model.enums.RoleStatus
+import com.pravo.pravo.domain.promise.service.PromiseRoleService
 import com.pravo.pravo.domain.promise.service.PromiseService
 import com.pravo.pravo.global.external.toss.PaymentClient
 import com.pravo.pravo.global.external.toss.dto.request.ConfirmRequestDto
@@ -20,6 +23,8 @@ class PaymentFacade(
     private val paymentClient: PaymentClient,
     private val paymentService: PaymentService,
     private val promiseService: PromiseService,
+    private val promiseRoleService: PromiseRoleService,
+    private val memberService: MemberService,
 ) {
     val logger = logger()
 
@@ -35,6 +40,8 @@ class PaymentFacade(
 
         val pendingPaymentLog = PaymentLog.getPendingPaymentLog(id)
         val pendingPromise = promiseService.createPendingPromise(promiseCreateDto)
+        val member = memberService.getMemberById(memberId)
+        promiseRoleService.createPendingPromiseRole(member, pendingPromise, RoleStatus.ORGANIZER)
 
         return RequestOrderResponseDto.of(paymentService.savePaymentLog(pendingPaymentLog).orderId, pendingPromise.id)
     }
