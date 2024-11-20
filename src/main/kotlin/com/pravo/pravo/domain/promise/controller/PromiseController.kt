@@ -40,24 +40,29 @@ class PromiseController(
     override fun getPromiseDetailByMember(
         @PathVariable promiseId: Long,
         @AuthUser authenticatedUser: AuthenticateUser,
-    ): PromiseDetailResponseDto {
-        return promiseService.getPromiseDetailByMember(authenticatedUser.memberId, promiseId)
-    }
+    ): PromiseDetailResponseDto = promiseService.getPromiseDetailByMember(authenticatedUser.memberId, promiseId)
 
     @DeleteMapping("/{promiseId}")
     override fun deletePromise(
         @PathVariable promiseId: Long,
         @AuthUser authenticatedUser: AuthenticateUser,
-    ): ApiResponseDto<Unit> {
-        return ApiResponseDto.success(promiseRoleService.deletePromise(authenticatedUser.memberId, promiseId))
-    }
+    ): ApiResponseDto<Unit> =
+        ApiResponseDto.success(
+            promiseRoleService.deletePromise(authenticatedUser.memberId, promiseId),
+        )
 
     @PostMapping("/{promiseId}/change")
     override fun changePendingStatus(
         @PathVariable promiseId: Long,
+    ): ApiResponseDto<Unit> = ApiResponseDto.success(promiseService.changePendingStatus(promiseId))
+
+    @DeleteMapping("/{promiseId}/cancel")
+    override fun cancelPromise(
+        @PathVariable promiseId: Long,
+        @AuthUser authenticatedUser: AuthenticateUser,
     ): ApiResponseDto<Unit> =
         ApiResponseDto.success(
-            promiseService.changePendingStatus(promiseId),
+            promiseRoleService.cancelPromise(authenticatedUser.memberId, promiseId),
         )
 
     @PostMapping("/{promiseId}/join")

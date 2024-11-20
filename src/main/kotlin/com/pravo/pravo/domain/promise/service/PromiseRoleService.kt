@@ -40,4 +40,18 @@ class PromiseRoleService(
     ): Boolean {
         return promiseRoleRepository.findByPromiseIdAndMemberId(promiseId, memberId) != null
     }
+
+    @Transactional
+    fun cancelPromise(
+        memberId: Long,
+        promiseId: Long,
+    ) {
+        val promiseRole =
+            promiseRoleRepository.findByPromiseIdAndMemberId(promiseId, memberId)
+                ?.takeIf { !it.isOrganizer }
+                ?: throw UnauthorizedException(ErrorCode.UNAUTHORIZED, "약속을 취소할 권한이 없습니다")
+
+        // TODO: 수수료 부과 로직 추가
+        promiseRole.delete()
+    }
 }
