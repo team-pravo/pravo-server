@@ -10,7 +10,6 @@ import com.pravo.pravo.global.error.exception.BaseException;
 import com.pravo.pravo.global.error.exception.NotFoundException;
 import com.pravo.pravo.global.error.exception.UnauthorizedException;
 import com.pravo.pravo.global.external.s3.S3Service;
-import com.pravo.pravo.global.jwt.AuthenticateUser;
 import com.pravo.pravo.global.jwt.JwtTokenProvider;
 import com.pravo.pravo.global.jwt.JwtTokens;
 import com.pravo.pravo.global.jwt.JwtTokensGenerator;
@@ -82,10 +81,10 @@ public class MemberService {
         return MyPageResponseDTO.of(member);
     }
 
-    public MyPageResponseDTO updateNameAndProfileImageUrl(AuthenticateUser authenticateUser,
+    public MyPageResponseDTO updateNameAndProfileImageUrl(Long memberId,
         String name,
         MultipartFile file) {
-        Member updateMember = memberRepository.findById(authenticateUser.getMemberId())
+        Member updateMember = memberRepository.findById(memberId)
             .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND, "멤버를 찾을 수 없습니다"));
         if (!updateMember.getName().equals(name) && memberRepository.existsByName(name)) {
             throw new BaseException(ErrorCode.NAME_EXIST_ERROR);
