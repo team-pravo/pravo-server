@@ -86,13 +86,15 @@ public class MemberService {
         MultipartFile file) {
         Member updateMember = memberRepository.findById(memberId)
             .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND, "멤버를 찾을 수 없습니다"));
-        if (!updateMember.getName().equals(name) && memberRepository.existsByName(name)) {
+        String updateMemberName = updateMember.getName();
+        if (!updateMemberName.equals(name) && memberRepository.existsByName(name)) {
             throw new BaseException(ErrorCode.NAME_EXIST_ERROR);
+        } else if (!updateMemberName.equals(name)) {
+            updateMember.changeName(name);
         }
-        String uploadedProfileImageUrl = (file == null)
-            ? updateMember.getProfileImageUrl()
-            : s3Service.uploadFile(file, "profile-image");
-        updateMember.updateNameAndProfileImageUrl(name, uploadedProfileImageUrl);
+        if (file != null) {
+            updateMember.changeProfileImageUrl(s3Service.uploadFile(file, "profile-image"));
+        }
         memberRepository.save(updateMember);
         return MyPageResponseDTO.of(updateMember);
     }
