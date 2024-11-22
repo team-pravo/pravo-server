@@ -87,9 +87,10 @@ public class MemberService {
         Member updateMember = memberRepository.findById(memberId)
             .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND, "멤버를 찾을 수 없습니다"));
         String updateMemberName = updateMember.getName();
-        if (!updateMemberName.equals(name) && memberRepository.existsByName(name)) {
-            throw new BaseException(ErrorCode.NAME_EXIST_ERROR);
-        } else if (!updateMemberName.equals(name)) {
+        if (!updateMemberName.equals(name)) {
+            if (memberRepository.existsByName(name)) {
+                throw new BaseException(ErrorCode.NAME_EXIST_ERROR);
+            }
             updateMember.changeName(name);
         }
         if (file != null) {
