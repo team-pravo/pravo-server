@@ -10,6 +10,9 @@ import com.pravo.pravo.domain.payment.repository.EasyPayRepository
 import com.pravo.pravo.domain.payment.repository.PaymentLogRepository
 import com.pravo.pravo.global.error.ErrorCode
 import com.pravo.pravo.global.error.exception.NotFoundException
+import com.pravo.pravo.global.external.toss.PaymentClient
+import com.pravo.pravo.global.external.toss.dto.request.CancelRequestDto
+import com.pravo.pravo.global.util.logger
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service
 import java.util.*
@@ -21,7 +24,10 @@ class PaymentService(
     private val cardRepository: CardRepository,
     private val easyPayRepository: EasyPayRepository,
     private val redisTemplate: RedisTemplate<String, String>,
+    private val paymentClient: PaymentClient,
 ) {
+    val logger = logger()
+
     fun existOrderId(orderId: String): Boolean = paymentLogRepository.existsById(orderId)
 
     fun savePaymentLog(paymentLog: PaymentLog): PaymentLog = paymentLogRepository.save(paymentLog)
@@ -55,5 +61,29 @@ class PaymentService(
         redisTemplate.opsForValue().set(redisKey, newKey, 24, TimeUnit.HOURS)
 
         return newKey
+    }
+
+    fun cancelPayment(
+        promiseId: Long,
+        memberId: Long,
+    ) {
+        val paymentLog =
+            paymentLogRepository.findByMemberIdAndPromiseId(memberId, promiseId).orElseThrow {
+                NotFoundException(ErrorCode.NOT_FOUND)
+            }
+
+        val idempotencyKey = getOrCreateIdempotencyKey(promiseId, memberId)
+
+        val cancel =
+            paymentClient.cancel(
+                "Basic " +
+                    Base64
+                        .getEncoder()
+                        .encodeToString("test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6:".toByteArray()),
+                idempotencyKey,
+                paymentLog.paymentKey,
+                CancelRequestDto("약속 정산"),
+            )
+        logger.info(cancel.toString())
     }
 }

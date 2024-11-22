@@ -1,6 +1,6 @@
 package com.pravo.pravo.global.external.toss.dto.response
 
-data class ConfirmResponseDto(
+data class TossResponseDto(
     val mId: String,
     val lastTransactionKey: String?,
     val paymentKey: String,
