@@ -81,8 +81,7 @@ public class MemberService {
         return MyPageResponseDTO.of(member);
     }
 
-    public MyPageResponseDTO updateNameAndProfileImageUrl(Long memberId,
-        String name,
+    public MyPageResponseDTO updateNameAndProfileImageUrl(Long memberId, String name,
         MultipartFile file) {
         Member updateMember = memberRepository.findById(memberId)
             .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND, "멤버를 찾을 수 없습니다"));
