@@ -14,6 +14,7 @@ import com.pravo.pravo.global.error.exception.NotFoundException
 import com.pravo.pravo.global.external.toss.PaymentClient
 import com.pravo.pravo.global.external.toss.dto.request.CancelRequestDto
 import com.pravo.pravo.global.util.logger
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service
 import java.util.*
@@ -26,6 +27,7 @@ class PaymentService(
     private val easyPayRepository: EasyPayRepository,
     private val redisTemplate: RedisTemplate<String, String>,
     private val paymentClient: PaymentClient,
+    @Value("\${toss.secretKey}") private val tossSecretKey: String,
 ) {
     val logger = logger()
 
@@ -81,7 +83,7 @@ class PaymentService(
                 "Basic " +
                     Base64
                         .getEncoder()
-                        .encodeToString("test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6:".toByteArray()),
+                        .encodeToString(tossSecretKey.toByteArray()),
                 idempotencyKey,
                 paymentLog.paymentKey,
                 CancelRequestDto("약속 정산"),

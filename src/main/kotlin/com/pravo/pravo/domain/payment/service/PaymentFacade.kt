@@ -11,6 +11,7 @@ import com.pravo.pravo.global.external.toss.PaymentClient
 import com.pravo.pravo.global.external.toss.dto.request.ConfirmRequestDto
 import com.pravo.pravo.global.util.logger
 import jakarta.transaction.Transactional
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.util.Base64
 import java.util.UUID
@@ -20,6 +21,7 @@ class PaymentFacade(
     private val paymentClient: PaymentClient,
     private val paymentService: PaymentService,
     private val promiseService: PromiseService,
+    @Value("\${toss.secretKey}") private val tossSecretKey: String,
 ) {
     val logger = logger()
 
@@ -46,7 +48,7 @@ class PaymentFacade(
                 "Basic " +
                     Base64
                         .getEncoder()
-                        .encodeToString("test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6:".toByteArray()),
+                        .encodeToString(tossSecretKey.toByteArray()),
                 confirmRequestDto,
             )
         logger.info(confirm.toString())
