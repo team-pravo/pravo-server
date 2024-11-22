@@ -93,6 +93,10 @@ public class PaymentLog extends BaseTimeEntity {
         return this.paymentKey;
     }
 
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
     private PaymentLog setPendingPaymentLog(String id, Long memberId, Long promiseId) {
         this.orderId = id;
         this.memberId = memberId;

@@ -2,6 +2,7 @@
 
 package com.pravo.pravo.domain.payment.service
 
+import com.pravo.pravo.domain.payment.enums.PaymentStatus
 import com.pravo.pravo.domain.payment.model.Card
 import com.pravo.pravo.domain.payment.model.EasyPay
 import com.pravo.pravo.domain.payment.model.PaymentLog
@@ -63,6 +64,7 @@ class PaymentService(
         return newKey
     }
 
+    // TODO 약속 정산 부분에서 호출
     fun cancelPayment(
         promiseId: Long,
         memberId: Long,
@@ -85,5 +87,7 @@ class PaymentService(
                 CancelRequestDto("약속 정산"),
             )
         logger.info(cancel.toString())
+
+        paymentLog.setPaymentStatus(PaymentStatus.CANCELED)
     }
 }
