@@ -33,8 +33,8 @@ class PaymentFacade(
             id = UUID.randomUUID().toString()
         }
 
-        val pendingPaymentLog = PaymentLog.getPendingPaymentLog(id)
         val pendingPromise = promiseService.createPendingPromise(promiseCreateDto)
+        val pendingPaymentLog = PaymentLog.getPendingPaymentLog(id, memberId, pendingPromise.id)
 
         return RequestOrderResponseDto.of(paymentService.savePaymentLog(pendingPaymentLog).orderId, pendingPromise.id)
     }
