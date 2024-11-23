@@ -97,7 +97,8 @@ public class MemberService {
             updateMember.changeProfileImageUrl(s3Service.uploadFile(file, "profile-image"));
         }
         memberRepository.save(updateMember);
-        if (!oldProfileImageUrl.equals(updateMember.getProfileImageUrl())) {
+        if (oldProfileImageUrl != null && !oldProfileImageUrl.equals(
+            updateMember.getProfileImageUrl())) {
             s3Service.deleteFile(oldProfileImageUrl);
         }
         return MyPageResponseDTO.of(updateMember);
