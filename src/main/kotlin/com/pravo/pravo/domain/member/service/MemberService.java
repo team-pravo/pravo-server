@@ -92,12 +92,14 @@ public class MemberService {
             }
             updateMember.changeName(name);
         }
+        String oldProfileImageUrl = updateMember.getProfileImageUrl();
         if (file != null) {
-            String oldProfileImageUrl = updateMember.getProfileImageUrl();
             updateMember.changeProfileImageUrl(s3Service.uploadFile(file, "profile-image"));
-            s3Service.deleteFile(oldProfileImageUrl);
         }
         memberRepository.save(updateMember);
+        if (!oldProfileImageUrl.equals(updateMember.getProfileImageUrl())) {
+            s3Service.deleteFile(oldProfileImageUrl);
+        }
         return MyPageResponseDTO.of(updateMember);
     }
 }
