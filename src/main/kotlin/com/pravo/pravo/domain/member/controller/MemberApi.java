@@ -19,7 +19,7 @@ public interface MemberApi {
     );
 
     @Operation(summary = "마이페이지", description = "멤버 이름과 프로필 사진 URL 조회합니다")
-    ApiResponseDto<MyPageResponseDTO> myPage(
+    ApiResponseDto<MyPageResponseDTO> getMyPage(
         @Parameter(hidden = true) AuthenticateUser authenticateUser
     );
 

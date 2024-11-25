@@ -33,7 +33,7 @@ public class MemberController implements MemberApi {
     }
 
     @GetMapping("/member")
-    public ApiResponseDto<MyPageResponseDTO> myPage(
+    public ApiResponseDto<MyPageResponseDTO> getMyPage(
         @AuthUser AuthenticateUser authenticateUser) {
         return ApiResponseDto.success(
             memberService.fetchMemberById(authenticateUser.getMemberId()));

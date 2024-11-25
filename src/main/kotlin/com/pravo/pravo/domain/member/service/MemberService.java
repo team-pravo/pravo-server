@@ -90,11 +90,11 @@ public class MemberService {
             if (memberRepository.existsByName(name)) {
                 throw new BaseException(ErrorCode.NAME_EXIST_ERROR);
             }
-            updateMember.changeName(name);
+            updateMember.setName(name);
         }
         String oldProfileImageUrl = updateMember.getProfileImageUrl();
         if (file != null) {
-            updateMember.changeProfileImageUrl(s3Service.uploadFile(file, "profile-image"));
+            updateMember.setProfileImageUrl(s3Service.uploadFile(file, "profile-image"));
         }
         memberRepository.save(updateMember);
         if (oldProfileImageUrl != null && !oldProfileImageUrl.equals(
