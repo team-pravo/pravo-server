@@ -15,8 +15,7 @@ class PromiseFacade(
         memberId: Long,
         promiseId: Long,
     ): PromiseResponseDto {
-        val promiseRole = promiseRoleService.checkPromiseRole(memberId, promiseId)
-        if (promiseRole) {
+        if (promiseRoleService.checkPromiseRole(memberId, promiseId)) {
             return PromiseResponseDto.of(promiseService.getPromise(promiseId))
         }
         val promise = promiseService.getPromise(promiseId)
