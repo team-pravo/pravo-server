@@ -14,21 +14,21 @@ import java.util.*
 
 @Service
 class S3Service(
-        private val amazonS3Client: AmazonS3,
-        @Value("\${cloud.aws.s3.bucket}") private val bucket: String,
-        @Value("\${spring.member.default-profile-image-url}") private val defaultProfileImageUrl: String,
+    private val amazonS3Client: AmazonS3,
+    @Value("\${cloud.aws.s3.bucket}") private val bucket: String,
+    @Value("\${spring.member.default-profile-image-url}") private val defaultProfileImageUrl: String,
 ) {
     val logger = logger()
 
     companion object {
         val IMAGE_EXTENSIONS: List<String> =
-                listOf("image/jpeg", "image/png", "image/jpg", "image/webp")
+            listOf("image/jpeg", "image/png", "image/jpg", "image/webp")
         val MAX_FILE_SIZE: Long = 5 * 1024 * 1024L
     }
 
     fun uploadFile(
-            file: MultipartFile,
-            folder: String,
+        file: MultipartFile,
+        folder: String,
     ): String {
         validateExtension(file)
         validateFileSize(file)
@@ -37,16 +37,16 @@ class S3Service(
         val fileName = "${UUID.randomUUID()}.$fileExtension"
 
         val objectMetadata =
-                ObjectMetadata().apply {
-                    contentType = file.contentType
-                    contentLength = file.size
-                }
+            ObjectMetadata().apply {
+                contentType = file.contentType
+                contentLength = file.size
+            }
 
         amazonS3Client.putObject(
-                "$bucket/$folder",
-                fileName,
-                file.inputStream,
-                objectMetadata,
+            "$bucket/$folder",
+            fileName,
+            file.inputStream,
+            objectMetadata,
         )
         return amazonS3Client.getUrl("$bucket/$folder", fileName).toString()
     }
