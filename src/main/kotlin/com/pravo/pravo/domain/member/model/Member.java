@@ -5,10 +5,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Column;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(name = "member")
+@SQLRestriction("deleted = false")
 public class Member extends BaseTimeEntity {
 
     @Id
@@ -18,6 +21,9 @@ public class Member extends BaseTimeEntity {
     private String name;
     private String profileImageUrl;
     private String socialId;
+
+    @Column(nullable = false)
+    private boolean deleted = false;
 
     //    private String refreshToken;
 

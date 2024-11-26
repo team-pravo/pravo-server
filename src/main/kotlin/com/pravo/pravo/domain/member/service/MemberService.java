@@ -13,6 +13,7 @@ import com.pravo.pravo.global.external.s3.S3Service;
 import com.pravo.pravo.global.jwt.JwtTokenProvider;
 import com.pravo.pravo.global.jwt.JwtTokens;
 import com.pravo.pravo.global.jwt.JwtTokensGenerator;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.concurrent.TimeUnit;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -102,5 +103,10 @@ public class MemberService {
             s3Service.deleteFile(oldProfileImageUrl);
         }
         return MyPageResponseDTO.of(updateMember);
+    }
+
+    public Member getMemberById(Long memberId) {
+        return memberRepository.findById(memberId)
+            .orElseThrow(() -> new EntityNotFoundException("멤버를 찾을 수 없습니다"));
     }
 }
