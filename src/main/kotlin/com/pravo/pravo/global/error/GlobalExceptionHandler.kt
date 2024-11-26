@@ -4,6 +4,7 @@ import com.pravo.pravo.global.common.ApiResponseDto
 import com.pravo.pravo.global.error.exception.BaseException
 import com.pravo.pravo.global.error.exception.NotFoundException
 import com.pravo.pravo.global.error.exception.UnauthorizedException
+import com.pravo.pravo.global.util.logger
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
+    val logger = logger()
+
     @ExceptionHandler(BaseException::class)
     protected fun handleException(e: BaseException): ResponseEntity<ApiResponseDto<Nothing>> {
         val errorCode = e.errorCode
@@ -20,6 +23,8 @@ class GlobalExceptionHandler {
                 errorCode.status,
                 errorCode.code,
             )
+
+        logger.error(e.message, e)
         return ResponseEntity.status(errorCode.status).body(response)
     }
 
@@ -27,6 +32,8 @@ class GlobalExceptionHandler {
     protected fun handleException(exception: Exception): ResponseEntity<ApiResponseDto<Nothing>> {
         val errorCode = ErrorCode.INTERNAL_SERVER_ERROR
         val response = ApiResponseDto.error(errorCode.message, errorCode.status, errorCode.code)
+
+        logger.error(exception.message, exception)
         return ResponseEntity.status(errorCode.status).body(response)
     }
 
@@ -34,6 +41,8 @@ class GlobalExceptionHandler {
     fun handleRuntimeException(e: RuntimeException): ResponseEntity<ApiResponseDto<Nothing>> {
         val errorCode = ErrorCode.INTERNAL_SERVER_ERROR
         val response = ApiResponseDto.error(errorCode.message, errorCode.status, errorCode.code)
+
+        logger.error(e.message, e)
         return ResponseEntity.status(errorCode.status).body(response)
     }
 
@@ -46,6 +55,8 @@ class GlobalExceptionHandler {
                 errorCode.status,
                 errorCode.code,
             )
+
+        logger.error(e.message, e)
         return ResponseEntity.status(errorCode.status).body(response)
     }
 
@@ -53,6 +64,8 @@ class GlobalExceptionHandler {
     fun handleEntityNotFoundException(e: EntityNotFoundException): ResponseEntity<ApiResponseDto<Nothing>> {
         val errorCode = ErrorCode.NOT_FOUND
         val response = ApiResponseDto.error(errorCode.message, errorCode.status, errorCode.code)
+
+        logger.error(e.message, e)
         return ResponseEntity.status(errorCode.status).body(response)
     }
 
@@ -72,6 +85,8 @@ class GlobalExceptionHandler {
                 errorCode.status,
                 errorCode.code,
             )
+
+        logger.error(e.message, e)
         return ResponseEntity.status(errorCode.status).body(response)
     }
 }
