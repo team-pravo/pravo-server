@@ -28,6 +28,9 @@ spring:
     redis:
       host: localhost
       port: 6379
-      
+
   apple:
     aud: ${APPLE_CLIENT_ID}
+
+  member:
+    default-profile-image-url: ${DEFAULT_PROFILE_IMAGE_URL}

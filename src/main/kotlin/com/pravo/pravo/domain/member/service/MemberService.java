@@ -15,6 +15,7 @@ import com.pravo.pravo.global.jwt.JwtTokens;
 import com.pravo.pravo.global.jwt.JwtTokensGenerator;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.concurrent.TimeUnit;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class MemberService {
 
+    @Value("${spring.member.default-profile-image-url}")
+    private String defaultProfileImageUrl;
     private final MemberRepository memberRepository;
     private final JwtTokensGenerator jwtTokensGenerator;
     private final JwtTokenProvider jwtTokenProvider;
@@ -45,7 +48,10 @@ public class MemberService {
 
         Member socialLoginMember = new Member(uniqueRandomName, loginRequestDto.getSocialId());
         Member loginMember = memberRepository.findBySocialId(socialLoginMember.getSocialId())
-            .orElseGet(() -> memberRepository.save(socialLoginMember));
+            .orElseGet(() -> {
+                socialLoginMember.setProfileImageUrl(defaultProfileImageUrl);
+                return memberRepository.save(socialLoginMember);
+            });
 
         LoginResponseDTO loginResponseDTO = new LoginResponseDTO();
         JwtTokens accessToken = jwtTokensGenerator.generate(loginMember.getId());
