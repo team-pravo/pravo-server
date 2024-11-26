@@ -1,5 +1,6 @@
 package com.pravo.pravo.domain.promise.dto.response
 
+import com.pravo.pravo.domain.promise.model.Promise
 import com.pravo.pravo.domain.promise.model.enums.PromiseStatus
 import com.querydsl.core.annotations.QueryProjection
 import io.swagger.v3.oas.annotations.media.Schema
@@ -19,7 +20,21 @@ class PromiseResponseDto
         @Schema(description = "약속 상태", example = "READY")
         val status: PromiseStatus,
         @Schema(description = "모임장 이름", example = "모임장 이름")
-        val organizerName: String,
+        val organizerName: String?,
         @Schema(description = "모임장 프로필 이미지", example = "모임장 프로필 이미지")
         val organizerProfileImageUrl: String?,
-    )
+    ) {
+        companion object {
+            fun of(promise: Promise): PromiseResponseDto {
+                return PromiseResponseDto(
+                    id = promise.id,
+                    name = promise.name,
+                    promiseDate = promise.promiseDate,
+                    location = promise.location,
+                    status = promise.status,
+                    organizerName = null,
+                    organizerProfileImageUrl = null,
+                )
+            }
+        }
+    }

@@ -3,6 +3,7 @@ package com.pravo.pravo.domain.promise.model;
 import com.pravo.pravo.domain.promise.dto.request.PromiseCreateDto;
 import com.pravo.pravo.domain.promise.model.enums.PromiseStatus;
 import com.pravo.pravo.global.common.model.BaseTimeEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,12 +15,10 @@ import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @SQLRestriction("deleted = false")
-@SQLDelete(sql = "UPDATE promise SET deleted = true WHERE promise_id = ?")
 public class Promise extends BaseTimeEntity {
 
     @Id
@@ -46,7 +45,7 @@ public class Promise extends BaseTimeEntity {
     @Column(nullable = false)
     private boolean deleted = false;
 
-    @OneToMany
+    @OneToMany(mappedBy = "promise", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PromiseRole> promiseRoles = new ArrayList<>();
 
     public Long getId() {
@@ -73,6 +72,7 @@ public class Promise extends BaseTimeEntity {
 
     public void delete() {
         this.deleted = true;
+        promiseRoles.forEach(PromiseRole::delete);
     }
 
     public List<PromiseRole> getPromiseRoles() {
