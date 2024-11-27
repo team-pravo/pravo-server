@@ -58,7 +58,7 @@ public class PaymentLog extends BaseTimeEntity {
 
         this.requestedAt = OffsetDateTime.parse(dto.getRequestedAt()).toLocalDateTime();
         this.approvedAt =
-            dto.getApprovedAt() != null ? LocalDateTime.parse(dto.getApprovedAt()) : null;
+            dto.getApprovedAt() != null ? OffsetDateTime.parse(dto.getApprovedAt()).toLocalDateTime() : null;
 
         this.useEscrow = dto.getUseEscrow();
         this.cultureExpense = dto.getCultureExpense();
