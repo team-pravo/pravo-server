@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service
 class PointLogService(
     private val pointLogRepository: PointLogRepository,
 ) {
+    // TODO 약속 정산에서 호출
     fun savePointLog(
         pointLogStatus: PointLogStatus,
         amount: Long,
