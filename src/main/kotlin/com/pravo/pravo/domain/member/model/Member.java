@@ -21,11 +21,10 @@ public class Member extends BaseTimeEntity {
     private String name;
     private String profileImageUrl;
     private String socialId;
+    private Long point;
 
     @Column(nullable = false)
     private boolean deleted = false;
-
-    //    private String refreshToken;
 
     public long getId() {
         return this.id;
@@ -41,6 +40,7 @@ public class Member extends BaseTimeEntity {
     public Member(String name, String socialId) {
         this.name = name;
         this.socialId = socialId;
+        this.point = 0L;
     }
 
     public String getSocialId() {
