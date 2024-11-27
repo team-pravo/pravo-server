@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.model.ObjectMetadata
 import com.pravo.pravo.global.error.ErrorCode
 import com.pravo.pravo.global.error.exception.BaseException
+import com.pravo.pravo.global.util.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -15,7 +16,10 @@ import java.util.*
 class S3Service(
     private val amazonS3Client: AmazonS3,
     @Value("\${cloud.aws.s3.bucket}") private val bucket: String,
+    @Value("\${spring.member.default-profile-image-url}") private val defaultProfileImageUrl: String,
 ) {
+    val logger = logger()
+
     companion object {
         val IMAGE_EXTENSIONS: List<String> =
             listOf("image/jpeg", "image/png", "image/jpg", "image/webp")
@@ -58,5 +62,17 @@ class S3Service(
         if (image.size > MAX_FILE_SIZE) {
             throw BaseException(ErrorCode.IMAGE_SIZE_ERROR)
         }
+    }
+
+    fun deleteFile(imageUrl: String) {
+        if (imageUrl == defaultProfileImageUrl) {
+            logger.info("Skipping deletion as the image is the default profile image.")
+            return
+        }
+        val fileKey = imageUrl.substringAfter("$bucket/")
+        if (!amazonS3Client.doesObjectExist(bucket, fileKey)) {
+            logger.warn("Image file does not exist in AWS S3 ")
+        }
+        amazonS3Client.deleteObject(bucket, fileKey)
     }
 }
