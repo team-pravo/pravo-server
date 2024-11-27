@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service
 class FineLogService(
     private val fineLogRepository: FineLogRepository,
 ) {
+    // TODO 정산 로직에서 사용
     fun saveFineLog(
         amount: Long,
         memberId: Long,
