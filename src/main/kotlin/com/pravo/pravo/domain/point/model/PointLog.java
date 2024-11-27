@@ -20,4 +20,20 @@ public class PointLog extends BaseTimeEntity {
 
     private Long memberId;
     private Long promiseId;
+
+    public PointLog(PointLogStatus pointLogStatus, Long amount, Long memberId, Long promiseId) {
+        this.pointLogStatus = pointLogStatus;
+        this.amount = amount;
+        this.memberId = memberId;
+        this.promiseId = promiseId;
+    }
+
+    public PointLog() {
+
+    }
+
+    public static PointLog of(PointLogStatus pointLogStatus, Long amount, Long memberId,
+        Long promiseId) {
+        return new PointLog(pointLogStatus, amount, memberId, promiseId);
+    }
 }
