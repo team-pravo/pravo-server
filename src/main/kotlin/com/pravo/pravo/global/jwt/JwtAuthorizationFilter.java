@@ -63,7 +63,7 @@ public class JwtAuthorizationFilter implements Filter {
         try {
             String token = getToken(httpServletRequest);
 
-            String isLogout = (String) redisTemplate.opsForValue().get("Bearer " + token);
+            String isLogout = (String) redisTemplate.opsForValue().get(token);
 
             // 로그아웃이 없는(되어 있지 않은) 경우 해당 토큰은 정상적으로 작동하기
             if (ObjectUtils.isEmpty(isLogout)) {
