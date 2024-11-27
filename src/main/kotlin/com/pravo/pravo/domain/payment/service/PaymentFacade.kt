@@ -1,5 +1,3 @@
-@file:Suppress("ktlint:standard:no-wildcard-imports")
-
 package com.pravo.pravo.domain.payment.service
 
 import com.pravo.pravo.domain.member.service.MemberService
@@ -18,7 +16,8 @@ import com.pravo.pravo.global.util.logger
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import java.util.*
+import java.util.Base64
+import java.util.UUID
 
 @Service
 class PaymentFacade(
