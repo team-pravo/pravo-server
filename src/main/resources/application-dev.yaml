@@ -33,3 +33,8 @@ spring:
 
   member:
     default-profile-image-url: ${DEFAULT_PROFILE_IMAGE_URL}
+
+logging:
+  discord:
+    error-uri: ${DISCORD_ERROR_URI}
+  config: classpath:logback-dev.xml

@@ -6,6 +6,7 @@ import com.pravo.pravo.global.external.toss.dto.response.ConfirmResponseDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 public class PaymentLog extends BaseTimeEntity {
@@ -55,10 +56,9 @@ public class PaymentLog extends BaseTimeEntity {
             dto.getTaxExemptionAmount() != null ? dto.getTaxExemptionAmount() : 0;
         this.status = dto.getStatus();
 
-        // LocalDateTime 파싱이 필요하다면, LocalDateTime.parse()를 사용하여 변환합니다.
-        this.requestedAt = LocalDateTime.parse(dto.getRequestedAt());
+        this.requestedAt = OffsetDateTime.parse(dto.getRequestedAt()).toLocalDateTime();
         this.approvedAt =
-            dto.getApprovedAt() != null ? LocalDateTime.parse(dto.getApprovedAt()) : null;
+            dto.getApprovedAt() != null ? OffsetDateTime.parse(dto.getApprovedAt()).toLocalDateTime() : null;
 
         this.useEscrow = dto.getUseEscrow();
         this.cultureExpense = dto.getCultureExpense();
