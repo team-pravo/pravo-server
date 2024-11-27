@@ -89,26 +89,49 @@ public class MemberService {
     }
 
     public MyPageResponseDTO updateNameAndProfileImageUrl(Long memberId, String name,
-        MultipartFile file) {
+        MultipartFile file, Boolean resetToDefaultImage) {
         Member updateMember = memberRepository.findById(memberId)
             .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND, "멤버를 찾을 수 없습니다"));
-        String updateMemberName = updateMember.getName();
-        if (!updateMemberName.equals(name)) {
+
+        // Update name if necessary
+        updateMemberNameIfNeeded(updateMember, name);
+
+        // Update profile image if necessary
+        String oldProfileImageUrl = updateMember.getProfileImageUrl();
+        updateProfileImage(updateMember, file, resetToDefaultImage);
+
+        // Save changes
+        memberRepository.save(updateMember);
+
+        // Delete old image if needed
+        deleteOldProfileImageIfNeeded(oldProfileImageUrl, updateMember.getProfileImageUrl());
+
+        return MyPageResponseDTO.of(updateMember);
+    }
+
+    private void updateMemberNameIfNeeded(Member member, String name) {
+        if (!member.getName().equals(name)) {
             if (memberRepository.existsByName(name)) {
                 throw new BaseException(ErrorCode.NAME_EXIST_ERROR);
             }
-            updateMember.setName(name);
+            member.setName(name);
         }
-        String oldProfileImageUrl = updateMember.getProfileImageUrl();
+    }
+
+    private void updateProfileImage(Member member, MultipartFile file,
+        Boolean resetToDefaultImage) {
         if (file != null) {
-            updateMember.setProfileImageUrl(s3Service.uploadFile(file, "profile-image"));
+            member.setProfileImageUrl(s3Service.uploadFile(file, "profile-image"));
+        } else if (resetToDefaultImage) {
+            member.setProfileImageUrl(defaultProfileImageUrl);
         }
-        memberRepository.save(updateMember);
-        if (oldProfileImageUrl != null && !oldProfileImageUrl.equals(
-            updateMember.getProfileImageUrl())) {
+    }
+
+    private void deleteOldProfileImageIfNeeded(String oldProfileImageUrl,
+        String newProfileImageUrl) {
+        if (oldProfileImageUrl != null && !oldProfileImageUrl.equals(newProfileImageUrl)) {
             s3Service.deleteFile(oldProfileImageUrl);
         }
-        return MyPageResponseDTO.of(updateMember);
     }
 
     public Member getMemberById(Long memberId) {

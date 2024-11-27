@@ -46,6 +46,7 @@ public class MemberController implements MemberApi {
     ) {
         return ApiResponseDto.success(
             memberService.updateNameAndProfileImageUrl(authenticateUser.getMemberId(),
-                profileChangeRequestDTO.name(), profileChangeRequestDTO.file()));
+                profileChangeRequestDTO.name(), profileChangeRequestDTO.file(),
+                profileChangeRequestDTO.resetToDefaultImage()));
     }
 }

@@ -8,8 +8,10 @@ public record ProfileChangeRequestDTO(
 
     @NotBlank(message = "Name cannot be blank")
     String name,
-    
-    @Nullable MultipartFile file
+
+    @Nullable MultipartFile file,
+
+    @NotBlank Boolean resetToDefaultImage
 
 ) {
 
