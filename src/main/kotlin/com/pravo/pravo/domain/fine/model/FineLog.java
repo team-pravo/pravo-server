@@ -33,4 +33,12 @@ public class FineLog extends BaseTimeEntity {
     public static FineLog of(Long amount, Long memberId, Long promiseId) {
         return new FineLog(amount, memberId, promiseId);
     }
+
+    public Long getPromiseId() {
+        return this.promiseId;
+    }
+
+    public Long getAmount() {
+        return this.amount;
+    }
 }

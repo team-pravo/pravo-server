@@ -1,6 +1,7 @@
 package com.pravo.pravo.domain.member.controller;
 
 import com.pravo.pravo.domain.member.dto.MemberPaymentLogResponseDTO;
+import com.pravo.pravo.domain.member.dto.MemberPointLogResponseDTO;
 import com.pravo.pravo.domain.member.dto.MyPageResponseDTO;
 import com.pravo.pravo.domain.member.dto.ProfileChangeRequestDTO;
 import com.pravo.pravo.global.common.ApiResponseDto;
@@ -33,6 +34,11 @@ public interface MemberApi {
 
     @Operation(summary = "결제 내역", description = "멤버 결제 내역 조회합니다")
     ApiResponseDto<List<MemberPaymentLogResponseDTO>> getMemberPaymentLog(
+        @Parameter(hidden = true) AuthenticateUser authenticateUser
+    );
+
+    @Operation(summary = "포인트 사용/적립/별금 내역", description = "포인트 사용/적립/별금 내역 조회합니다")
+    ApiResponseDto<List<MemberPointLogResponseDTO>> getMemberPointLog(
         @Parameter(hidden = true) AuthenticateUser authenticateUser
     );
 }

@@ -2,6 +2,7 @@ package com.pravo.pravo.domain.member.controller;
 
 import com.pravo.pravo.domain.member.dto.MemberPaymentLogResponseDTO;
 import com.pravo.pravo.domain.member.dto.MyPageResponseDTO;
+import com.pravo.pravo.domain.member.dto.MemberPointLogResponseDTO;
 import com.pravo.pravo.domain.member.dto.ProfileChangeRequestDTO;
 import com.pravo.pravo.domain.member.service.MemberFacade;
 import com.pravo.pravo.domain.member.service.MemberService;
@@ -60,5 +61,12 @@ public class MemberController implements MemberApi {
         @AuthUser AuthenticateUser authenticateUser) {
         return ApiResponseDto.success(
             memberFacade.getMemberPaymentLog(authenticateUser.getMemberId()));
+    }
+
+    @GetMapping("/member/point-log")
+    public ApiResponseDto<List<MemberPointLogResponseDTO>> getMemberPointLog(
+        @AuthUser AuthenticateUser authenticateUser) {
+        return ApiResponseDto.success(
+            (memberFacade.getMemberPointLog(authenticateUser.getMemberId())));
     }
 }

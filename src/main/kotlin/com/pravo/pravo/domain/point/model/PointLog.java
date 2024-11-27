@@ -36,4 +36,16 @@ public class PointLog extends BaseTimeEntity {
         Long promiseId) {
         return new PointLog(pointLogStatus, amount, memberId, promiseId);
     }
+
+    public Long getPromiseId() {
+        return this.promiseId;
+    }
+
+    public PointLogStatus getPointLogStatus() {
+        return this.pointLogStatus;
+    }
+
+    public Long getAmount() {
+        return this.amount;
+    }
 }
