@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.pravo.pravo.domain.payment.service
 
 import com.pravo.pravo.domain.member.service.MemberService
@@ -16,8 +18,7 @@ import com.pravo.pravo.global.util.logger
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import java.util.Base64
-import java.util.UUID
+import java.util.*
 
 @Service
 class PaymentFacade(
@@ -30,7 +31,7 @@ class PaymentFacade(
 ) {
     val logger = logger()
 
-    fun createPaymentUUID(): String  {
+    fun createPaymentUUID(): String {
         var id = UUID.randomUUID().toString()
         while (paymentService.existOrderId(id)) {
             id = UUID.randomUUID().toString()
@@ -49,7 +50,10 @@ class PaymentFacade(
         val member = memberService.getMemberById(memberId)
         promiseRoleService.createPendingPromiseRole(member, pendingPromise, RoleStatus.ORGANIZER)
 
-        return RequestOrderResponseDto.of(paymentService.savePaymentLog(pendingPaymentLog).orderId, pendingPromise.id)
+        return RequestOrderResponseDto.of(
+            paymentService.savePaymentLog(pendingPaymentLog).orderId,
+            pendingPromise.id,
+        )
     }
 
     @Transactional
@@ -63,7 +67,10 @@ class PaymentFacade(
         val promise = promiseService.getPromise(promiseId)
         promiseRoleService.createPendingPromiseRole(member, promise, RoleStatus.PARTICIPANT)
 
-        return RequestOrderResponseDto.of(paymentService.savePaymentLog(pendingPaymentLog).orderId, promiseId)
+        return RequestOrderResponseDto.of(
+            paymentService.savePaymentLog(pendingPaymentLog).orderId,
+            promiseId,
+        )
     }
 
     @Transactional
@@ -84,7 +91,12 @@ class PaymentFacade(
         val card = confirm.card?.let { Card(it) }
         val easyPay = confirm.easyPay?.let { EasyPay(it) }
 
-        paymentLog.updateFromConfirmResponse(confirm, card?.id, easyPay?.id, PaymentStatus.COMPLETED)
+        paymentLog.updateFromConfirmResponse(
+            confirm,
+            card?.id,
+            easyPay?.id,
+            PaymentStatus.COMPLETED,
+        )
         paymentService.saveCardAndEasyPay(card, easyPay)
     }
 }
