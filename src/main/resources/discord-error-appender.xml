@@ -3,7 +3,7 @@
         <webhookUri>
             ${DISCORD_ERROR_URI}
         </webhookUri>
-        <username>Internel Server Error detected 🚨</username>
+        <username>Internal Server Error detected 🚨</username>
           <avatarUrl>https://s3.orbi.kr/data/file/united/251cc0d1434cc0aed00afe93082bb25a.jpeg</avatarUrl>
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>%msg%n</pattern>
