@@ -105,4 +105,20 @@ interface PromiseApi {
         @PathVariable promiseId: Long,
         @Parameter(hidden = true) @AuthUser authenticatedUser: AuthenticateUser,
     ): ApiResponseDto<Unit>
+
+    @Operation(summary = "약속 정산 조회", description = "약속을 생성합니다.")
+    @ApiResponse(
+        responseCode = "200",
+        description = "약속 정산 조회 성공",
+        content = [
+            Content(
+                schema = Schema(implementation = ApiResponseDto::class),
+            ),
+        ],
+    )
+    @SecurityRequirement(name = "jwt")
+    fun getPromiseSettlement(
+        @PathVariable promiseId: Long,
+        @Parameter(hidden = true) @AuthUser authenticatedUser: AuthenticateUser,
+    ): ApiResponseDto<Unit>
 }

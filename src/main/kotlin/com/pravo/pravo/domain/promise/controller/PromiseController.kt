@@ -69,6 +69,14 @@ class PromiseController(
             promiseRoleService.cancelPromise(authenticatedUser.memberId, promiseId),
         )
 
+    @GetMapping("/{promiseId}/settlement")
+    override fun getPromiseSettlement(
+        @PathVariable promiseId: Long,
+        @AuthUser authenticatedUser: AuthenticateUser
+    ): ApiResponseDto<Unit> {
+        TODO("Not yet implemented")
+    }
+
     @PostMapping("/{promiseId}/join")
     override fun joinPromise(
         @PathVariable promiseId: Long,
