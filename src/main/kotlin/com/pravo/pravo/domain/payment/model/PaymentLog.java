@@ -61,7 +61,8 @@ public class PaymentLog extends BaseTimeEntity {
 
         this.requestedAt = OffsetDateTime.parse(dto.getRequestedAt()).toLocalDateTime();
         this.approvedAt =
-            dto.getApprovedAt() != null ? OffsetDateTime.parse(dto.getApprovedAt()).toLocalDateTime() : null;
+            dto.getApprovedAt() != null ? OffsetDateTime.parse(dto.getApprovedAt())
+                .toLocalDateTime() : null;
 
         this.useEscrow = dto.getUseEscrow();
         this.cultureExpense = dto.getCultureExpense();
@@ -89,6 +90,7 @@ public class PaymentLog extends BaseTimeEntity {
     public String getOrderId() {
         return this.orderId;
     }
+
     public String getPaymentKey() {
         return this.paymentKey;
     }
@@ -104,5 +106,20 @@ public class PaymentLog extends BaseTimeEntity {
         return this;
     }
 
+    public int getBalanceAmount() {
+        return this.balanceAmount;
+    }
+
+    public LocalDateTime getApprovedAt() {
+        return this.approvedAt;
+    }
+
+    public Long getPromiseId() {
+        return this.promiseId;
+    }
+
+    public PaymentStatus getPaymentStatus() {
+        return this.paymentStatus;
+    }
 
 }

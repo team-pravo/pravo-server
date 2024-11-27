@@ -69,8 +69,7 @@ public class MemberService {
         Long expiration = jwtTokenProvider.getExpiration(token) - System.currentTimeMillis();
 
         //**로그아웃 구분하기 위해 redis에 저장**
-        redisTemplate.opsForValue()
-            .set(token, "logout token", expiration, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(token, "logout token", expiration, TimeUnit.MILLISECONDS);
 
         return "Successfully logged out";
     }
@@ -83,8 +82,7 @@ public class MemberService {
 
     public MyPageResponseDTO fetchMemberById(Long memberId) {
         Member member = memberRepository.findById(memberId)
-            .orElseThrow(
-                () -> new NotFoundException(ErrorCode.NOT_FOUND, "멤버를 찾을 수 없습니다"));
+            .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND, "멤버를 찾을 수 없습니다"));
         return MyPageResponseDTO.of(member);
     }
 

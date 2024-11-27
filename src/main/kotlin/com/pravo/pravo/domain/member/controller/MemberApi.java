@@ -1,5 +1,6 @@
 package com.pravo.pravo.domain.member.controller;
 
+import com.pravo.pravo.domain.member.dto.MemberPaymentLogResponseDTO;
 import com.pravo.pravo.domain.member.dto.MyPageResponseDTO;
 import com.pravo.pravo.domain.member.dto.ProfileChangeRequestDTO;
 import com.pravo.pravo.global.common.ApiResponseDto;
@@ -8,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 
 @SecurityRequirement(name = "jwt")
 @Tag(name = "Member", description = "멤버 API")
@@ -29,4 +31,8 @@ public interface MemberApi {
         ProfileChangeRequestDTO profileChangeRequestDTO
     );
 
+    @Operation(summary = "결제 내역", description = "멤버 결제 내역 조회합니다")
+    ApiResponseDto<List<MemberPaymentLogResponseDTO>> getMemberPaymentLog(
+        @Parameter(hidden = true) AuthenticateUser authenticateUser
+    );
 }
