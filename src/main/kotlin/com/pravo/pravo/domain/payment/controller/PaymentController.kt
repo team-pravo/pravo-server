@@ -7,6 +7,7 @@ import com.pravo.pravo.global.auth.annotation.AuthUser
 import com.pravo.pravo.global.common.ApiResponseDto
 import com.pravo.pravo.global.external.toss.dto.request.ConfirmRequestDto
 import com.pravo.pravo.global.jwt.AuthenticateUser
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -28,6 +29,19 @@ class PaymentController(
                 promiseCreateDto,
             ),
         )
+
+    @PostMapping("/request/{promiseId}")
+    override fun requestOrderParticipant(
+        authenticatedUser: AuthenticateUser,
+        @PathVariable promiseId: Long,
+    ) {
+        ApiResponseDto.success(
+            paymentFacade.requestOrderParticipant(
+                authenticatedUser.memberId,
+                promiseId,
+            ),
+        )
+    }
 
     @PostMapping("/confirm")
     override fun confirmOrder(
