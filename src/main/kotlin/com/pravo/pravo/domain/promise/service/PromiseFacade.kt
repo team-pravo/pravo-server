@@ -3,6 +3,7 @@ package com.pravo.pravo.domain.promise.service
 import com.pravo.pravo.domain.member.service.MemberService
 import com.pravo.pravo.domain.promise.dto.response.PromiseResponseDto
 import com.pravo.pravo.domain.promise.model.enums.RoleStatus
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 
 @Service
@@ -24,6 +25,7 @@ class PromiseFacade(
         return PromiseResponseDto.of(promise)
     }
 
+    @Transactional
     fun changePendingStatus(
         memberId: Long,
         promiseId: Long,
