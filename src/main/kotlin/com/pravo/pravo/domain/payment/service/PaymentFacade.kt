@@ -14,6 +14,7 @@ import com.pravo.pravo.global.external.toss.PaymentClient
 import com.pravo.pravo.global.external.toss.dto.request.ConfirmRequestDto
 import com.pravo.pravo.global.util.logger
 import jakarta.transaction.Transactional
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.util.Base64
 import java.util.UUID
@@ -25,6 +26,7 @@ class PaymentFacade(
     private val promiseService: PromiseService,
     private val promiseRoleService: PromiseRoleService,
     private val memberService: MemberService,
+    @Value("\${toss.secretKey}") private val tossSecretKey: String,
 ) {
     val logger = logger()
 
@@ -38,8 +40,8 @@ class PaymentFacade(
             id = UUID.randomUUID().toString()
         }
 
-        val pendingPaymentLog = PaymentLog.getPendingPaymentLog(id)
         val pendingPromise = promiseService.createPendingPromise(promiseCreateDto)
+        val pendingPaymentLog = PaymentLog.getPendingPaymentLog(id, memberId, pendingPromise.id)
         val member = memberService.getMemberById(memberId)
         promiseRoleService.createPendingPromiseRole(member, pendingPromise, RoleStatus.ORGANIZER)
 
@@ -53,7 +55,7 @@ class PaymentFacade(
                 "Basic " +
                     Base64
                         .getEncoder()
-                        .encodeToString("test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6:".toByteArray()),
+                        .encodeToString(tossSecretKey.toByteArray()),
                 confirmRequestDto,
             )
         logger.info(confirm.toString())
@@ -66,7 +68,5 @@ class PaymentFacade(
 
         paymentLog.updateFromConfirmResponse(confirm, card?.id, easyPay?.id, PaymentStatus.COMPLETED)
         paymentService.saveCardAndEasyPay(card, easyPay)
-
-        // TODO Front로 Reponse Success 및 Error 확인
     }
 }

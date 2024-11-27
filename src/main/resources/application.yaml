@@ -37,3 +37,6 @@ cloud:
       bucket: ${S3_BUCKET_NAME}
     stack:
       auto: false
+
+toss:
+  secretKey: ${TOSS_SECRET_KEY}

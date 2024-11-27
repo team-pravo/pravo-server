@@ -2,7 +2,7 @@ package com.pravo.pravo.domain.payment.model;
 
 import com.pravo.pravo.domain.payment.enums.PaymentStatus;
 import com.pravo.pravo.global.common.model.BaseTimeEntity;
-import com.pravo.pravo.global.external.toss.dto.response.ConfirmResponseDto;
+import com.pravo.pravo.global.external.toss.dto.response.TossResponseDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import java.time.LocalDateTime;
@@ -39,14 +39,17 @@ public class PaymentLog extends BaseTimeEntity {
     private Long cardId;      // Card 객체의 ID
     private Long easyPayId;     // EasyPay 객체의 ID
 
+    private Long memberId;
+    private Long promiseId;
+
     private PaymentStatus paymentStatus;
 
-    public static PaymentLog getPendingPaymentLog(String id) {
+    public static PaymentLog getPendingPaymentLog(String id, Long memberId, Long promiseId) {
         PaymentLog paymentLog = new PaymentLog();
-        return paymentLog.setOrderId(id);
+        return paymentLog.setPendingPaymentLog(id, memberId, promiseId);
     }
 
-    public void updateFromConfirmResponse(ConfirmResponseDto dto, Long cardId, Long easyPayId,
+    public void updateFromConfirmResponse(TossResponseDto dto, Long cardId, Long easyPayId,
         PaymentStatus paymentStatus) {
         this.mId = dto.getMId();
         this.lastTransactionKey = dto.getLastTransactionKey();
@@ -86,9 +89,18 @@ public class PaymentLog extends BaseTimeEntity {
     public String getOrderId() {
         return this.orderId;
     }
+    public String getPaymentKey() {
+        return this.paymentKey;
+    }
 
-    private PaymentLog setOrderId(String id) {
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    private PaymentLog setPendingPaymentLog(String id, Long memberId, Long promiseId) {
         this.orderId = id;
+        this.memberId = memberId;
+        this.promiseId = promiseId;
         return this;
     }
 
