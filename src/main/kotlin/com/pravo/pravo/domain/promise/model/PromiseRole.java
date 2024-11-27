@@ -44,7 +44,15 @@ public class PromiseRole extends BaseTimeEntity {
     @Column(nullable = false)
     private boolean deleted = false;
 
+    public PromiseRole(Member member, Promise promise, ParticipantStatus status, RoleStatus role) {
+        this.member = member;
+        this.promise = promise;
+        this.status = status;
+        this.role = role;
+    }
+
     public PromiseRole() {
+
     }
 
     public Long getId() {
@@ -77,4 +85,10 @@ public class PromiseRole extends BaseTimeEntity {
     public void delete() {
         this.deleted = true;
     }
+
+    public static PromiseRole pendingOf(Promise promise, Member member, RoleStatus role) {
+        return new PromiseRole(member, promise, ParticipantStatus.PENDING, role);
+    }
+
+    public void changePendingStatus() { this.status = ParticipantStatus.READY; }
 }

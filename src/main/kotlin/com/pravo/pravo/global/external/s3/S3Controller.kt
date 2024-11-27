@@ -2,6 +2,7 @@ package com.pravo.pravo.global.external.s3
 
 import com.pravo.pravo.global.common.ApiResponseDto
 import org.springframework.http.MediaType
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestPart
@@ -18,4 +19,7 @@ class S3Controller(
     fun uploadTest(
         @RequestPart file: MultipartFile,
     ): ApiResponseDto<String> = ApiResponseDto.success(s3Service.uploadFile(file, "profile-image"))
+
+    @GetMapping
+    fun testException(): Nothing = throw RuntimeException()
 }

@@ -1,6 +1,7 @@
 package com.pravo.pravo.domain.promise.repository;
 
 import com.pravo.pravo.domain.promise.model.Promise;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -12,5 +13,5 @@ public interface PromiseRepository extends JpaRepository<Promise, Long>, Promise
         WHERE p.id = :promiseId
         AND p.deleted = false
     """)
-    public Promise getPromiseById(Long promiseId);
+    Optional<Promise> getPromiseById(Long promiseId);
 }

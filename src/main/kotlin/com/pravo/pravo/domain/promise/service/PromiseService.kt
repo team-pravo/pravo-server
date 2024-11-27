@@ -26,9 +26,9 @@ class PromiseService(
         promiseId: Long,
     ): PromiseDetailResponseDto {
         val promise =
-            promiseRepository.getPromiseById(promiseId)
-                ?: throw NotFoundException(ErrorCode.NOT_FOUND, "약속을 찾을 수 없습니다")
-
+            promiseRepository.getPromiseById(promiseId).orElseThrow {
+                NotFoundException(ErrorCode.BAD_REQUEST, "약속을 찾을 수 없습니다")
+            }
         val participants =
             promise.promiseRoles.map {
                 ParticipantResponseDto.of(it, it.member)
@@ -41,11 +41,8 @@ class PromiseService(
         return promiseRepository.save(promise)
     }
 
-    fun changePendingStatus(promiseId: Long) {
-        val promise =
-            promiseRepository.findById(promiseId).orElseThrow {
-                NotFoundException(ErrorCode.NOT_FOUND)
-            }
-        promise.changePendingStatus()
+    fun getPromise(promiseId: Long): Promise {
+        return promiseRepository.findById(promiseId)
+            .orElseThrow { NotFoundException(ErrorCode.BAD_REQUEST, "약속을 찾을 수 없습니다") }
     }
 }

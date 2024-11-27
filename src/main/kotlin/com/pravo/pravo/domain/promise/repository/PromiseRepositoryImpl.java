@@ -1,10 +1,11 @@
 package com.pravo.pravo.domain.promise.repository;
 
 import static com.pravo.pravo.domain.promise.model.QPromise.promise;
-import static com.pravo.pravo.domain.promise.model.QPromiseRole.promiseRole;
 
 import com.pravo.pravo.domain.promise.dto.response.PromiseResponseDto;
 import com.pravo.pravo.domain.promise.dto.response.QPromiseResponseDto;
+import com.pravo.pravo.domain.promise.model.QPromise;
+import com.pravo.pravo.domain.promise.model.QPromiseRole;
 import com.pravo.pravo.domain.promise.model.enums.RoleStatus;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -24,6 +25,10 @@ public class PromiseRepositoryImpl implements PromiseRepositoryCustom {
     @Override
     public List<PromiseResponseDto> getPromisesByMemberIdAndStartedAtAndEndedAt(Long memberId,
         LocalDate startedAt, LocalDate endedAt) {
+        QPromiseRole promiseRole = QPromiseRole.promiseRole;  // 기본 alias
+        QPromiseRole organizer = new QPromiseRole("organizer");  // 모임장용 alias
+        QPromise promise = QPromise.promise;
+
         return queryFactory
             .select(new QPromiseResponseDto(
                 promise.id,
@@ -31,23 +36,22 @@ public class PromiseRepositoryImpl implements PromiseRepositoryCustom {
                 promise.promiseDate,
                 promise.location,
                 promise.status,
-                promiseRole.member.name,
-                promiseRole.member.profileImageUrl
+                organizer.member.name,
+                organizer.member.profileImageUrl
             ))
-            .from(promiseRole)
-            .join(promiseRole.promise, promise)
-            .leftJoin(promiseRole.member)
+            .from(promise)
+            .join(promiseRole).on(promiseRole.promise.eq(promise))
+            .leftJoin(organizer).on(
+                organizer.promise.eq(promise)
+                    .and(organizer.role.eq(RoleStatus.ORGANIZER))
+            )
             .where(
-                memberIdEquals(memberId),
+                promiseRole.member.id.eq(memberId),
                 promiseDateAfter(startedAt),
                 promiseDateBefore(endedAt)
             )
             .orderBy(promise.promiseDate.asc())
             .fetch();
-    }
-
-    private BooleanExpression memberIdEquals(Long memberId) {
-        return memberId != null ? promiseRole.member.id.eq(memberId) : null;
     }
 
     private BooleanExpression promiseDateAfter(LocalDate startedAt) {

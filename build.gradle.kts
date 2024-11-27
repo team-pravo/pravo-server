@@ -34,6 +34,9 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://jitpack.io")
+    }
 }
 
 extra["springCloudVersion"] = "2023.0.2"
@@ -94,6 +97,9 @@ dependencies {
 
     // S3
     implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
+
+    // Discord
+    implementation("com.github.napstr:logback-discord-appender:1.0.0")
 }
 
 kotlin {
