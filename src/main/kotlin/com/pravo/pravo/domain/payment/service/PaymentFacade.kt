@@ -30,22 +30,40 @@ class PaymentFacade(
 ) {
     val logger = logger()
 
+    fun createPaymentUUID(): String  {
+        var id = UUID.randomUUID().toString()
+        while (paymentService.existOrderId(id)) {
+            id = UUID.randomUUID().toString()
+        }
+        return id
+    }
+
     @Transactional
     fun requestOrder(
         memberId: Long,
         promiseCreateDto: PromiseCreateDto,
     ): RequestOrderResponseDto {
-        var id = UUID.randomUUID().toString()
-        while (paymentService.existOrderId(id)) {
-            id = UUID.randomUUID().toString()
-        }
-
+        val id = createPaymentUUID()
         val pendingPromise = promiseService.createPendingPromise(promiseCreateDto)
         val pendingPaymentLog = PaymentLog.getPendingPaymentLog(id, memberId, pendingPromise.id)
         val member = memberService.getMemberById(memberId)
         promiseRoleService.createPendingPromiseRole(member, pendingPromise, RoleStatus.ORGANIZER)
 
         return RequestOrderResponseDto.of(paymentService.savePaymentLog(pendingPaymentLog).orderId, pendingPromise.id)
+    }
+
+    @Transactional
+    fun requestOrderParticipant(
+        memberId: Long,
+        promiseId: Long,
+    ): RequestOrderResponseDto {
+        val id = createPaymentUUID()
+        val pendingPaymentLog = PaymentLog.getPendingPaymentLog(id, memberId, promiseId)
+        val member = memberService.getMemberById(memberId)
+        val promise = promiseService.getPromise(promiseId)
+        promiseRoleService.createPendingPromiseRole(member, promise, RoleStatus.PARTICIPANT)
+
+        return RequestOrderResponseDto.of(paymentService.savePaymentLog(pendingPaymentLog).orderId, promiseId)
     }
 
     @Transactional
