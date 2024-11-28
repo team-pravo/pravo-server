@@ -44,7 +44,7 @@ class PromiseSettlementFacade(
                 participants = participants,
                 attendedMemberIds = settlementRequest.memberIds,
             )
-        promise.changeCompletedStatus()
+        promise.updateStatus(PromiseStatus.COMPLETED)
         return if (attendees.isEmpty()) {
             processEmptyAttendees(absentees, promise)
         } else {
@@ -197,5 +197,23 @@ class PromiseSettlementFacade(
             .partition { participant ->
                 participant.status == ParticipantStatus.ATTENDED
             }
+    }
+
+    @Transactional
+    fun deletePromise(
+        memberId: Long,
+        promiseId: Long,
+    ) {
+        val promiseRole = promiseRoleService.getPromiseRole(memberId, promiseId)
+        if (promiseRole.role != RoleStatus.ORGANIZER) {
+            throw UnauthorizedException(ErrorCode.UNAUTHORIZED, "모임장만 약속을 삭제할 수 있습니다.")
+        }
+        val participants = promiseRoleService.getParticipantsByStatus(promiseId, ParticipantStatus.READY)
+        participants.forEach {
+            it.updateStatus(ParticipantStatus.CANCELED)
+            paymentService.cancelPayment(it.member.id, promiseId)
+        }
+        promiseRole.promise.updateStatus(PromiseStatus.CANCELED)
+        promiseRole.promise.delete()
     }
 }
