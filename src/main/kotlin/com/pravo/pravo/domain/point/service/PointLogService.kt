@@ -3,13 +3,14 @@ package com.pravo.pravo.domain.point.service
 import com.pravo.pravo.domain.point.model.PointLog
 import com.pravo.pravo.domain.point.model.PointLogStatus
 import com.pravo.pravo.domain.point.repository.PointLogRepository
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 
 @Service
 class PointLogService(
     private val pointLogRepository: PointLogRepository,
 ) {
-    // TODO 약속 정산에서 호출
+    @Transactional
     fun savePointLog(
         pointLogStatus: PointLogStatus,
         amount: Long,
