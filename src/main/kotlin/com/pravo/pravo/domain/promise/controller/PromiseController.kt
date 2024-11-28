@@ -1,11 +1,14 @@
 package com.pravo.pravo.domain.promise.controller
 
 import com.pravo.pravo.domain.promise.dto.request.PromiseSearchDto
+import com.pravo.pravo.domain.promise.dto.request.PromiseSettlementRequestDto
 import com.pravo.pravo.domain.promise.dto.response.PromiseDetailResponseDto
 import com.pravo.pravo.domain.promise.dto.response.PromiseResponseDto
+import com.pravo.pravo.domain.promise.dto.response.PromiseSettlementResponseDto
 import com.pravo.pravo.domain.promise.service.PromiseFacade
 import com.pravo.pravo.domain.promise.service.PromiseRoleService
 import com.pravo.pravo.domain.promise.service.PromiseService
+import com.pravo.pravo.domain.promise.service.PromiseSettlementFacade
 import com.pravo.pravo.global.auth.annotation.AuthUser
 import com.pravo.pravo.global.common.ApiResponseDto
 import com.pravo.pravo.global.jwt.AuthenticateUser
@@ -22,6 +25,7 @@ class PromiseController(
     private val promiseService: PromiseService,
     private val promiseRoleService: PromiseRoleService,
     private val promiseFacade: PromiseFacade,
+    private val promiseSettlementFacade: PromiseSettlementFacade,
 ) : PromiseApi {
     @GetMapping
     override fun getPromisesByMember(
@@ -60,22 +64,14 @@ class PromiseController(
             promiseFacade.changePendingStatus(authenticatedUser.memberId, promiseId),
         )
 
-    @DeleteMapping("/{promiseId}/cancel")
+    @DeleteMapping("/{promiseId}/participant")
     override fun cancelPromise(
         @PathVariable promiseId: Long,
         @AuthUser authenticatedUser: AuthenticateUser,
     ): ApiResponseDto<Unit> =
         ApiResponseDto.success(
-            promiseRoleService.cancelPromise(authenticatedUser.memberId, promiseId),
+            promiseSettlementFacade.cancelPromise(authenticatedUser.memberId, promiseId),
         )
-
-    @GetMapping("/{promiseId}/settlement")
-    override fun getPromiseSettlement(
-        @PathVariable promiseId: Long,
-        @AuthUser authenticatedUser: AuthenticateUser
-    ): ApiResponseDto<Unit> {
-        TODO("Not yet implemented")
-    }
 
     @PostMapping("/{promiseId}/join")
     override fun joinPromise(
@@ -93,5 +89,14 @@ class PromiseController(
     ): ApiResponseDto<Unit> =
         ApiResponseDto.success(
             promiseRoleService.changePendingStatus(authenticatedUser.memberId, promiseId),
+        )
+
+    @PostMapping("/{promiseId}/participants")
+    override fun settlePromise(
+        settlementRequest: PromiseSettlementRequestDto,
+        @AuthUser authenticatedUser: AuthenticateUser,
+    ): ApiResponseDto<PromiseSettlementResponseDto> =
+        ApiResponseDto.success(
+            promiseSettlementFacade.settlePromise(authenticatedUser.memberId, settlementRequest),
         )
 }

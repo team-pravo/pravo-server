@@ -12,6 +12,7 @@ class PromiseFacade(
     private val promiseRoleService: PromiseRoleService,
     private val memberService: MemberService,
 ) {
+    @Transactional
     fun joinPromise(
         memberId: Long,
         promiseId: Long,
