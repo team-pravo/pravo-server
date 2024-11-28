@@ -1,8 +1,10 @@
 package com.pravo.pravo.domain.promise.controller
 
 import com.pravo.pravo.domain.promise.dto.request.PromiseSearchDto
+import com.pravo.pravo.domain.promise.dto.request.PromiseSettlementRequestDto
 import com.pravo.pravo.domain.promise.dto.response.PromiseDetailResponseDto
 import com.pravo.pravo.domain.promise.dto.response.PromiseResponseDto
+import com.pravo.pravo.domain.promise.dto.response.PromiseSettlementResponseDto
 import com.pravo.pravo.global.auth.annotation.AuthUser
 import com.pravo.pravo.global.common.ApiResponseDto
 import com.pravo.pravo.global.jwt.AuthenticateUser
@@ -16,6 +18,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseStatus
 
 @Tag(name = "Promise", description = "약속 API")
@@ -106,10 +109,10 @@ interface PromiseApi {
         @Parameter(hidden = true) @AuthUser authenticatedUser: AuthenticateUser,
     ): ApiResponseDto<Unit>
 
-    @Operation(summary = "약속 정산 조회", description = "약속을 생성합니다.")
+    @Operation(summary = "약속 정산하기", description = "약속을 정산합니다")
     @ApiResponse(
         responseCode = "200",
-        description = "약속 정산 조회 성공",
+        description = "약속 정산 성공",
         content = [
             Content(
                 schema = Schema(implementation = ApiResponseDto::class),
@@ -117,8 +120,8 @@ interface PromiseApi {
         ],
     )
     @SecurityRequirement(name = "jwt")
-    fun getPromiseSettlement(
-        @PathVariable promiseId: Long,
+    fun settlePromise(
+        @RequestBody settlementRequest: PromiseSettlementRequestDto,
         @Parameter(hidden = true) @AuthUser authenticatedUser: AuthenticateUser,
-    ): ApiResponseDto<Unit>
+    ): ApiResponseDto<PromiseSettlementResponseDto>
 }

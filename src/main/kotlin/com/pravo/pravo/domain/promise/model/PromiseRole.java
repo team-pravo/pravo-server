@@ -91,4 +91,8 @@ public class PromiseRole extends BaseTimeEntity {
     }
 
     public void changePendingStatus() { this.status = ParticipantStatus.READY; }
+
+    public void updateStatus(ParticipantStatus newStatus) {
+        this.status = newStatus;
+    }
 }
