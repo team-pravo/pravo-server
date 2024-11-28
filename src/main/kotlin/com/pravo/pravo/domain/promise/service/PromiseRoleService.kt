@@ -8,7 +8,6 @@ import com.pravo.pravo.domain.promise.model.enums.RoleStatus
 import com.pravo.pravo.domain.promise.repository.PromiseRoleRepository
 import com.pravo.pravo.global.error.ErrorCode
 import com.pravo.pravo.global.error.exception.NotFoundException
-import com.pravo.pravo.global.error.exception.UnauthorizedException
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 
@@ -16,19 +15,6 @@ import org.springframework.stereotype.Service
 class PromiseRoleService(
     private val promiseRoleRepository: PromiseRoleRepository,
 ) {
-    @Transactional
-    fun deletePromise(
-        memberId: Long,
-        promiseId: Long,
-    ) {
-        val promiseRole =
-            promiseRoleRepository.findDetailByPromiseIdAndMemberId(promiseId, memberId)
-                ?.takeIf { it.isOrganizer }
-                ?: throw UnauthorizedException(ErrorCode.UNAUTHORIZED, "약속을 삭제할 권한이 없습니다")
-        // TODO: 환불 로직 추가
-        promiseRole.promise.delete()
-    }
-
     fun createPendingPromiseRole(
         member: Member,
         promise: Promise,
@@ -54,7 +40,7 @@ class PromiseRoleService(
             promiseRoleRepository.findByPromiseIdAndMemberId(promiseId, memberId).orElseThrow {
                 NotFoundException(ErrorCode.BAD_REQUEST, "약속을 찾을 수 없습니다")
             }
-        promiseRole.changePendingStatus()
+        promiseRole.updateStatus(ParticipantStatus.READY)
     }
 
     fun getPromiseRole(

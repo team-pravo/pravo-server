@@ -74,7 +74,7 @@ class PaymentService(
     ) {
         val paymentLog =
             paymentLogRepository.findByMemberIdAndPromiseId(memberId, promiseId).orElseThrow {
-                NotFoundException(ErrorCode.NOT_FOUND)
+                NotFoundException(ErrorCode.NOT_FOUND, "결제 정보를 찾을 수 없습니다")
             }
 
         val idempotencyKey = getOrCreateIdempotencyKey(promiseId, memberId)

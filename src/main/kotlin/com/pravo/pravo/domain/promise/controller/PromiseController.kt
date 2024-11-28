@@ -52,7 +52,7 @@ class PromiseController(
         @AuthUser authenticatedUser: AuthenticateUser,
     ): ApiResponseDto<Unit> =
         ApiResponseDto.success(
-            promiseRoleService.deletePromise(authenticatedUser.memberId, promiseId),
+            promiseSettlementFacade.deletePromise(authenticatedUser.memberId, promiseId),
         )
 
     @PostMapping("/{promiseId}/change")
