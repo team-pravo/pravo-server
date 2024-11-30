@@ -15,8 +15,8 @@ import com.pravo.pravo.domain.promise.model.enums.RoleStatus
 import com.pravo.pravo.global.error.ErrorCode
 import com.pravo.pravo.global.error.exception.BadRequestException
 import com.pravo.pravo.global.error.exception.UnauthorizedException
+import com.pravo.pravo.global.util.logger
 import jakarta.transaction.Transactional
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
