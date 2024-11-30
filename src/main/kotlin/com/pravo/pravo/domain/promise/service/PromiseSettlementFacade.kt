@@ -27,9 +27,7 @@ class PromiseSettlementFacade(
     private val paymentService: PaymentService,
     private val fineLogService: FineLogService,
 ) {
-    companion object {
-        private val log = LoggerFactory.getLogger(PromiseSettlementFacade::class.java)
-    }
+    val log = logger()
 
     @Transactional
     fun settlePromise(
