@@ -14,6 +14,7 @@ import com.pravo.pravo.domain.promise.model.enums.PromiseStatus
 import com.pravo.pravo.domain.promise.model.enums.RoleStatus
 import com.pravo.pravo.global.error.ErrorCode
 import com.pravo.pravo.global.error.exception.BadRequestException
+import com.pravo.pravo.global.error.exception.BaseException
 import com.pravo.pravo.global.error.exception.UnauthorizedException
 import com.pravo.pravo.global.util.logger
 import jakarta.transaction.Transactional
@@ -124,7 +125,7 @@ class PromiseSettlementFacade(
         val cancelResults =
             attendees.map { attendee ->
                 try {
-//                paymentService.cancelPayment(attendee.member.id, promiseId)
+                    paymentService.cancelPayment(attendee.member.id, promiseId)
                     true
                 } catch (e: Exception) {
                     log.error("Failed to cancel payment for member ${attendee.member.id}: ${e.message}")
@@ -173,8 +174,12 @@ class PromiseSettlementFacade(
             throw UnauthorizedException(ErrorCode.UNAUTHORIZED, "모임장은 약속을 취소할 수 없습니다.")
         }
 
-        paymentService.cancelPayment(memberId, promiseId)
-        promiseRole.updateStatus(ParticipantStatus.CANCELED)
+        try {
+            paymentService.cancelPayment(promiseId, memberId)
+            promiseRole.updateStatus(ParticipantStatus.CANCELED)
+        } catch (e: Exception) {
+            throw BaseException(ErrorCode.IMAGE_EXTENSION_ERROR)
+        }
     }
 
     private fun updateAndSplitParticipants(
@@ -207,10 +212,19 @@ class PromiseSettlementFacade(
             throw UnauthorizedException(ErrorCode.UNAUTHORIZED, "모임장만 약속을 삭제할 수 있습니다.")
         }
         val participants = promiseRoleService.getParticipantsByStatus(promiseId, ParticipantStatus.READY)
-        participants.forEach {
-            it.updateStatus(ParticipantStatus.CANCELED)
-            paymentService.cancelPayment(it.member.id, promiseId)
+        try {
+            participants.forEach { participant ->
+                paymentService.cancelPayment(participant.member.id, promiseId)
+            }
+        } catch (e: Exception) {
+            log.error("Failed to cancel payments: ${e.message}")
+            throw BadRequestException("결제 취소 실패로 인해 약속 삭제를 진행할 수 없습니다")
         }
+
+        participants.forEach { participant ->
+            participant.updateStatus(ParticipantStatus.CANCELED)
+        }
+
         promiseRole.promise.updateStatus(PromiseStatus.CANCELED)
         promiseRole.promise.delete()
     }
