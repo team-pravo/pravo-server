@@ -51,11 +51,17 @@ public class Member extends BaseTimeEntity {
         return this.profileImageUrl;
     }
 
+    public Long getPoint() { return this.point; }
+
     public void setName(String name) {
         this.name = name;
     }
 
     public void setProfileImageUrl(String profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
+    }
+
+    public void updatePoint(Long point) {
+        this.point += point;
     }
 }

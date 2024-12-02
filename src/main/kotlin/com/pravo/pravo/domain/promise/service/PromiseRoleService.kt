@@ -3,11 +3,11 @@ package com.pravo.pravo.domain.promise.service
 import com.pravo.pravo.domain.member.model.Member
 import com.pravo.pravo.domain.promise.model.Promise
 import com.pravo.pravo.domain.promise.model.PromiseRole
+import com.pravo.pravo.domain.promise.model.enums.ParticipantStatus
 import com.pravo.pravo.domain.promise.model.enums.RoleStatus
 import com.pravo.pravo.domain.promise.repository.PromiseRoleRepository
 import com.pravo.pravo.global.error.ErrorCode
 import com.pravo.pravo.global.error.exception.NotFoundException
-import com.pravo.pravo.global.error.exception.UnauthorizedException
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 
@@ -15,19 +15,6 @@ import org.springframework.stereotype.Service
 class PromiseRoleService(
     private val promiseRoleRepository: PromiseRoleRepository,
 ) {
-    @Transactional
-    fun deletePromise(
-        memberId: Long,
-        promiseId: Long,
-    ) {
-        val promiseRole =
-            promiseRoleRepository.findDetailByPromiseIdAndMemberId(promiseId, memberId)
-                ?.takeIf { it.isOrganizer }
-                ?: throw UnauthorizedException(ErrorCode.UNAUTHORIZED, "약속을 삭제할 권한이 없습니다")
-        // TODO: 환불 로직 추가
-        promiseRole.promise.delete()
-    }
-
     fun createPendingPromiseRole(
         member: Member,
         promise: Promise,
@@ -41,21 +28,7 @@ class PromiseRoleService(
         memberId: Long,
         promiseId: Long,
     ): Boolean {
-        return promiseRoleRepository.findByPromiseIdAndMemberId(promiseId, memberId) != null
-    }
-
-    @Transactional
-    fun cancelPromise(
-        memberId: Long,
-        promiseId: Long,
-    ) {
-        val promiseRole =
-            promiseRoleRepository.findDetailByPromiseIdAndMemberId(promiseId, memberId)
-                ?.takeIf { !it.isOrganizer }
-                ?: throw UnauthorizedException(ErrorCode.UNAUTHORIZED, "약속을 취소할 권한이 없습니다")
-
-        // TODO: 수수료 부과 로직 추가
-        promiseRole.delete()
+        return promiseRoleRepository.existsByPromiseIdAndMemberId(promiseId, memberId)
     }
 
     @Transactional
@@ -67,7 +40,7 @@ class PromiseRoleService(
             promiseRoleRepository.findByPromiseIdAndMemberId(promiseId, memberId).orElseThrow {
                 NotFoundException(ErrorCode.BAD_REQUEST, "약속을 찾을 수 없습니다")
             }
-        promiseRole.changePendingStatus()
+        promiseRole.updateStatus(ParticipantStatus.READY)
     }
 
     fun getPromiseRole(
@@ -77,5 +50,12 @@ class PromiseRoleService(
         return promiseRoleRepository.findByPromiseIdAndMemberId(promiseId, memberId).orElseThrow {
             NotFoundException(ErrorCode.BAD_REQUEST, "약속을 찾을 수 없습니다")
         }
+    }
+
+    fun getParticipantsByStatus(
+        promiseId: Long,
+        status: ParticipantStatus,
+    ): List<PromiseRole> {
+        return promiseRoleRepository.findByPromiseIdAndStatus(promiseId, status)
     }
 }
