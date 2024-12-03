@@ -171,9 +171,10 @@ public class MemberService {
         return paymentLogs.stream()
             .map(paymentLog -> new MemberPaymentLogResponseDTO(
                 paymentLog.getPromise().getName(),
-                paymentLog.getApprovedAt().toString(),
                 paymentLog.getBalanceAmount(),
-                paymentLog.getPaymentStatus().name()
+                paymentLog.getPaymentStatus().name(),
+                paymentLog.getApprovedAt().toString(),
+                paymentLog.getUpdatedAt().toString()
             ))
             .collect(Collectors.toList());
     }
