@@ -1,10 +1,14 @@
 package com.pravo.pravo.domain.payment.model;
 
 import com.pravo.pravo.domain.payment.enums.PaymentStatus;
+import com.pravo.pravo.domain.promise.model.Promise;
 import com.pravo.pravo.global.common.model.BaseTimeEntity;
 import com.pravo.pravo.global.external.toss.dto.response.TossResponseDto;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
@@ -43,6 +47,10 @@ public class PaymentLog extends BaseTimeEntity {
     private Long promiseId;
 
     private PaymentStatus paymentStatus;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fetch_promise_id")
+    private Promise promise;
 
     public static PaymentLog getPendingPaymentLog(String id, Long memberId, Long promiseId) {
         PaymentLog paymentLog = new PaymentLog();
@@ -120,6 +128,10 @@ public class PaymentLog extends BaseTimeEntity {
 
     public PaymentStatus getPaymentStatus() {
         return this.paymentStatus;
+    }
+
+    public Promise getPromise() {
+        return this.promise;
     }
 
 }

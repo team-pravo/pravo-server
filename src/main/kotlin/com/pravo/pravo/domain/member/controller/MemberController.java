@@ -1,10 +1,9 @@
 package com.pravo.pravo.domain.member.controller;
 
 import com.pravo.pravo.domain.member.dto.MemberPaymentLogResponseDTO;
-import com.pravo.pravo.domain.member.dto.MyPageResponseDTO;
 import com.pravo.pravo.domain.member.dto.MemberPointLogResponseDTO;
+import com.pravo.pravo.domain.member.dto.MyPageResponseDTO;
 import com.pravo.pravo.domain.member.dto.ProfileChangeRequestDTO;
-import com.pravo.pravo.domain.member.service.MemberFacade;
 import com.pravo.pravo.domain.member.service.MemberService;
 import com.pravo.pravo.global.auth.annotation.AuthUser;
 import com.pravo.pravo.global.common.ApiResponseDto;
@@ -24,11 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController implements MemberApi {
 
     private final MemberService memberService;
-    private final MemberFacade memberFacade;
 
-    public MemberController(MemberService memberService, MemberFacade memberFacade) {
+    public MemberController(MemberService memberService) {
         this.memberService = memberService;
-        this.memberFacade = memberFacade;
     }
 
     @PostMapping("/logout")
@@ -60,13 +57,13 @@ public class MemberController implements MemberApi {
     public ApiResponseDto<List<MemberPaymentLogResponseDTO>> getMemberPaymentLog(
         @AuthUser AuthenticateUser authenticateUser) {
         return ApiResponseDto.success(
-            memberFacade.getMemberPaymentLog(authenticateUser.getMemberId()));
+            memberService.getMemberPaymentLog(authenticateUser.getMemberId()));
     }
 
     @GetMapping("/member/point-log")
     public ApiResponseDto<List<MemberPointLogResponseDTO>> getMemberPointLog(
         @AuthUser AuthenticateUser authenticateUser) {
         return ApiResponseDto.success(
-            (memberFacade.getMemberPointLog(authenticateUser.getMemberId())));
+            (memberService.getMemberPointLog(authenticateUser.getMemberId())));
     }
 }

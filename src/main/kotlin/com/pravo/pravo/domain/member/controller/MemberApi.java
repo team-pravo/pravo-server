@@ -37,7 +37,7 @@ public interface MemberApi {
         @Parameter(hidden = true) AuthenticateUser authenticateUser
     );
 
-    @Operation(summary = "포인트 사용/적립/별금 내역", description = "포인트 사용/적립/별금 내역 조회합니다")
+    @Operation(summary = "포인트 사용/적립 내역", description = "포인트 사용/적립 내역 조회합니다")
     ApiResponseDto<List<MemberPointLogResponseDTO>> getMemberPointLog(
         @Parameter(hidden = true) AuthenticateUser authenticateUser
     );

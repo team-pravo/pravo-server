@@ -11,7 +11,10 @@ public record MemberPaymentLogResponseDTO(
     String paymentDate,
 
     @Schema(description = "결제 금액", example = "10000")
-    int paymentAmount
+    int paymentAmount,
+
+    @Schema(description = "결제 상태: 완료/취소", example = "COMPLETED/CANCELED")
+    String paymentStatus
 ) {
 
 }
