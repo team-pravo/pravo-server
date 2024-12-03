@@ -4,6 +4,7 @@ import com.pravo.pravo.domain.fine.model.FineLog;
 import com.pravo.pravo.domain.fine.repository.FineLogRepository;
 import com.pravo.pravo.domain.member.dto.LoginRequestDTO;
 import com.pravo.pravo.domain.member.dto.LoginResponseDTO;
+import com.pravo.pravo.domain.member.dto.MemberFineLogResponseDTO;
 import com.pravo.pravo.domain.member.dto.MemberPaymentLogResponseDTO;
 import com.pravo.pravo.domain.member.dto.MemberPointLogResponseDTO;
 import com.pravo.pravo.domain.member.dto.MyPageResponseDTO;
@@ -14,7 +15,6 @@ import com.pravo.pravo.domain.payment.model.PaymentLog;
 import com.pravo.pravo.domain.payment.repository.PaymentLogRepository;
 import com.pravo.pravo.domain.point.model.PointLog;
 import com.pravo.pravo.domain.point.repository.PointLogRepository;
-import com.pravo.pravo.domain.promise.model.Promise;
 import com.pravo.pravo.domain.promise.repository.PromiseRepository;
 import com.pravo.pravo.global.error.ErrorCode;
 import com.pravo.pravo.global.error.exception.BaseException;
@@ -25,7 +25,6 @@ import com.pravo.pravo.global.jwt.JwtTokenProvider;
 import com.pravo.pravo.global.jwt.JwtTokens;
 import com.pravo.pravo.global.jwt.JwtTokensGenerator;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -181,45 +180,28 @@ public class MemberService {
 
     public List<MemberPointLogResponseDTO> getMemberPointLog(Long memberId) {
         List<PointLog> pointLogs = pointLogRepository.findByMemberId(memberId);
+
+        return pointLogs.stream()
+            .map(pointLog -> new MemberPointLogResponseDTO(
+                pointLog.getPromise().getName(),
+                pointLog.getPointLogStatus().toString(),
+                pointLog.getAmount(),
+                pointLog.getUpdatedAt()
+            ))
+            .sorted(Comparator.comparing(MemberPointLogResponseDTO::pointDate).reversed())
+            .toList();
+    }
+
+    public List<MemberFineLogResponseDTO> getMemberFineLog(Long memberId) {
         List<FineLog> fineLogs = fineLogRepository.findByMemberId(memberId);
 
-        List<MemberPointLogResponseDTO> combinedLogs = new ArrayList<>();
-
-        // pointlog
-        combinedLogs.addAll(
-            pointLogs.stream()
-                .map(pointLog -> {
-                    Promise promise = promiseRepository.findById(pointLog.getPromiseId())
-                        .orElseThrow(
-                            () -> new NotFoundException(ErrorCode.NOT_FOUND, "약속을 찾을 수 없습니다"));
-                    return new MemberPointLogResponseDTO(
-                        promise.getName(),
-                        pointLog.getPointLogStatus().toString(),
-                        pointLog.getAmount(),
-                        pointLog.getUpdatedAt()
-                    );
-                })
-                .toList()
-        );
-
-        // finelog
-        combinedLogs.addAll(
-            fineLogs.stream()
-                .map(fineLog -> {
-                    Promise promise = promiseRepository.findById(fineLog.getPromiseId())
-                        .orElseThrow(
-                            () -> new NotFoundException(ErrorCode.NOT_FOUND, "약속을 찾을 수 없습니다"));
-                    return new MemberPointLogResponseDTO(
-                        promise.getName(),
-                        "FINE",
-                        fineLog.getAmount(),
-                        fineLog.getUpdatedAt()
-                    );
-                })
-                .toList()
-        );
-
-        combinedLogs.sort(Comparator.comparing(MemberPointLogResponseDTO::pointDate).reversed());
-        return combinedLogs;
+        return fineLogs.stream()
+            .map(fineLog -> new MemberFineLogResponseDTO(
+                fineLog.getPromise().getName(),
+                fineLog.getAmount(),
+                fineLog.getUpdatedAt()
+            ))
+            .sorted(Comparator.comparing(MemberFineLogResponseDTO::fineDate).reversed())
+            .toList();
     }
 }

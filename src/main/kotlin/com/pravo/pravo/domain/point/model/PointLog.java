@@ -1,10 +1,14 @@
 package com.pravo.pravo.domain.point.model;
 
+import com.pravo.pravo.domain.promise.model.Promise;
 import com.pravo.pravo.global.common.model.BaseTimeEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -21,6 +25,11 @@ public class PointLog extends BaseTimeEntity {
     private Long memberId;
     private Long promiseId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fetch_promise_id")
+    private Promise promise;
+
+
     public PointLog(PointLogStatus pointLogStatus, Long amount, Long memberId, Long promiseId) {
         this.pointLogStatus = pointLogStatus;
         this.amount = amount;
@@ -36,10 +45,7 @@ public class PointLog extends BaseTimeEntity {
         Long promiseId) {
         return new PointLog(pointLogStatus, amount, memberId, promiseId);
     }
-
-    public Long getPromiseId() {
-        return this.promiseId;
-    }
+    
 
     public PointLogStatus getPointLogStatus() {
         return this.pointLogStatus;
@@ -47,5 +53,9 @@ public class PointLog extends BaseTimeEntity {
 
     public Long getAmount() {
         return this.amount;
+    }
+
+    public Promise getPromise() {
+        return this.promise;
     }
 }
