@@ -10,17 +10,19 @@ import org.springframework.data.jpa.repository.Query;
 public interface PromiseRoleRepository extends JpaRepository<PromiseRole, Long> {
 
     @Query("""
-    SELECT pr
-    FROM PromiseRole pr
-    JOIN FETCH pr.promise
-    WHERE pr.promise.id = :promiseId
-    AND pr.member.id = :memberId
-    """)
+        SELECT pr
+        FROM PromiseRole pr
+        JOIN FETCH pr.promise
+        WHERE pr.promise.id = :promiseId
+        AND pr.member.id = :memberId
+        """)
     PromiseRole findDetailByPromiseIdAndMemberId(Long promiseId, Long memberId);
 
-     Optional<PromiseRole> findByPromiseIdAndMemberId(Long promiseId, Long memberId);
+    Optional<PromiseRole> findByPromiseIdAndMemberId(Long promiseId, Long memberId);
 
-     List<PromiseRole> findByPromiseIdAndStatus(Long promiseId, ParticipantStatus participantStatus);
+    List<PromiseRole> findByPromiseIdAndStatus(Long promiseId, ParticipantStatus participantStatus);
 
-     Boolean existsByPromiseIdAndMemberId(Long promiseId, Long memberId);
+    Boolean existsByPromiseIdAndMemberId(Long promiseId, Long memberId);
+
+    List<PromiseRole> findByMemberId(Long memberId);
 }

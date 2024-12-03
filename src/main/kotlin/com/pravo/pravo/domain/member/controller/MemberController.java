@@ -7,6 +7,7 @@ import com.pravo.pravo.global.auth.annotation.AuthUser;
 import com.pravo.pravo.global.common.ApiResponseDto;
 import com.pravo.pravo.global.jwt.AuthenticateUser;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -26,10 +27,11 @@ public class MemberController implements MemberApi {
     }
 
     @PostMapping("/logout")
-    public ApiResponseDto<String> logoutPage(
+    public ApiResponseDto<Void> logoutPage(
         @RequestHeader("Authorization") String token
     ) {
-        return ApiResponseDto.success(memberService.logout(token));
+        memberService.logout(token);
+        return ApiResponseDto.success(null);
     }
 
     @GetMapping("/member")
@@ -49,4 +51,12 @@ public class MemberController implements MemberApi {
                 profileChangeRequestDTO.name(), profileChangeRequestDTO.file(),
                 profileChangeRequestDTO.resetToDefaultImage()));
     }
+
+    @DeleteMapping("/withdraw")
+    public ApiResponseDto<Void> withdrawMember(@AuthUser AuthenticateUser authenticateUser,
+        @RequestHeader("Authorization") String token) {
+        memberService.withdrawMember(authenticateUser.getMemberId(), token);
+        return ApiResponseDto.success(null);
+    }
+
 }

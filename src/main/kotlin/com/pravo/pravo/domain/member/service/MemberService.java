@@ -5,6 +5,8 @@ import com.pravo.pravo.domain.member.dto.LoginResponseDTO;
 import com.pravo.pravo.domain.member.dto.MyPageResponseDTO;
 import com.pravo.pravo.domain.member.model.Member;
 import com.pravo.pravo.domain.member.repository.MemberRepository;
+import com.pravo.pravo.domain.promise.model.PromiseRole;
+import com.pravo.pravo.domain.promise.repository.PromiseRoleRepository;
 import com.pravo.pravo.global.error.ErrorCode;
 import com.pravo.pravo.global.error.exception.BaseException;
 import com.pravo.pravo.global.error.exception.NotFoundException;
@@ -14,6 +16,8 @@ import com.pravo.pravo.global.jwt.JwtTokenProvider;
 import com.pravo.pravo.global.jwt.JwtTokens;
 import com.pravo.pravo.global.jwt.JwtTokensGenerator;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -31,14 +35,17 @@ public class MemberService {
     private final RedisTemplate<String, String> redisTemplate;
     private final S3Service s3Service;
 
+    private final PromiseRoleRepository promiseRoleRepository;
+
     public MemberService(MemberRepository memberRepository, JwtTokensGenerator jwtTokensGenerator,
         RedisTemplate<String, String> redisTemplate, JwtTokenProvider jwtTokenProvider,
-        S3Service s3Service) {
+        S3Service s3Service, PromiseRoleRepository promiseRoleRepository) {
         this.memberRepository = memberRepository;
         this.jwtTokensGenerator = jwtTokensGenerator;
         this.redisTemplate = redisTemplate;
         this.jwtTokenProvider = jwtTokenProvider;
         this.s3Service = s3Service;
+        this.promiseRoleRepository = promiseRoleRepository;
     }
 
     public LoginResponseDTO login(LoginRequestDTO loginRequestDto) {
@@ -63,7 +70,7 @@ public class MemberService {
         return loginResponseDTO;
     }
 
-    public String logout(String token) {
+    public void logout(String token) {
         // remove Bearer
         token = token.substring(7);
         Long expiration = jwtTokenProvider.getExpiration(token) - System.currentTimeMillis();
@@ -71,8 +78,6 @@ public class MemberService {
         //**로그아웃 구분하기 위해 redis에 저장**
         redisTemplate.opsForValue()
             .set(token, "logout token", expiration, TimeUnit.MILLISECONDS);
-
-        return "Successfully logged out";
     }
 
     public void validateMemberById(Long memberId) {
@@ -137,5 +142,18 @@ public class MemberService {
     public Member getMemberById(Long memberId) {
         return memberRepository.findById(memberId)
             .orElseThrow(() -> new EntityNotFoundException("멤버를 찾을 수 없습니다"));
+    }
+
+    @Transactional
+    public void withdrawMember(Long memberId, String token) {
+        Member withdrawMember = memberRepository.findById(memberId)
+            .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND, "멤버를 찾을 수 없습니다"));
+        // TODO: 남은 포인트 처리
+        List<PromiseRole> promiseRoles = promiseRoleRepository.findByMemberId(memberId);
+        for (PromiseRole promiseRole : promiseRoles) {
+            promiseRole.delete();
+        }
+        withdrawMember.delete();
+        logout(token);
     }
 }
