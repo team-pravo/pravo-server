@@ -1,11 +1,11 @@
 package com.pravo.pravo.domain.member.model;
 
 import com.pravo.pravo.global.common.model.BaseTimeEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -52,7 +52,9 @@ public class Member extends BaseTimeEntity {
         return this.profileImageUrl;
     }
 
-    public Long getPoint() { return this.point; }
+    public Long getPoint() {
+        return this.point;
+    }
 
     public String getFcmToken() {
         return this.fcmToken;
@@ -72,5 +74,12 @@ public class Member extends BaseTimeEntity {
 
     public void setFcmToken(String fcmToken) {
         this.fcmToken = fcmToken;
+      
+    public void delete() {
+        this.deleted = true;
+    }
+
+    public void setPoint(Long point) {
+        this.point = point;
     }
 }
