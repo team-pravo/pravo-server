@@ -15,7 +15,7 @@ class ApiResponseDto<T>(
 ) {
     companion object {
         @JvmStatic
-        fun success(): ApiResponseDto<Unit> {
+        fun success(): ApiResponseDto<Void> {
             return ApiResponseDto(
                 message = "Success",
                 status = 200,

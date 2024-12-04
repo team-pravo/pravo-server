@@ -17,4 +17,11 @@ class PointLogService(
         memberId: Long,
         promiseId: Long,
     ): PointLog = pointLogRepository.save(PointLog.of(pointLogStatus, amount, memberId, promiseId))
+
+    @Transactional
+    fun saveWithdrawPointLog(
+        pointLogStatus: PointLogStatus,
+        amount: Long,
+        memberId: Long,
+    ): PointLog = pointLogRepository.save(PointLog.of(pointLogStatus, amount, memberId, null))
 }

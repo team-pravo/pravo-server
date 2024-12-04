@@ -77,7 +77,8 @@ public class JwtAuthorizationFilter implements Filter {
         } catch (JsonParseException e) {
             log.error("JsonParseException" + e.getMessage());
             sendErrorResponse(httpServletResponse,
-                ApiResponseDto.error("잘못된 요청입니다", HttpStatus.BAD_REQUEST.value(), "E01"));
+                ApiResponseDto.error("잘못된 요청입니다", HttpStatus.UNAUTHORIZED.value(),
+                    "E01"));  // UNAUTHORIZED 로 변경
         } catch (MalformedJwtException | UnsupportedJwtException e) {
             log.error("JwtException" + e.getMessage());
             sendErrorResponse(httpServletResponse,
