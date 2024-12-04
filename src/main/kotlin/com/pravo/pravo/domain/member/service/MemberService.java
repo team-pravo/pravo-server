@@ -103,7 +103,6 @@ public class MemberService {
         //**로그아웃 구분하기 위해 redis에 저장**
         redisTemplate.opsForValue()
             .set(token, "logout token", expiration, TimeUnit.MILLISECONDS);
-        redisTemplate.opsForValue().set(token, "logout token", expiration, TimeUnit.MILLISECONDS);
     }
 
     public void validateMemberById(Long memberId) {
