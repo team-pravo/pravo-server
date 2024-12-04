@@ -1,5 +1,8 @@
 package com.pravo.pravo.domain.member.controller;
 
+import com.pravo.pravo.domain.member.dto.MemberFineLogResponseDTO;
+import com.pravo.pravo.domain.member.dto.MemberPaymentLogResponseDTO;
+import com.pravo.pravo.domain.member.dto.MemberPointLogResponseDTO;
 import com.pravo.pravo.domain.member.dto.MyPageResponseDTO;
 import com.pravo.pravo.domain.member.dto.ProfileChangeRequestDTO;
 import com.pravo.pravo.global.common.ApiResponseDto;
@@ -8,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 
 @SecurityRequirement(name = "jwt")
 @Tag(name = "Member", description = "멤버 API")
@@ -28,11 +32,25 @@ public interface MemberApi {
         @Parameter(hidden = true) AuthenticateUser authenticateUser,
         ProfileChangeRequestDTO profileChangeRequestDTO
     );
-
+    
     @Operation(summary = "회원 탈퇴", description = "회원 탈퇴합니다")
     ApiResponseDto<Void> withdrawMember(
         @Parameter(hidden = true) AuthenticateUser authenticateUser,
         @Parameter(hidden = true) String token
     );
 
+    @Operation(summary = "결제 내역", description = "멤버 결제 내역 조회합니다")
+    ApiResponseDto<List<MemberPaymentLogResponseDTO>> getMemberPaymentLog(
+        @Parameter(hidden = true) AuthenticateUser authenticateUser
+    );
+
+    @Operation(summary = "포인트 사용/적립 내역", description = "포인트 사용/적립 내역 조회합니다")
+    ApiResponseDto<List<MemberPointLogResponseDTO>> getMemberPointLog(
+        @Parameter(hidden = true) AuthenticateUser authenticateUser
+    );
+
+    @Operation(summary = "별금 내역", description = "별금 내역 조회합니다")
+    ApiResponseDto<List<MemberFineLogResponseDTO>> getMemberFineLog(
+        @Parameter(hidden = true) AuthenticateUser authenticateUser
+    );
 }

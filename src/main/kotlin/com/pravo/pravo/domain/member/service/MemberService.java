@@ -1,11 +1,24 @@
 package com.pravo.pravo.domain.member.service;
 
+import com.pravo.pravo.domain.fine.model.FineLog;
+import com.pravo.pravo.domain.fine.repository.FineLogRepository;
 import com.pravo.pravo.domain.member.dto.LoginRequestDTO;
 import com.pravo.pravo.domain.member.dto.LoginResponseDTO;
+import com.pravo.pravo.domain.member.dto.MemberFineLogResponseDTO;
+import com.pravo.pravo.domain.member.dto.MemberPaymentLogResponseDTO;
+import com.pravo.pravo.domain.member.dto.MemberPointLogResponseDTO;
 import com.pravo.pravo.domain.member.dto.MyPageResponseDTO;
 import com.pravo.pravo.domain.member.model.Member;
 import com.pravo.pravo.domain.member.repository.MemberRepository;
+import com.pravo.pravo.domain.payment.enums.PaymentStatus;
+import com.pravo.pravo.domain.payment.model.PaymentLog;
+import com.pravo.pravo.domain.payment.repository.PaymentLogRepository;
+import com.pravo.pravo.domain.point.model.PointLog;
+import com.pravo.pravo.domain.point.repository.PointLogRepository;
 import com.pravo.pravo.domain.promise.model.PromiseRole;
+import com.pravo.pravo.domain.promise.model.enums.ParticipantStatus;
+import com.pravo.pravo.domain.promise.model.enums.PromiseStatus;
+import com.pravo.pravo.domain.promise.repository.PromiseRepository;
 import com.pravo.pravo.domain.promise.repository.PromiseRoleRepository;
 import com.pravo.pravo.global.error.ErrorCode;
 import com.pravo.pravo.global.error.exception.BaseException;
@@ -17,8 +30,10 @@ import com.pravo.pravo.global.jwt.JwtTokens;
 import com.pravo.pravo.global.jwt.JwtTokensGenerator;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -34,18 +49,28 @@ public class MemberService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTemplate<String, String> redisTemplate;
     private final S3Service s3Service;
-
     private final PromiseRoleRepository promiseRoleRepository;
+    private final PromiseRepository promiseRepository;
+    private final PaymentLogRepository paymentLogRepository;
+    private final PointLogRepository pointLogRepository;
+    private final FineLogRepository fineLogRepository;
 
     public MemberService(MemberRepository memberRepository, JwtTokensGenerator jwtTokensGenerator,
         RedisTemplate<String, String> redisTemplate, JwtTokenProvider jwtTokenProvider,
-        S3Service s3Service, PromiseRoleRepository promiseRoleRepository) {
+        S3Service s3Service, PromiseRepository promiseRepository,
+        PromiseRoleRepository promiseRoleRepository,
+        PaymentLogRepository paymentLogRepository, PointLogRepository pointLogRepository,
+        FineLogRepository fineLogRepository) {
         this.memberRepository = memberRepository;
         this.jwtTokensGenerator = jwtTokensGenerator;
         this.redisTemplate = redisTemplate;
         this.jwtTokenProvider = jwtTokenProvider;
         this.s3Service = s3Service;
         this.promiseRoleRepository = promiseRoleRepository;
+        this.promiseRepository = promiseRepository;
+        this.paymentLogRepository = paymentLogRepository;
+        this.pointLogRepository = pointLogRepository;
+        this.fineLogRepository = fineLogRepository;
     }
 
     public LoginResponseDTO login(LoginRequestDTO loginRequestDto) {
@@ -78,6 +103,7 @@ public class MemberService {
         //**로그아웃 구분하기 위해 redis에 저장**
         redisTemplate.opsForValue()
             .set(token, "logout token", expiration, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(token, "logout token", expiration, TimeUnit.MILLISECONDS);
     }
 
     public void validateMemberById(Long memberId) {
@@ -88,8 +114,7 @@ public class MemberService {
 
     public MyPageResponseDTO fetchMemberById(Long memberId) {
         Member member = memberRepository.findById(memberId)
-            .orElseThrow(
-                () -> new NotFoundException(ErrorCode.NOT_FOUND, "멤버를 찾을 수 없습니다"));
+            .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND, "멤버를 찾을 수 없습니다"));
         return MyPageResponseDTO.of(member);
     }
 
@@ -151,9 +176,59 @@ public class MemberService {
         // TODO: 남은 포인트 처리
         List<PromiseRole> promiseRoles = promiseRoleRepository.findByMemberId(memberId);
         for (PromiseRole promiseRole : promiseRoles) {
+            if (promiseRole.getPromise().getStatus() == PromiseStatus.READY
+                && promiseRole.getStatus() == ParticipantStatus.READY) {
+                {
+                    throw new BaseException(ErrorCode.PROMISE_NOT_CANCELLED,
+                        "진행 중인 약속이 있습니다. 약속을 먼저 취소해주세요.");
+                }
+            }
             promiseRole.delete();
         }
         withdrawMember.delete();
         logout(token);
+    }
+
+    public List<MemberPaymentLogResponseDTO> getMemberPaymentLog(Long memberId) {
+        List<PaymentLog> paymentLogs = paymentLogRepository.findByMemberIdAndPaymentStatus(
+            memberId,
+            List.of(PaymentStatus.COMPLETED, PaymentStatus.CANCELED));
+
+        return paymentLogs.stream()
+            .map(paymentLog -> new MemberPaymentLogResponseDTO(
+                paymentLog.getPromise().getName(),
+                paymentLog.getBalanceAmount(),
+                paymentLog.getPaymentStatus().name(),
+                paymentLog.getApprovedAt().toString(),
+                paymentLog.getUpdatedAt().toString()
+            ))
+            .collect(Collectors.toList());
+    }
+
+    public List<MemberPointLogResponseDTO> getMemberPointLog(Long memberId) {
+        List<PointLog> pointLogs = pointLogRepository.findByMemberId(memberId);
+
+        return pointLogs.stream()
+            .map(pointLog -> new MemberPointLogResponseDTO(
+                pointLog.getPromise().getName(),
+                pointLog.getPointLogStatus().toString(),
+                pointLog.getAmount(),
+                pointLog.getUpdatedAt()
+            ))
+            .sorted(Comparator.comparing(MemberPointLogResponseDTO::pointDate).reversed())
+            .toList();
+    }
+
+    public List<MemberFineLogResponseDTO> getMemberFineLog(Long memberId) {
+        List<FineLog> fineLogs = fineLogRepository.findByMemberId(memberId);
+
+        return fineLogs.stream()
+            .map(fineLog -> new MemberFineLogResponseDTO(
+                fineLog.getPromise().getName(),
+                fineLog.getAmount(),
+                fineLog.getUpdatedAt()
+            ))
+            .sorted(Comparator.comparing(MemberFineLogResponseDTO::fineDate).reversed())
+            .toList();
     }
 }
