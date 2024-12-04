@@ -40,3 +40,6 @@ cloud:
 
 toss:
   secretKey: ${TOSS_SECRET_KEY}
+
+firebase:
+  config-path: serviceAccountKey.json
