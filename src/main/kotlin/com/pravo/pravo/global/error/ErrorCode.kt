@@ -1,9 +1,9 @@
 package com.pravo.pravo.global.error
 
 enum class ErrorCode(
-        val message: String,
-        val status: Int,
-        val code: String,
+    val message: String,
+    val status: Int,
+    val code: String,
 ) {
     INTERNAL_SERVER_ERROR("Internal Server Error", 500, "E01"),
     BAD_REQUEST("Bad Request", 400, "E02"),
@@ -14,5 +14,5 @@ enum class ErrorCode(
     IMAGE_EXTENSION_ERROR("이미지 확장자는 jpg, png, webp만 가능합니다.", 400, "E07"),
     IMAGE_SIZE_ERROR("이미지 사이즈는 5MB를 넘을 수 없습니다.", 400, "E08"),
     NAME_EXIST_ERROR("Name already exists", 409, "E09"),
-    PROMISE_NOT_CANCELLED("진행 중인 약속이 있습니다", 400, "E10")
+    PROMISE_NOT_CANCELLED("진행 중인 약속이 있습니다", 400, "E10"),
 }
