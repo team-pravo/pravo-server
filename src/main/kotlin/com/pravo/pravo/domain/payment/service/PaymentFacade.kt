@@ -62,10 +62,6 @@ class PaymentFacade(
     ): RequestOrderResponseDto {
         val id = createPaymentUUID()
         val pendingPaymentLog = PaymentLog.getPendingPaymentLog(id, memberId, promiseId)
-        val member = memberService.getMemberById(memberId)
-        val promise = promiseService.getPromise(promiseId)
-        promiseRoleService.createPendingPromiseRole(member, promise, RoleStatus.PARTICIPANT)
-
         return RequestOrderResponseDto.of(
             paymentService.savePaymentLog(pendingPaymentLog).orderId,
             promiseId,

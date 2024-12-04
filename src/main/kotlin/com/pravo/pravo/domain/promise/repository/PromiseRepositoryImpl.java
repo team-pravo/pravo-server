@@ -6,6 +6,7 @@ import com.pravo.pravo.domain.promise.dto.response.PromiseResponseDto;
 import com.pravo.pravo.domain.promise.dto.response.QPromiseResponseDto;
 import com.pravo.pravo.domain.promise.model.QPromise;
 import com.pravo.pravo.domain.promise.model.QPromiseRole;
+import com.pravo.pravo.domain.promise.model.enums.ParticipantStatus;
 import com.pravo.pravo.domain.promise.model.enums.PromiseStatus;
 import com.pravo.pravo.domain.promise.model.enums.RoleStatus;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -41,7 +42,10 @@ public class PromiseRepositoryImpl implements PromiseRepositoryCustom {
                 organizer.member.profileImageUrl
             ))
             .from(promise)
-            .join(promiseRole).on(promiseRole.promise.eq(promise))
+            .join(promiseRole).on(
+                promiseRole.promise.eq(promise)
+                .and(promiseRole.status.ne(ParticipantStatus.PENDING))
+            )
             .leftJoin(organizer).on(
                 organizer.promise.eq(promise)
                     .and(organizer.role.eq(RoleStatus.ORGANIZER))
