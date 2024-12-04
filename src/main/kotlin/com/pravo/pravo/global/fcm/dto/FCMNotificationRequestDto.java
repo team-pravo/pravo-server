@@ -15,4 +15,15 @@ public class FCMNotificationRequestDto {
     @Schema(example = "약속을 어기면 산타가 선물을 안줘요!")
     private String body;
 
+    public String getToken() {
+        return this.token;
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public String getBody() {
+        return this.body;
+    }
 }
