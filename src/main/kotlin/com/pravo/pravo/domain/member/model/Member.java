@@ -69,4 +69,8 @@ public class Member extends BaseTimeEntity {
     public void updatePoint(Long point) {
         this.point += point;
     }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
 }

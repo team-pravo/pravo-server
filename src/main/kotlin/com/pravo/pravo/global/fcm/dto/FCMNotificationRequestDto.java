@@ -1,11 +1,7 @@
 package com.pravo.pravo.global.fcm.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
-import lombok.Data;
 
-@Data
-@Builder
 public class FCMNotificationRequestDto {
 
     @Schema(example = "device token")
@@ -25,5 +21,9 @@ public class FCMNotificationRequestDto {
 
     public String getBody() {
         return this.body;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

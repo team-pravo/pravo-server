@@ -9,6 +9,7 @@ import com.pravo.pravo.domain.member.service.MemberService;
 import com.pravo.pravo.global.auth.annotation.AuthUser;
 import com.pravo.pravo.global.common.ApiResponseDto;
 import com.pravo.pravo.global.jwt.AuthenticateUser;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
+@Tag(name = "Member", description = "회원 관련 API")
 public class MemberController implements MemberApi {
 
     private final MemberService memberService;
