@@ -6,6 +6,7 @@ import com.pravo.pravo.domain.promise.dto.response.PromiseResponseDto;
 import com.pravo.pravo.domain.promise.dto.response.QPromiseResponseDto;
 import com.pravo.pravo.domain.promise.model.QPromise;
 import com.pravo.pravo.domain.promise.model.QPromiseRole;
+import com.pravo.pravo.domain.promise.model.enums.PromiseStatus;
 import com.pravo.pravo.domain.promise.model.enums.RoleStatus;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -48,7 +49,8 @@ public class PromiseRepositoryImpl implements PromiseRepositoryCustom {
             .where(
                 promiseRole.member.id.eq(memberId),
                 promiseDateAfter(startedAt),
-                promiseDateBefore(endedAt)
+                promiseDateBefore(endedAt),
+                promise.status.ne(PromiseStatus.PENDING)
             )
             .orderBy(promise.promiseDate.asc())
             .fetch();
