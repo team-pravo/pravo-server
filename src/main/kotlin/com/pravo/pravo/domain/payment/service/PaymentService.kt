@@ -41,6 +41,14 @@ class PaymentService(
             NotFoundException(ErrorCode.NOT_FOUND)
         }
 
+    fun findByMemberIdAndPromiseId(
+        memberId: Long,
+        promiseId: Long,
+    ): PaymentLog =
+        paymentLogRepository.findByMemberIdAndPromiseId(memberId, promiseId).orElseThrow {
+            NotFoundException(ErrorCode.NOT_FOUND, "결제 정보를 찾을 수 없습니다")
+        }
+
     fun saveCardAndEasyPay(
         card: Card?,
         easyPay: EasyPay?,

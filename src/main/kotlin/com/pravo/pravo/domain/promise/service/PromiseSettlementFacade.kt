@@ -2,6 +2,7 @@ package com.pravo.pravo.domain.promise.service
 
 import com.pravo.pravo.domain.fine.service.FineLogService
 import com.pravo.pravo.domain.member.model.Member
+import com.pravo.pravo.domain.payment.enums.PaymentStatus
 import com.pravo.pravo.domain.payment.service.PaymentService
 import com.pravo.pravo.domain.point.model.PointLogStatus
 import com.pravo.pravo.domain.point.service.PointLogService
@@ -125,7 +126,10 @@ class PromiseSettlementFacade(
         val cancelResults =
             attendees.map { attendee ->
                 try {
-                    paymentService.cancelPayment(attendee.member.id, promiseId)
+                    // TODO 실제 결제가 이루어저야 해당 로직이 동작 가능함
+                    // paymentService.cancelPayment(attendee.member.id, promiseId)
+                    val paymentLog = paymentService.findByMemberIdAndPromiseId(attendee.member.id, promiseId)
+                    paymentLog.setPaymentStatus(PaymentStatus.CANCELED)
                     true
                 } catch (e: Exception) {
                     log.error("Failed to cancel payment for member ${attendee.member.id}: ${e.message}")
@@ -185,8 +189,8 @@ class PromiseSettlementFacade(
     private fun updateAndSplitParticipants(
         participants: List<PromiseRole>,
         attendedMemberIds: List<Long>,
-    ): Pair<List<PromiseRole>, List<PromiseRole>> {
-        return participants
+    ): Pair<List<PromiseRole>, List<PromiseRole>> =
+        participants
             .map { participant ->
                 val newStatus =
                     if (attendedMemberIds.contains(participant.member.id)) {
@@ -196,11 +200,9 @@ class PromiseSettlementFacade(
                     }
                 participant.updateStatus(newStatus)
                 participant
-            }
-            .partition { participant ->
+            }.partition { participant ->
                 participant.status == ParticipantStatus.ATTENDED
             }
-    }
 
     @Transactional
     fun deletePromise(
