@@ -70,4 +70,8 @@ public class Member extends BaseTimeEntity {
     public void delete() {
         this.deleted = true;
     }
+
+    public void setPoint(Long point) {
+        this.point = point;
+    }
 }

@@ -14,7 +14,9 @@ import com.pravo.pravo.domain.payment.enums.PaymentStatus;
 import com.pravo.pravo.domain.payment.model.PaymentLog;
 import com.pravo.pravo.domain.payment.repository.PaymentLogRepository;
 import com.pravo.pravo.domain.point.model.PointLog;
+import com.pravo.pravo.domain.point.model.PointLogStatus;
 import com.pravo.pravo.domain.point.repository.PointLogRepository;
+import com.pravo.pravo.domain.point.service.PointLogService;
 import com.pravo.pravo.domain.promise.model.PromiseRole;
 import com.pravo.pravo.domain.promise.model.enums.ParticipantStatus;
 import com.pravo.pravo.domain.promise.model.enums.PromiseStatus;
@@ -50,27 +52,27 @@ public class MemberService {
     private final RedisTemplate<String, String> redisTemplate;
     private final S3Service s3Service;
     private final PromiseRoleRepository promiseRoleRepository;
-    private final PromiseRepository promiseRepository;
     private final PaymentLogRepository paymentLogRepository;
     private final PointLogRepository pointLogRepository;
     private final FineLogRepository fineLogRepository;
+    private final PointLogService pointLogService;
 
     public MemberService(MemberRepository memberRepository, JwtTokensGenerator jwtTokensGenerator,
         RedisTemplate<String, String> redisTemplate, JwtTokenProvider jwtTokenProvider,
         S3Service s3Service, PromiseRepository promiseRepository,
         PromiseRoleRepository promiseRoleRepository,
         PaymentLogRepository paymentLogRepository, PointLogRepository pointLogRepository,
-        FineLogRepository fineLogRepository) {
+        FineLogRepository fineLogRepository, PointLogService pointLogService) {
         this.memberRepository = memberRepository;
         this.jwtTokensGenerator = jwtTokensGenerator;
         this.redisTemplate = redisTemplate;
         this.jwtTokenProvider = jwtTokenProvider;
         this.s3Service = s3Service;
         this.promiseRoleRepository = promiseRoleRepository;
-        this.promiseRepository = promiseRepository;
         this.paymentLogRepository = paymentLogRepository;
         this.pointLogRepository = pointLogRepository;
         this.fineLogRepository = fineLogRepository;
+        this.pointLogService = pointLogService;
     }
 
     public LoginResponseDTO login(LoginRequestDTO loginRequestDto) {
@@ -172,7 +174,6 @@ public class MemberService {
     public void withdrawMember(Long memberId, String token) {
         Member withdrawMember = memberRepository.findById(memberId)
             .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND, "멤버를 찾을 수 없습니다"));
-        // TODO: 남은 포인트 처리
         List<PromiseRole> promiseRoles = promiseRoleRepository.findByMemberId(memberId);
         for (PromiseRole promiseRole : promiseRoles) {
             if (promiseRole.getPromise().getStatus() == PromiseStatus.READY
@@ -184,8 +185,10 @@ public class MemberService {
             }
             promiseRole.delete();
         }
+        pointLogService.saveWithdrawPointLog(PointLogStatus.MINUS, withdrawMember.getPoint(),
+            memberId);
+        withdrawMember.setPoint(0L);
         withdrawMember.delete();
-        logout(token);
     }
 
     public List<MemberPaymentLogResponseDTO> getMemberPaymentLog(Long memberId) {

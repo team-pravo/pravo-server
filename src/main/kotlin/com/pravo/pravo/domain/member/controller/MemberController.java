@@ -35,7 +35,7 @@ public class MemberController implements MemberApi {
         @RequestHeader("Authorization") String token
     ) {
         memberService.logout(token);
-        return ApiResponseDto.success(null);
+        return ApiResponseDto.success();
     }
 
     @GetMapping("/member")
@@ -60,7 +60,7 @@ public class MemberController implements MemberApi {
     public ApiResponseDto<Void> withdrawMember(@AuthUser AuthenticateUser authenticateUser,
         @RequestHeader("Authorization") String token) {
         memberService.withdrawMember(authenticateUser.getMemberId(), token);
-        return ApiResponseDto.success(null);
+        return ApiResponseDto.success();
     }
 
     @GetMapping("/member/payment-log")
