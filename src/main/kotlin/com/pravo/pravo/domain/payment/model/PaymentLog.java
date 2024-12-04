@@ -1,10 +1,14 @@
 package com.pravo.pravo.domain.payment.model;
 
 import com.pravo.pravo.domain.payment.enums.PaymentStatus;
+import com.pravo.pravo.domain.promise.model.Promise;
 import com.pravo.pravo.global.common.model.BaseTimeEntity;
 import com.pravo.pravo.global.external.toss.dto.response.TossResponseDto;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
@@ -44,6 +48,10 @@ public class PaymentLog extends BaseTimeEntity {
 
     private PaymentStatus paymentStatus;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fetch_promise_id")
+    private Promise promise;
+
     public static PaymentLog getPendingPaymentLog(String id, Long memberId, Long promiseId) {
         PaymentLog paymentLog = new PaymentLog();
         return paymentLog.setPendingPaymentLog(id, memberId, promiseId);
@@ -61,7 +69,8 @@ public class PaymentLog extends BaseTimeEntity {
 
         this.requestedAt = OffsetDateTime.parse(dto.getRequestedAt()).toLocalDateTime();
         this.approvedAt =
-            dto.getApprovedAt() != null ? OffsetDateTime.parse(dto.getApprovedAt()).toLocalDateTime() : null;
+            dto.getApprovedAt() != null ? OffsetDateTime.parse(dto.getApprovedAt())
+                .toLocalDateTime() : null;
 
         this.useEscrow = dto.getUseEscrow();
         this.cultureExpense = dto.getCultureExpense();
@@ -89,6 +98,7 @@ public class PaymentLog extends BaseTimeEntity {
     public String getOrderId() {
         return this.orderId;
     }
+
     public String getPaymentKey() {
         return this.paymentKey;
     }
@@ -104,5 +114,24 @@ public class PaymentLog extends BaseTimeEntity {
         return this;
     }
 
+    public int getBalanceAmount() {
+        return this.balanceAmount;
+    }
+
+    public LocalDateTime getApprovedAt() {
+        return this.approvedAt;
+    }
+
+    public Long getPromiseId() {
+        return this.promiseId;
+    }
+
+    public PaymentStatus getPaymentStatus() {
+        return this.paymentStatus;
+    }
+
+    public Promise getPromise() {
+        return this.promise;
+    }
 
 }
