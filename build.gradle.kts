@@ -100,6 +100,9 @@ dependencies {
 
     // Discord
     implementation("com.github.napstr:logback-discord-appender:1.0.0")
+
+    // fcm
+    implementation("com.google.firebase:firebase-admin:9.4.1")
 }
 
 kotlin {
