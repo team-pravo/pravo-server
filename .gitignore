@@ -42,5 +42,5 @@ out/
 
 ## Secret Files
 # Contains sensitive information such as passwords, API keys, etc.
-!**/src/main/resources/application-secret.properties
-!**/src/main/resources/serviceAccountKey.json
+/src/main/resources/serviceAccountKey.json
+/src/main/resources/application-secret.properties
