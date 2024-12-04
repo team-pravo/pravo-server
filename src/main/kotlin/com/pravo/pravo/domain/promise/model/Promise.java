@@ -30,7 +30,7 @@ public class Promise extends BaseTimeEntity {
     private String name;
 
     @Column(nullable = false)
-    private LocalDateTime promiseDate;
+    private LocalDateTime scheduledAt;
 
     @Column
     private String location;
@@ -56,8 +56,8 @@ public class Promise extends BaseTimeEntity {
         return this.name;
     }
 
-    public LocalDateTime getPromiseDate() {
-        return this.promiseDate;
+    public LocalDateTime getScheduledAt() {
+        return this.scheduledAt;
     }
 
     public String getLocation() {
@@ -82,10 +82,10 @@ public class Promise extends BaseTimeEntity {
     public Promise() {
     }
 
-    public Promise(String name, LocalDateTime promiseDate, String location,
+    public Promise(String name, LocalDateTime scheduledAt, String location,
         PromiseStatus promiseStatus, Integer deposit) {
         this.name = name;
-        this.promiseDate = promiseDate;
+        this.scheduledAt = scheduledAt;
         this.location = location;
         this.status = promiseStatus;
         this.deposit = deposit;

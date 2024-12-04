@@ -6,6 +6,7 @@ import com.pravo.pravo.domain.promise.dto.response.PromiseResponseDto;
 import com.pravo.pravo.domain.promise.dto.response.QPromiseResponseDto;
 import com.pravo.pravo.domain.promise.model.QPromise;
 import com.pravo.pravo.domain.promise.model.QPromiseRole;
+import com.pravo.pravo.domain.promise.model.enums.PromiseStatus;
 import com.pravo.pravo.domain.promise.model.enums.RoleStatus;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -33,7 +34,7 @@ public class PromiseRepositoryImpl implements PromiseRepositoryCustom {
             .select(new QPromiseResponseDto(
                 promise.id,
                 promise.name,
-                promise.promiseDate,
+                promise.scheduledAt,
                 promise.location,
                 promise.status,
                 organizer.member.name,
@@ -47,18 +48,19 @@ public class PromiseRepositoryImpl implements PromiseRepositoryCustom {
             )
             .where(
                 promiseRole.member.id.eq(memberId),
-                promiseDateAfter(startedAt),
-                promiseDateBefore(endedAt)
+                scheduledAtAfter(startedAt),
+                scheduledAtBefore(endedAt),
+                promise.status.ne(PromiseStatus.PENDING)
             )
-            .orderBy(promise.promiseDate.asc())
+            .orderBy(promise.scheduledAt.asc())
             .fetch();
     }
 
-    private BooleanExpression promiseDateAfter(LocalDate startedAt) {
-        return startedAt != null ? promise.promiseDate.goe(startedAt.atStartOfDay()) : null;
+    private BooleanExpression scheduledAtAfter(LocalDate startedAt) {
+        return startedAt != null ? promise.scheduledAt.goe(startedAt.atStartOfDay()) : null;
     }
 
-    private BooleanExpression promiseDateBefore(LocalDate endedAt) {
-        return endedAt != null ? promise.promiseDate.loe(endedAt.atTime(LocalTime.MAX)) : null;
+    private BooleanExpression scheduledAtBefore(LocalDate endedAt) {
+        return endedAt != null ? promise.scheduledAt.loe(endedAt.atTime(LocalTime.MAX)) : null;
     }
 }

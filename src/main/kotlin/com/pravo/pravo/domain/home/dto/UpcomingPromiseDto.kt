@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 
 data class UpcomingPromiseDto(
     @Schema(description = "약속 일시", example = "2021-08-01T00:00:00")
-    val promiseDate: LocalDateTime,
+    val scheduledAt: LocalDateTime,
     @Schema(description = "약속 이름", example = "약속 이름")
     val name: String,
 )

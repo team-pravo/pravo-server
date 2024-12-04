@@ -34,14 +34,13 @@ class PaymentController(
     override fun requestOrderParticipant(
         @AuthUser authenticatedUser: AuthenticateUser,
         @PathVariable promiseId: Long,
-    ) {
+    ): ApiResponseDto<RequestOrderResponseDto> =
         ApiResponseDto.success(
             paymentFacade.requestOrderParticipant(
                 authenticatedUser.memberId,
                 promiseId,
             ),
         )
-    }
 
     @PostMapping("/confirm")
     override fun confirmOrder(

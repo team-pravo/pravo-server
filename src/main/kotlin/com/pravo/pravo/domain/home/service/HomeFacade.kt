@@ -24,8 +24,8 @@ class HomeFacade(
                     LocalDate.now().plusDays(1),
                     LocalDate.now().plusDays(7),
                 ).map { p ->
-                    UpcomingPromiseDto(p.promiseDate, p.name)
-                }.sortedBy { it.promiseDate }
+                    UpcomingPromiseDto(p.scheduledAt, p.name)
+                }.sortedBy { it.scheduledAt }
 
         return HomeResponseDto(todayPromises, member.point, upcomingPromises)
     }
