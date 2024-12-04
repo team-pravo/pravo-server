@@ -74,7 +74,8 @@ public class Member extends BaseTimeEntity {
 
     public void setFcmToken(String fcmToken) {
         this.fcmToken = fcmToken;
-      
+    }
+
     public void delete() {
         this.deleted = true;
     }
