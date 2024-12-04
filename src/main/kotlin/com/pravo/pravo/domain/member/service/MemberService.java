@@ -171,7 +171,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void withdrawMember(Long memberId, String token) {
+    public void withdrawMember(Long memberId) {
         Member withdrawMember = memberRepository.findById(memberId)
             .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND, "멤버를 찾을 수 없습니다"));
         List<PromiseRole> promiseRoles = promiseRoleRepository.findByMemberId(memberId);
