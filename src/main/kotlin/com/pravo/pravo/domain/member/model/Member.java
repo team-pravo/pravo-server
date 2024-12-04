@@ -22,6 +22,7 @@ public class Member extends BaseTimeEntity {
     private String profileImageUrl;
     private String socialId;
     private Long point;
+    private String fcmToken = "";
 
     @Column(nullable = false)
     private boolean deleted = false;
@@ -52,6 +53,10 @@ public class Member extends BaseTimeEntity {
     }
 
     public Long getPoint() { return this.point; }
+
+    public String getFcmToken() {
+        return this.fcmToken;
+    }
 
     public void setName(String name) {
         this.name = name;

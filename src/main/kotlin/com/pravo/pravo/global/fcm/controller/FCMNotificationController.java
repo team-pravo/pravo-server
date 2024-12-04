@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Tag(name = "FCM", description = "FCM 관련 API")
-public class FCMController {
+public class FCMNotificationController {
 
     private final FCMNotificationService fcmNotificationService;
 
-    public FCMController(FCMNotificationService fcmNotificationService) {
+    public FCMNotificationController(FCMNotificationService fcmNotificationService) {
         this.fcmNotificationService = fcmNotificationService;
     }
 

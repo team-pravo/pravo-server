@@ -12,12 +12,15 @@ import org.springframework.stereotype.Service;
 public class FCMNotificationService {
 
     public void sendMessage(String token, String title, String body) throws FirebaseMessagingException {
+        if (token == null) {
+            throw new IllegalArgumentException("Token is null");
+        }
         String message = FirebaseMessaging.getInstance().send(Message.builder()
             .setNotification(Notification.builder()
                 .setTitle(title)
                 .setBody(body)
                 .build())
-            .setToken(token)  // 대상 디바이스의 등록 토큰
+            .setToken(token)
             .build());
 
         System.out.println("Sent message: " + message);
