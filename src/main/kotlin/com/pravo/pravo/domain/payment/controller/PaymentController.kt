@@ -32,7 +32,7 @@ class PaymentController(
 
     @PostMapping("/request/{promiseId}")
     override fun requestOrderParticipant(
-        authenticatedUser: AuthenticateUser,
+        @AuthUser authenticatedUser: AuthenticateUser,
         @PathVariable promiseId: Long,
     ) {
         ApiResponseDto.success(
