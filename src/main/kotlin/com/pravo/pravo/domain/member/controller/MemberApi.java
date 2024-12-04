@@ -35,8 +35,7 @@ public interface MemberApi {
     
     @Operation(summary = "회원 탈퇴", description = "회원 탈퇴합니다")
     ApiResponseDto<Void> withdrawMember(
-        @Parameter(hidden = true) AuthenticateUser authenticateUser,
-        @Parameter(hidden = true) String token
+        @Parameter(hidden = true) AuthenticateUser authenticateUser
     );
 
     @Operation(summary = "결제 내역", description = "멤버 결제 내역 조회합니다")

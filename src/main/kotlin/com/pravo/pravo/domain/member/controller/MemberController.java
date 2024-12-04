@@ -57,9 +57,8 @@ public class MemberController implements MemberApi {
     }
 
     @DeleteMapping("/withdraw")
-    public ApiResponseDto<Void> withdrawMember(@AuthUser AuthenticateUser authenticateUser,
-        @RequestHeader("Authorization") String token) {
-        memberService.withdrawMember(authenticateUser.getMemberId(), token);
+    public ApiResponseDto<Void> withdrawMember(@AuthUser AuthenticateUser authenticateUser) {
+        memberService.withdrawMember(authenticateUser.getMemberId());
         return ApiResponseDto.success();
     }
 
