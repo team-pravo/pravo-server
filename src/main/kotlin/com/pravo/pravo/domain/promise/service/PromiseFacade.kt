@@ -2,6 +2,8 @@ package com.pravo.pravo.domain.promise.service
 
 import com.pravo.pravo.domain.member.service.MemberService
 import com.pravo.pravo.domain.promise.dto.response.PromiseResponseDto
+import com.pravo.pravo.domain.promise.model.enums.ParticipantStatus
+import com.pravo.pravo.domain.promise.model.enums.PromiseStatus
 import com.pravo.pravo.domain.promise.model.enums.RoleStatus
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
@@ -12,6 +14,7 @@ class PromiseFacade(
     private val promiseRoleService: PromiseRoleService,
     private val memberService: MemberService,
 ) {
+    @Transactional
     fun joinPromise(
         memberId: Long,
         promiseId: Long,
@@ -31,9 +34,9 @@ class PromiseFacade(
         promiseId: Long,
     ) {
         val promise = promiseService.getPromise(promiseId)
-        promise.changePendingStatus()
+        promise.updateStatus(PromiseStatus.READY)
 
         val promiseRole = promiseRoleService.getPromiseRole(memberId, promiseId)
-        promiseRole.changePendingStatus()
+        promiseRole.updateStatus(ParticipantStatus.READY)
     }
 }

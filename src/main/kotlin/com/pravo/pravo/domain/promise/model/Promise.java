@@ -101,7 +101,7 @@ public class Promise extends BaseTimeEntity {
         );
     }
 
-    public void changePendingStatus() {
-        this.status = PromiseStatus.READY;
+    public void updateStatus(PromiseStatus newStatus) {
+        this.status = newStatus;
     }
 }

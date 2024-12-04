@@ -14,6 +14,7 @@ import com.pravo.pravo.global.error.exception.NotFoundException
 import com.pravo.pravo.global.external.toss.PaymentClient
 import com.pravo.pravo.global.external.toss.dto.request.CancelRequestDto
 import com.pravo.pravo.global.util.logger
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service
@@ -66,14 +67,14 @@ class PaymentService(
         return newKey
     }
 
-    // TODO 약속 정산 부분에서 호출
+    @Transactional
     fun cancelPayment(
         promiseId: Long,
         memberId: Long,
     ) {
         val paymentLog =
             paymentLogRepository.findByMemberIdAndPromiseId(memberId, promiseId).orElseThrow {
-                NotFoundException(ErrorCode.NOT_FOUND)
+                NotFoundException(ErrorCode.NOT_FOUND, "결제 정보를 찾을 수 없습니다")
             }
 
         val idempotencyKey = getOrCreateIdempotencyKey(promiseId, memberId)

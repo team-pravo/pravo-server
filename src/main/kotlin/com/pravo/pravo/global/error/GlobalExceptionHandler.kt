@@ -1,6 +1,7 @@
 package com.pravo.pravo.global.error
 
 import com.pravo.pravo.global.common.ApiResponseDto
+import com.pravo.pravo.global.error.exception.BadRequestException
 import com.pravo.pravo.global.error.exception.BaseException
 import com.pravo.pravo.global.error.exception.NotFoundException
 import com.pravo.pravo.global.error.exception.UnauthorizedException
@@ -78,6 +79,20 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(UnauthorizedException::class)
     fun handleUnauthorizedException(e: UnauthorizedException): ResponseEntity<ApiResponseDto<Nothing>> {
+        val errorCode = e.errorCode
+        val response =
+            ApiResponseDto.error(
+                e.message ?: errorCode.message,
+                errorCode.status,
+                errorCode.code,
+            )
+
+        logger.error(e.message, e)
+        return ResponseEntity.status(errorCode.status).body(response)
+    }
+
+    @ExceptionHandler(BadRequestException::class)
+    fun handleBadRequestException(e: BadRequestException): ResponseEntity<ApiResponseDto<Nothing>> {
         val errorCode = e.errorCode
         val response =
             ApiResponseDto.error(
