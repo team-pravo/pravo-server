@@ -18,7 +18,7 @@ import java.util.List;
 public interface MemberApi {
 
     @Operation(summary = "로그아웃", description = "로그아웃입니다")
-    ApiResponseDto<String> logoutPage(
+    ApiResponseDto<Void> logoutPage(
         @Parameter(hidden = true) String token
     );
 
@@ -31,6 +31,11 @@ public interface MemberApi {
     ApiResponseDto<MyPageResponseDTO> updateNameAndProfileImageUrl(
         @Parameter(hidden = true) AuthenticateUser authenticateUser,
         ProfileChangeRequestDTO profileChangeRequestDTO
+    );
+    
+    @Operation(summary = "회원 탈퇴", description = "회원 탈퇴합니다")
+    ApiResponseDto<Void> withdrawMember(
+        @Parameter(hidden = true) AuthenticateUser authenticateUser
     );
 
     @Operation(summary = "결제 내역", description = "멤버 결제 내역 조회합니다")

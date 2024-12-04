@@ -12,6 +12,7 @@ import com.pravo.pravo.global.jwt.AuthenticateUser;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -32,10 +33,11 @@ public class MemberController implements MemberApi {
     }
 
     @PostMapping("/logout")
-    public ApiResponseDto<String> logoutPage(
+    public ApiResponseDto<Void> logoutPage(
         @RequestHeader("Authorization") String token
     ) {
-        return ApiResponseDto.success(memberService.logout(token));
+        memberService.logout(token);
+        return ApiResponseDto.success();
     }
 
     @GetMapping("/member")
@@ -54,6 +56,12 @@ public class MemberController implements MemberApi {
             memberService.updateNameAndProfileImageUrl(authenticateUser.getMemberId(),
                 profileChangeRequestDTO.name(), profileChangeRequestDTO.file(),
                 profileChangeRequestDTO.resetToDefaultImage()));
+    }
+
+    @DeleteMapping("/withdraw")
+    public ApiResponseDto<Void> withdrawMember(@AuthUser AuthenticateUser authenticateUser) {
+        memberService.withdrawMember(authenticateUser.getMemberId());
+        return ApiResponseDto.success();
     }
 
     @GetMapping("/member/payment-log")
