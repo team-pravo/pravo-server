@@ -219,7 +219,11 @@ class PromiseSettlementFacade(
         val participants = promiseRoleService.getParticipantsByStatus(promiseId, ParticipantStatus.READY)
         try {
             participants.forEach { participant ->
-                paymentService.cancelPayment(participant.member.id, promiseId)
+                // TODO 실제 결제가 이루어질때 동작
+                // paymentService.cancelPayment(promiseId, participant.member.id)
+                val paymentLog = paymentService.findByMemberIdAndPromiseId(participant.member.id, promiseId)
+                paymentLog.setPaymentStatus(PaymentStatus.CANCELED)
+                participant.updateStatus(ParticipantStatus.CANCELED)
             }
         } catch (e: Exception) {
             log.error("Failed to cancel payments: ${e.message}")
