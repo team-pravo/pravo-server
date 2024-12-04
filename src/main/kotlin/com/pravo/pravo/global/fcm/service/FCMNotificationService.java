@@ -14,9 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class FCMNotificationService {
     private final MemberRepository memberRepository;
+    private final FCMInitializer fcmInitializer;
 
-    public FCMNotificationService(MemberRepository memberRepository) {
+    public FCMNotificationService(MemberRepository memberRepository, FCMInitializer fcmInitializer) {
         this.memberRepository = memberRepository;
+        this.fcmInitializer = fcmInitializer;
     }
 
 
