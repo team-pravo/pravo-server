@@ -3,6 +3,7 @@ package com.pravo.pravo.global.config;
 import com.google.auth.oauth2.GoogleCredentials;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import com.google.firebase.FirebaseApp;
@@ -13,15 +14,21 @@ import org.springframework.beans.factory.annotation.Value;
 @Configuration
 public class FirebaseConfig {
 
-    @Value("${firebase.config-path}")
-    private String FIREBASE_CONFIG_PATH;
+    private final String firebaseConfigPath;
 
+    public FirebaseConfig(@Value("${firebase.config-path}") String firebaseConfigPath) {
+        this.firebaseConfigPath = firebaseConfigPath;
+        try {
+            init();
+        } catch (Exception e) {
+            throw new RuntimeException("Firebase initialization failed", e);
+        }
+    }
 
-    @PostConstruct
     public void init(){
         try {
-            Resource resource = new ClassPathResource(FIREBASE_CONFIG_PATH);
-            System.out.println("Firebase config path: " + FIREBASE_CONFIG_PATH);
+            Resource resource = new ClassPathResource(firebaseConfigPath);
+            System.out.println("Firebase config path: " + firebaseConfigPath);
             System.out.println("Resource exists: "+ resource.exists());
 
             FirebaseOptions options = FirebaseOptions.builder()
