@@ -127,7 +127,7 @@ class PromiseSettlementFacade(
             attendees.map { attendee ->
                 try {
                     // TODO 실제 결제가 이루어저야 해당 로직이 동작 가능함
-                    // paymentService.cancelPayment(attendee.member.id, promiseId)
+                    // paymentService.cancelPayment(promiseId, attendee.member.id)
                     val paymentLog = paymentService.findByMemberIdAndPromiseId(attendee.member.id, promiseId)
                     paymentLog.setPaymentStatus(PaymentStatus.CANCELED)
                     true
@@ -179,7 +179,10 @@ class PromiseSettlementFacade(
         }
 
         try {
-            paymentService.cancelPayment(promiseId, memberId)
+            // TODO 실제 결제가 가능할때 동작
+            // paymentService.cancelPayment(promiseId, memberId)
+            val paymentLog = paymentService.findByMemberIdAndPromiseId(memberId, promiseId)
+            paymentLog.setPaymentStatus(PaymentStatus.CANCELED)
             promiseRole.updateStatus(ParticipantStatus.CANCELED)
         } catch (e: Exception) {
             throw BaseException(ErrorCode.IMAGE_EXTENSION_ERROR)
