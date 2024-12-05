@@ -181,11 +181,11 @@ class PromiseSettlementFacade(
         try {
             // TODO 실제 결제가 가능할때 동작
             // paymentService.cancelPayment(promiseId, memberId)
-            val paymentLog = paymentService.findByMemberIdAndPromiseId(memberId, promiseId)
-            paymentLog.setPaymentStatus(PaymentStatus.CANCELED)
+//            val paymentLog = paymentService.findByMemberIdAndPromiseId(memberId, promiseId)
+//            paymentLog.setPaymentStatus(PaymentStatus.CANCELED)
             promiseRole.updateStatus(ParticipantStatus.CANCELED)
         } catch (e: Exception) {
-            throw BaseException(ErrorCode.IMAGE_EXTENSION_ERROR)
+            throw BaseException(ErrorCode.INTERNAL_SERVER_ERROR, e.message)
         }
     }
 
