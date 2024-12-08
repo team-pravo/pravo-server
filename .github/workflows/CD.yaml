@@ -33,7 +33,11 @@ jobs:
         run: |
           cd src/main/resources
           echo "${{ secrets.PROPERTIES }}" > ./application-secret.properties
-          echo "${{ secrets.FCM_SECRET_KEY }}" > ./serviceAccountKey.json
+      - name: Create service-account-file.json
+        run: |
+          mkdir -p ./src/main/resources
+          cd ./src/main/resources
+          echo "${{ secrets.FCM_SECRET_KEY }}" | base64 -d > serviceAccountKey.json
 
       - name: Build
         run: |
