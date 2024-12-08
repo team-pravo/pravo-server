@@ -1,5 +1,6 @@
 package com.pravo.pravo.global.fcm.service;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
@@ -16,9 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 @DependsOn("FCMInitializer")
 public class FCMNotificationService {
     private final MemberRepository memberRepository;
+    private final FCMInitializer fcmInitializer;
 
-    public FCMNotificationService(MemberRepository memberRepository) {
+    public FCMNotificationService(MemberRepository memberRepository, FCMInitializer fcmInitializer) {
         this.memberRepository = memberRepository;
+        this.fcmInitializer = fcmInitializer;
     }
 
 
@@ -26,15 +29,24 @@ public class FCMNotificationService {
         if (token == null) {
             throw new IllegalArgumentException("Token is null");
         }
-        String message = FirebaseMessaging.getInstance().send(Message.builder()
-            .setNotification(Notification.builder()
-                .setTitle(title)
-                .setBody(body)
-                .build())
-            .setToken(token)
-            .build());
+        try {
+            // Firebase 앱이 초기화되지 않았다면 다시 초기화 시도
+            if (FirebaseApp.getApps().isEmpty()) {
+                fcmInitializer.initialize();
+            }
 
-        System.out.println("Sent message: " + message);
+            String message = FirebaseMessaging.getInstance().send(Message.builder()
+                .setNotification(Notification.builder()
+                    .setTitle(title)
+                    .setBody(body)
+                    .build())
+                .setToken(token)
+                .build());
+
+        } catch (Exception e) {
+            throw e;
+        }
+        System.out.println("Sent message successfully");
     }
 
     @Transactional
