@@ -8,17 +8,17 @@ import com.pravo.pravo.domain.member.model.Member;
 import com.pravo.pravo.domain.member.repository.MemberRepository;
 import com.pravo.pravo.global.error.ErrorCode;
 import com.pravo.pravo.global.error.exception.BaseException;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@DependsOn("FCMInitializer")
 public class FCMNotificationService {
     private final MemberRepository memberRepository;
-    private final FCMInitializer fcmInitializer;
 
-    public FCMNotificationService(MemberRepository memberRepository, FCMInitializer fcmInitializer) {
+    public FCMNotificationService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
-        this.fcmInitializer = fcmInitializer;
     }
 
 
