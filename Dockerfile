@@ -6,8 +6,6 @@ RUN apk update && apk add --no-cache curl
 # 애플리케이션 JAR 파일 복사
 COPY ./build/libs/Pravo-0.0.1-SNAPSHOT.jar /app/pravo.jar
 
-COPY ./src/main/resources/serviceAccountKey.json /app/serviceAccountKey.json
-
 # 작업 디렉터리 설정
 WORKDIR /app
 
