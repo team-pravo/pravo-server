@@ -33,7 +33,7 @@ jobs:
         run: |
           cd src/main/resources
           echo "${{ secrets.PROPERTIES }}" > ./application-secret.properties
-          echo "${{ secrets.FCM_SECRET_KEY }}" > ./serviceAccountKey.json
+          echo '${{ secrets.FCM_SECRET_KEY }}' > ./serviceAccountKey.json
 
       - name: Build
         run: |
