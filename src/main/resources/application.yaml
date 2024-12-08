@@ -42,4 +42,4 @@ toss:
   secretKey: ${TOSS_SECRET_KEY}
 
 firebase:
-  config-path: /app/resources/serviceAccountKey.json
+  config-path: serviceAccountKey.json
