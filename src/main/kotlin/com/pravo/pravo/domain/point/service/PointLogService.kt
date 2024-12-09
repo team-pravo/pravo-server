@@ -24,4 +24,15 @@ class PointLogService(
         amount: Long,
         memberId: Long,
     ): PointLog = pointLogRepository.save(PointLog.of(pointLogStatus, amount, memberId, null))
+
+    fun calculateSettlementAmount(
+        memberId: Long,
+        promiseId: Long,
+        deposit: Int,
+    ): Int {
+        return pointLogRepository.findByMemberIdAndPromiseId(memberId, promiseId)
+            ?.amount
+            ?.toInt()
+            ?: -deposit
+    }
 }

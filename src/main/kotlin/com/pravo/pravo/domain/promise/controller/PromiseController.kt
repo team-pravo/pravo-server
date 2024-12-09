@@ -44,7 +44,7 @@ class PromiseController(
     override fun getPromiseDetailByMember(
         @PathVariable promiseId: Long,
         @AuthUser authenticatedUser: AuthenticateUser,
-    ): PromiseDetailResponseDto = promiseService.getPromiseDetailByMember(authenticatedUser.memberId, promiseId)
+    ): PromiseDetailResponseDto = promiseFacade.getPromiseDetailByMember(authenticatedUser.memberId, promiseId)
 
     @DeleteMapping("/{promiseId}")
     override fun deletePromise(

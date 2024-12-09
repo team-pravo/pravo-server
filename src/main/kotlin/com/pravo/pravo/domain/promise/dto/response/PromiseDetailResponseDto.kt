@@ -19,11 +19,14 @@ data class PromiseDetailResponseDto(
     val deposit: Int,
     @Schema(description = "참가자", example = "참가자")
     val participants: List<ParticipantResponseDto>,
+    @Schema(description = "정산 금액", example = "333")
+    val settlementAmount: Int?,
 ) {
     companion object {
         fun of(
             promise: Promise,
             participants: List<ParticipantResponseDto>,
+            settlementAmount: Int?,
         ): PromiseDetailResponseDto =
             PromiseDetailResponseDto(
                 id = promise.id,
@@ -33,6 +36,7 @@ data class PromiseDetailResponseDto(
                 status = promise.status,
                 deposit = promise.deposit,
                 participants = participants,
+                settlementAmount = settlementAmount,
             )
     }
 }
