@@ -13,4 +13,6 @@ public interface PointLogRepository extends JpaRepository<PointLog, Long> {
             WHERE pl.memberId = :memberId
         """)
     List<PointLog> findByMemberId(Long memberId);
+
+    PointLog findByMemberIdAndPromiseId(Long memberId, Long promiseId);
 }
