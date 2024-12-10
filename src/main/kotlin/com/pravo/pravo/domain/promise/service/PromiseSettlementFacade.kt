@@ -140,7 +140,7 @@ class PromiseSettlementFacade(
         if (cancelResults.all { it }) {
             attendees.forEach { attendee ->
                 try {
-                    settlePoint(earnedPoint, attendee.member, promise.id)
+                    settlePoint(earnedPoint, attendee.member, promise)
                 } catch (e: Exception) {
                     log.error("Failed to settle points for member ${attendee.member.id}: ${e.message}")
                     throw IllegalStateException("포인트 정산 실패: ${e.message}")
@@ -162,9 +162,9 @@ class PromiseSettlementFacade(
     fun settlePoint(
         earnedPoint: Long,
         member: Member,
-        promiseId: Long,
+        promise: Promise,
     ) {
-        pointLogService.savePointLog(PointLogStatus.PLUS, earnedPoint, member.id, promiseId)
+        pointLogService.savePointLog(PointLogStatus.PLUS, earnedPoint, member.id, promise)
         member.updatePoint(earnedPoint)
     }
 

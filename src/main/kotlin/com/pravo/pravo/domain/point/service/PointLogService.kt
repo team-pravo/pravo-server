@@ -3,6 +3,7 @@ package com.pravo.pravo.domain.point.service
 import com.pravo.pravo.domain.point.model.PointLog
 import com.pravo.pravo.domain.point.model.PointLogStatus
 import com.pravo.pravo.domain.point.repository.PointLogRepository
+import com.pravo.pravo.domain.promise.model.Promise
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 
@@ -15,8 +16,8 @@ class PointLogService(
         pointLogStatus: PointLogStatus,
         amount: Long,
         memberId: Long,
-        promiseId: Long,
-    ): PointLog = pointLogRepository.save(PointLog.of(pointLogStatus, amount, memberId, promiseId))
+        promise: Promise,
+    ): PointLog = pointLogRepository.save(PointLog.of(pointLogStatus, amount, memberId, promise))
 
     @Transactional
     fun saveWithdrawPointLog(
@@ -29,10 +30,10 @@ class PointLogService(
         memberId: Long,
         promiseId: Long,
         deposit: Int,
-    ): Int {
-        return pointLogRepository.findByMemberIdAndPromiseId(memberId, promiseId)
+    ): Int =
+        pointLogRepository
+            .findByMemberIdAndPromiseId(memberId, promiseId)
             ?.amount
             ?.toInt()
             ?: -deposit
-    }
 }
