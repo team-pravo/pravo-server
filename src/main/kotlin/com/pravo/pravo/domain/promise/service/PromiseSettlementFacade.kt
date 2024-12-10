@@ -142,7 +142,7 @@ class PromiseSettlementFacade(
         if (cancelResults.all { it }) {
             attendees.forEach { attendee ->
                 try {
-                    settlePoint(earnedPoint, attendee.member, promise.id)
+                    settlePoint(earnedPoint, attendee.member, promise)
                     fcmNotificationService.sendMessage(
                         attendee.member.fcmToken,
                         "약속 정산이 완료되었습니다. ",
@@ -176,9 +176,9 @@ class PromiseSettlementFacade(
     fun settlePoint(
         earnedPoint: Long,
         member: Member,
-        promiseId: Long,
+        promise: Promise,
     ) {
-        pointLogService.savePointLog(PointLogStatus.PLUS, earnedPoint, member.id, promiseId)
+        pointLogService.savePointLog(PointLogStatus.PLUS, earnedPoint, member.id, promise)
         member.updatePoint(earnedPoint)
     }
 

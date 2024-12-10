@@ -23,18 +23,17 @@ public class PointLog extends BaseTimeEntity {
     private Long amount;
 
     private Long memberId;
-    private Long promiseId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fetch_promise_id")
+    @JoinColumn(name = "promise_id")
     private Promise promise;
 
 
-    public PointLog(PointLogStatus pointLogStatus, Long amount, Long memberId, Long promiseId) {
+    public PointLog(PointLogStatus pointLogStatus, Long amount, Long memberId, Promise promise) {
         this.pointLogStatus = pointLogStatus;
         this.amount = amount;
         this.memberId = memberId;
-        this.promiseId = promiseId;
+        this.promise = promise;
     }
 
     public PointLog() {
@@ -42,8 +41,8 @@ public class PointLog extends BaseTimeEntity {
     }
 
     public static PointLog of(PointLogStatus pointLogStatus, Long amount, Long memberId,
-        Long promiseId) {
-        return new PointLog(pointLogStatus, amount, memberId, promiseId);
+        Promise promise) {
+        return new PointLog(pointLogStatus, amount, memberId, promise);
     }
     
 

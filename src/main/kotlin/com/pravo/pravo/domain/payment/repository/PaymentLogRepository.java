@@ -13,6 +13,7 @@ public interface PaymentLogRepository extends JpaRepository<PaymentLog, String> 
 
     @Query("""
             SELECT pl FROM PaymentLog pl
+            JOIN FETCH pl.promise p
             WHERE pl.memberId = :memberId
             AND pl.paymentStatus IN :paymentStatuses
             AND pl.status = "DONE"

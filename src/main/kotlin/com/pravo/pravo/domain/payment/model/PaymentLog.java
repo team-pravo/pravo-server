@@ -46,18 +46,17 @@ public class PaymentLog extends BaseTimeEntity {
     private Long easyPayId;     // EasyPay 객체의 ID
 
     private Long memberId;
-    private Long promiseId;
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fetch_promise_id")
+    @JoinColumn(name = "promise_id")
     private Promise promise;
 
-    public static PaymentLog getPendingPaymentLog(String id, Long memberId, Long promiseId) {
+    public static PaymentLog getPendingPaymentLog(String id, Long memberId, Promise promise) {
         PaymentLog paymentLog = new PaymentLog();
-        return paymentLog.setPendingPaymentLog(id, memberId, promiseId);
+        return paymentLog.setPendingPaymentLog(id, memberId, promise);
     }
 
     public void updateFromConfirmResponse(TossResponseDto dto, Long cardId, Long easyPayId,
@@ -110,10 +109,10 @@ public class PaymentLog extends BaseTimeEntity {
         this.paymentStatus = paymentStatus;
     }
 
-    private PaymentLog setPendingPaymentLog(String id, Long memberId, Long promiseId) {
+    private PaymentLog setPendingPaymentLog(String id, Long memberId, Promise promise) {
         this.orderId = id;
         this.memberId = memberId;
-        this.promiseId = promiseId;
+        this.promise = promise;
         return this;
     }
 
@@ -123,10 +122,6 @@ public class PaymentLog extends BaseTimeEntity {
 
     public LocalDateTime getApprovedAt() {
         return this.approvedAt;
-    }
-
-    public Long getPromiseId() {
-        return this.promiseId;
     }
 
     public PaymentStatus getPaymentStatus() {
