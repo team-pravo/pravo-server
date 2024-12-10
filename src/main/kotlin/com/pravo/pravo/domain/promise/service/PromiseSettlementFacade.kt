@@ -148,7 +148,6 @@ class PromiseSettlementFacade(
                         "약속 정산이 완료되었습니다. ",
                         "약속 정산이 완료되었습니다. 정산 금액: $earnedPoint 포인트",
                     )
-
                 } catch (e: Exception) {
                     log.error("Failed to settle points for member ${attendee.member.id}: ${e.message}")
                     throw IllegalStateException("포인트 정산 실패: ${e.message}")
