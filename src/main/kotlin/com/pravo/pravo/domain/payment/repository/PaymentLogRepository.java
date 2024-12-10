@@ -16,6 +16,7 @@ public interface PaymentLogRepository extends JpaRepository<PaymentLog, String> 
             JOIN FETCH pl.promise p
             WHERE pl.memberId = :memberId
             AND pl.paymentStatus IN :paymentStatuses
+            AND pl.status = "DONE"
         """)
     List<PaymentLog> findByMemberIdAndPaymentStatus(Long memberId,
         List<PaymentStatus> paymentStatuses);

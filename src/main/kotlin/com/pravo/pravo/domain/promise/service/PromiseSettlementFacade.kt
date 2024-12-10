@@ -17,6 +17,7 @@ import com.pravo.pravo.global.error.ErrorCode
 import com.pravo.pravo.global.error.exception.BadRequestException
 import com.pravo.pravo.global.error.exception.BaseException
 import com.pravo.pravo.global.error.exception.UnauthorizedException
+import com.pravo.pravo.global.fcm.service.FCMNotificationService
 import com.pravo.pravo.global.util.logger
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
@@ -28,6 +29,7 @@ class PromiseSettlementFacade(
     private val pointLogService: PointLogService,
     private val paymentService: PaymentService,
     private val fineLogService: FineLogService,
+    private val fcmNotificationService: FCMNotificationService,
 ) {
     val log = logger()
 
@@ -107,7 +109,7 @@ class PromiseSettlementFacade(
         val participants = promiseRoleService.getParticipantsByStatus(promise.id, ParticipantStatus.READY)
         val organizer =
             participants.find { it.role == RoleStatus.ORGANIZER }
-                ?: throw IllegalStateException("모임장이 존재하지 않습니다.")
+                ?: throw BadRequestException("모임장이 존재하지 않습니다.")
 
         if (organizer.member.id != memberId) {
             throw UnauthorizedException(ErrorCode.UNAUTHORIZED, "모임장만 정산을 진행할 수 있습니다.")
@@ -132,8 +134,8 @@ class PromiseSettlementFacade(
                     paymentLog.setPaymentStatus(PaymentStatus.CANCELED)
                     true
                 } catch (e: Exception) {
-                    log.error("Failed to cancel payment for member ${attendee.member.id}: ${e.message}")
-                    throw IllegalStateException("결제 취소 실패로 인해 정산을 진행할 수 없습니다: ${e.message}")
+                    log.error("Failed to settlement ${attendee.member.id}: ${e.message}")
+                    throw IllegalStateException("정산을 진행할 수 없습니다: ${e.message}")
                 }
             }
 
@@ -141,12 +143,25 @@ class PromiseSettlementFacade(
             attendees.forEach { attendee ->
                 try {
                     settlePoint(earnedPoint, attendee.member, promiseId)
+                    fcmNotificationService.sendMessage(
+                        attendee.member.fcmToken,
+                        "약속 정산이 완료되었습니다. ",
+                        "약속 정산이 완료되었습니다. 정산 금액: $earnedPoint 포인트",
+                    )
+
                 } catch (e: Exception) {
                     log.error("Failed to settle points for member ${attendee.member.id}: ${e.message}")
                     throw IllegalStateException("포인트 정산 실패: ${e.message}")
                 }
             }
-            absentees.forEach { fineLogService.saveFineLog(deposit.toLong(), it.member.id, promiseId) }
+            absentees.forEach {
+                fineLogService.saveFineLog(deposit.toLong(), it.member.id, promiseId)
+                fcmNotificationService.sendMessage(
+                    it.member.fcmToken,
+                    "약속 정산이 완료되었습니다. ",
+                    "약속 정산이 완료되었습니다. 정산 금액: $earnedPoint 포인트",
+                )
+            }
         }
     }
 
