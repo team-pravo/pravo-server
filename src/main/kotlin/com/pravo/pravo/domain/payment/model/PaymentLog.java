@@ -5,6 +5,8 @@ import com.pravo.pravo.domain.promise.model.Promise;
 import com.pravo.pravo.global.common.model.BaseTimeEntity;
 import com.pravo.pravo.global.external.toss.dto.response.TossResponseDto;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -46,6 +48,7 @@ public class PaymentLog extends BaseTimeEntity {
     private Long memberId;
     private Long promiseId;
 
+    @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
