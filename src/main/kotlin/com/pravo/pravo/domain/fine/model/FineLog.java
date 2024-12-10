@@ -22,24 +22,23 @@ public class FineLog extends BaseTimeEntity {
     private Long amount;
 
     private Long memberId;
-    private Long promiseId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fetch_promise_id")
+    @JoinColumn(name = "promise_id")
     private Promise promise;
 
-    public FineLog(Long amount, Long memberId, Long promiseId) {
+    public FineLog(Long amount, Long memberId, Promise promise) {
         this.amount = amount;
         this.memberId = memberId;
-        this.promiseId = promiseId;
+        this.promise = promise;
     }
 
     public FineLog() {
 
     }
 
-    public static FineLog of(Long amount, Long memberId, Long promiseId) {
-        return new FineLog(amount, memberId, promiseId);
+    public static FineLog of(Long amount, Long memberId, Promise promise) {
+        return new FineLog(amount, memberId, promise);
     }
 
     public Long getAmount() {

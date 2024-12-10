@@ -60,7 +60,7 @@ class PromiseSettlementFacade(
     ): PromiseSettlementResponseDto {
         absentees.forEach {
             it.updateStatus(ParticipantStatus.NOT_ATTENDED)
-            fineLogService.saveFineLog(promise.deposit.toLong(), it.member.id, promise.id)
+            fineLogService.saveFineLog(promise.deposit.toLong(), it.member.id, promise)
         }
 
         return PromiseSettlementResponseDto(
@@ -84,7 +84,7 @@ class PromiseSettlementFacade(
             attendees = attendees,
             absentees = absentees,
             earnedPoint = earnedPoint,
-            promiseId = promise.id,
+            promise = promise,
             deposit = promise.deposit,
         )
 
@@ -122,7 +122,7 @@ class PromiseSettlementFacade(
         attendees: List<PromiseRole>,
         absentees: List<PromiseRole>,
         earnedPoint: Long,
-        promiseId: Long,
+        promise: Promise,
         deposit: Int,
     ) {
         val cancelResults =
@@ -130,7 +130,7 @@ class PromiseSettlementFacade(
                 try {
                     // TODO 실제 결제가 이루어저야 해당 로직이 동작 가능함
                     // paymentService.cancelPayment(promiseId, attendee.member.id)
-                    val paymentLog = paymentService.findByMemberIdAndPromiseId(attendee.member.id, promiseId)
+                    val paymentLog = paymentService.findByMemberIdAndPromiseId(attendee.member.id, promise.id)
                     paymentLog.setPaymentStatus(PaymentStatus.CANCELED)
                     true
                 } catch (e: Exception) {
@@ -142,7 +142,7 @@ class PromiseSettlementFacade(
         if (cancelResults.all { it }) {
             attendees.forEach { attendee ->
                 try {
-                    settlePoint(earnedPoint, attendee.member, promiseId)
+                    settlePoint(earnedPoint, attendee.member, promise.id)
                     fcmNotificationService.sendMessage(
                         attendee.member.fcmToken,
                         "약속 정산이 완료되었습니다. ",
@@ -154,7 +154,7 @@ class PromiseSettlementFacade(
                 }
             }
             absentees.forEach {
-                fineLogService.saveFineLog(deposit.toLong(), it.member.id, promiseId)
+                fineLogService.saveFineLog(deposit.toLong(), it.member.id, promise)
                 fcmNotificationService.sendMessage(
                     it.member.fcmToken,
                     "약속 정산이 완료되었습니다. ",
