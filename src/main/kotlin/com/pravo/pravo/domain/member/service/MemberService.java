@@ -17,6 +17,7 @@ import com.pravo.pravo.domain.point.model.PointLog;
 import com.pravo.pravo.domain.point.model.PointLogStatus;
 import com.pravo.pravo.domain.point.repository.PointLogRepository;
 import com.pravo.pravo.domain.point.service.PointLogService;
+import com.pravo.pravo.domain.promise.model.Promise;
 import com.pravo.pravo.domain.promise.model.PromiseRole;
 import com.pravo.pravo.domain.promise.model.enums.ParticipantStatus;
 import com.pravo.pravo.domain.promise.model.enums.PromiseStatus;
@@ -57,6 +58,8 @@ public class MemberService {
     private final FineLogRepository fineLogRepository;
     private final PointLogService pointLogService;
 
+    private final PromiseRepository promiseRepository;
+
     public MemberService(MemberRepository memberRepository, JwtTokensGenerator jwtTokensGenerator,
         RedisTemplate<String, String> redisTemplate, JwtTokenProvider jwtTokenProvider,
         S3Service s3Service, PromiseRepository promiseRepository,
@@ -73,6 +76,7 @@ public class MemberService {
         this.pointLogRepository = pointLogRepository;
         this.fineLogRepository = fineLogRepository;
         this.pointLogService = pointLogService;
+        this.promiseRepository = promiseRepository;
     }
 
     public LoginResponseDTO login(LoginRequestDTO loginRequestDto) {
@@ -197,13 +201,18 @@ public class MemberService {
             List.of(PaymentStatus.COMPLETED, PaymentStatus.CANCELED));
 
         return paymentLogs.stream()
-            .map(paymentLog -> new MemberPaymentLogResponseDTO(
-                paymentLog.getPromise().getName(),
-                paymentLog.getBalanceAmount(),
-                paymentLog.getPaymentStatus().name(),
-                paymentLog.getApprovedAt().toString(),
-                paymentLog.getUpdatedAt().toString()
-            ))
+            .map(paymentLog -> {
+                Promise promise = promiseRepository.findById(paymentLog.getPromiseId())
+                    .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND, "약속을 찾을 수 없습니다"));
+
+                return new MemberPaymentLogResponseDTO(
+                    promise.getName(),
+                    paymentLog.getBalanceAmount(),
+                    paymentLog.getPaymentStatus().name(),
+                    paymentLog.getApprovedAt().toString(),
+                    paymentLog.getUpdatedAt().toString()
+                );
+            })
             .collect(Collectors.toList());
     }
 
