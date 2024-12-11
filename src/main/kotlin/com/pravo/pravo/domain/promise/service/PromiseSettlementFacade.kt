@@ -21,6 +21,7 @@ import com.pravo.pravo.global.fcm.service.FCMNotificationService
 import com.pravo.pravo.global.util.logger
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
+import com.pravo.pravo.global.common.extensions.isBeforeNow
 
 @Service
 class PromiseSettlementFacade(
@@ -143,23 +144,27 @@ class PromiseSettlementFacade(
             attendees.forEach { attendee ->
                 try {
                     settlePoint(earnedPoint, attendee.member, promise)
-                    fcmNotificationService.sendMessage(
-                        attendee.member.fcmToken,
-                        "약속 정산이 완료되었습니다. ",
-                        "약속 정산이 완료되었습니다. 정산 금액: $earnedPoint 포인트",
-                    )
+                    attendee.member.fcmToken?.let { token ->
+                        fcmNotificationService.sendMessage(
+                            token,
+                            "약속 정산이 완료되었습니다. ",
+                            "약속 정산이 완료되었습니다. 정산 금액: $earnedPoint 포인트",
+                        )
+                    }
                 } catch (e: Exception) {
                     log.error("Failed to settle points for member ${attendee.member.id}: ${e.message}")
                     throw IllegalStateException("포인트 정산 실패: ${e.message}")
                 }
             }
-            absentees.forEach {
-                fineLogService.saveFineLog(deposit.toLong(), it.member.id, promise)
-                fcmNotificationService.sendMessage(
-                    it.member.fcmToken,
-                    "약속 정산이 완료되었습니다. ",
-                    "약속 정산이 완료되었습니다. 정산 금액: $earnedPoint 포인트",
-                )
+            absentees.forEach { absentee ->
+                fineLogService.saveFineLog(deposit.toLong(), absentee.member.id, promise)
+                absentee.member.fcmToken?.let { token ->
+                    fcmNotificationService.sendMessage(
+                        token,
+                        "약속 정산이 완료되었습니다. ",
+                        "약속 정산이 완료되었습니다. 정산 금액: $earnedPoint 포인트",
+                    )
+                }
             }
         }
     }
@@ -190,6 +195,9 @@ class PromiseSettlementFacade(
         val promiseRole = promiseRoleService.getPromiseRole(memberId, promiseId)
         if (promiseRole.role == RoleStatus.ORGANIZER) {
             throw UnauthorizedException(ErrorCode.UNAUTHORIZED, "모임장은 약속을 취소할 수 없습니다.")
+        }
+        if (promiseRole.promise.scheduledAt.isBeforeNow) {
+            throw BadRequestException("이미 진행된 약속은 취소할 수 없습니다.")
         }
 
         try {
@@ -229,6 +237,9 @@ class PromiseSettlementFacade(
         val promiseRole = promiseRoleService.getPromiseRole(memberId, promiseId)
         if (promiseRole.role != RoleStatus.ORGANIZER) {
             throw UnauthorizedException(ErrorCode.UNAUTHORIZED, "모임장만 약속을 삭제할 수 있습니다.")
+        }
+        if (promiseRole.promise.scheduledAt.isBeforeNow) {
+            throw BadRequestException("이미 진행된 약속은 삭제할 수 없습니다.")
         }
         val participants = promiseRoleService.getParticipantsByStatus(promiseId, ParticipantStatus.READY)
         try {
